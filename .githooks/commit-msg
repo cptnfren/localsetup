@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# Localsetup v2  - commit-msg hook: strip Co-authored-by AI/bot trailers, bump VERSION, amend if needed.
+# Policy: only humans are contributors; no AI agents or tools in commit history or contributor list.
+# When we run "git commit --amend", we set LOCALSETUP_HOOK_AMEND=1 so the hook does not run bump again (avoids loop).
+# Requires: scripts/bump-version in repo; Git run from repo root.
+
+set -euo pipefail
+COMMIT_MSG_FILE="${1:-}"
+[[ -z "$COMMIT_MSG_FILE" ]] || [[ ! -f "$COMMIT_MSG_FILE" ]] && exit 0
+
+# Strip Co-authored-by trailers for AI/bots (Cursor, Copilot, Claude, etc.) - human authorship only
+sed -e '/^[[:space:]]*Co-authored-by:.*[Cc]ursor/d' \
+    -e '/^[[:space:]]*Co-authored-by:.*[Cc]ursoragent/d' \
+    -e '/^[[:space:]]*Co-authored-by:.*[Cc]opilot/d' \
+    -e '/^[[:space:]]*Co-authored-by:.*[Cc]laude/d' \
+    -e '/^[[:space:]]*Co-authored-by:.*[Cc]hat[Gg]pt/d' \
+    -e '/^[[:space:]]*Co-authored-by:.*[Bb]ot/d' \
+    -e '/^[[:space:]]*Co-authored-by:.*[Oo]pen[Aa][Ii]/d' \
+    -e '/^[[:space:]]*Co-authored-by:.*[Aa]nthropic/d' \
+    -e '/^[[:space:]]*Co-authored-by:.*[Gg]ithub [Aa]ctions/d' \
+    "$COMMIT_MSG_FILE" > "${COMMIT_MSG_FILE}.tmp" && mv "${COMMIT_MSG_FILE}.tmp" "$COMMIT_MSG_FILE"
+
+# Skip during merge or rebase (amending can conflict)
+GIT_DIR="$(git rev-parse --git-dir)"
+[[ -f "$GIT_DIR/MERGE_HEAD" ]] && exit 0
+[[ -d "$GIT_DIR/rebase-merge" ]] || [[ -d "$GIT_DIR/rebase-apply" ]] && exit 0
+
+# Skip bump/amend when we are the ones amending (prevents version-bump loop)
+[[ -n "${LOCALSETUP_HOOK_AMEND:-}" ]] && exit 0
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Bump metadata.version in any staged framework/skills/*/SKILL.md (Agent Skills spec)
+SKILL_BUMP="$REPO_ROOT/scripts/bump-skill-versions"
+if [[ -f "$SKILL_BUMP" ]]; then
+  [[ -x "$SKILL_BUMP" ]] || chmod +x "$SKILL_BUMP" 2>/dev/null || true
+  "$SKILL_BUMP" --staged 2>/dev/null || true
+  git add framework/skills/ framework/.cursor/skills/ 2>/dev/null || true
+fi
+
+BUMP_SCRIPT="$REPO_ROOT/scripts/bump-version"
+if [[ ! -x "$BUMP_SCRIPT" ]]; then
+  [[ -f "$BUMP_SCRIPT" ]] && chmod +x "$BUMP_SCRIPT" 2>/dev/null || true
+fi
+if [[ ! -f "$BUMP_SCRIPT" ]]; then
+  exit 0
+fi
+
+OLD_VERSION="$(cat "$REPO_ROOT/VERSION" 2>/dev/null || echo "0.0.0")"
+NEW_VERSION="$("$BUMP_SCRIPT" "$COMMIT_MSG_FILE" 2>/dev/null)" || exit 0
+[[ -z "$NEW_VERSION" ]] && exit 0
+[[ "$OLD_VERSION" == "$NEW_VERSION" ]] && exit 0
+
+# Regenerate public docs artifacts after version bump so generated facts match VERSION
+DOC_GEN="$REPO_ROOT/scripts/generate-doc-artifacts"
+if [[ -f "$DOC_GEN" ]]; then
+  [[ -x "$DOC_GEN" ]] || chmod +x "$DOC_GEN" 2>/dev/null || true
+  "$DOC_GEN" 2>/dev/null || true
+fi
+
+git add VERSION
+# Sync READMEs and docs if bump-version updated them
+git add README.md framework/README.md 2>/dev/null || true
+git add framework/docs/*.md docs/*.md 2>/dev/null || true
+git add framework/docs/_generated/facts.json 2>/dev/null || true
+LOCALSETUP_HOOK_AMEND=1 git commit --amend --no-edit
+exit 0

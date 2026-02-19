@@ -1,0 +1,25 @@
+name: docs-sync
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify-generated-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Regenerate docs artifacts
+        run: ./scripts/generate-doc-artifacts
+
+      - name: Verify generated files are committed
+        run: git diff --exit-code framework/docs/SKILLS.md framework/docs/_generated/facts.json

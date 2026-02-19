@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Localsetup v2  - Install Git hooks from .githooks so version bump runs on commit.
+# Run once per clone: scripts/install-githooks  (or from repo root: ./scripts/install-githooks)
+
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$REPO_ROOT"
+
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "Not a Git repository. Run from a clone of localsetup." >&2
+  exit 1
+fi
+
+HOOKS_SRC=".githooks"
+if [[ ! -d "$HOOKS_SRC" ]]; then
+  echo "No .githooks directory found." >&2
+  exit 1
+fi
+
+git config core.hooksPath "$HOOKS_SRC"
+chmod +x "$HOOKS_SRC/commit-msg" "$HOOKS_SRC/post-commit" 2>/dev/null || true
+echo "Git hooks installed: core.hooksPath = $HOOKS_SRC"
+echo "Commits will trigger: repo VERSION bump; skill version bump for changed SKILL.md; committer normalized to author (no AI in contributors)."

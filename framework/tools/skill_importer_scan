@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# Localsetup v2  - Scan a directory tree for Agent Skills; output per-skill brief and security flags.
+# Purpose: Discover skills, validate format, list contents/code types, heuristic security screen (no execution).
+# Usage: skill_importer_scan <path>   (path = directory that may contain skill subdirs, e.g. after git clone)
+# Output: Human-readable summary to stdout. Exit 0 if at least one skill found, 1 if none or error.
+
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCAN_ROOT="${1:-}"
+[[ -z "$SCAN_ROOT" ]] && { echo "Usage: skill_importer_scan <path>" >&2; exit 1; }
+[[ -d "$SCAN_ROOT" ]] || { echo "Not a directory: $SCAN_ROOT" >&2; exit 1; }
+SCAN_ROOT="$(cd "$SCAN_ROOT" && pwd)"
+
+# Heuristic patterns to flag (no execution). Space-separated for grep -E.
+SECURITY_PATTERNS='eval\s*\(|curl\s+.*\|\s*sh\s|wget\s+.*\|\s*bash|base64\s+-d.*\|\s*sh|Invoke-Expression|\.Invoke\(|passthru|/etc/shadow|/etc/passwd\s|NOPASSWD'
+
+# Ensure skill validation pattern file exists and is not stale (fetch if missing; exit 2 if stale for agent to prompt)
+VALIDATION_SCRIPT="${SCRIPT_DIR}/skill_validation_scan.py"
+if [[ -x "$VALIDATION_SCRIPT" ]] || [[ -f "$VALIDATION_SCRIPT" ]]; then
+  if command -v python3 >/dev/null 2>&1; then
+    if ! python3 "$VALIDATION_SCRIPT" --ensure-only --scan-root "$SCAN_ROOT" 2>/dev/null; then
+      ret=$?
+      python3 "$VALIDATION_SCRIPT" --ensure-only --scan-root "$SCAN_ROOT" 2>&1
+      exit "$ret"
+    fi
+  fi
+fi
+
+extract_frontmatter() {
+  local file="$1"
+  sed -n '/^---$/,/^---$/p' "$file" 2>/dev/null | head -50
+}
+# Use # as delimiter in s/// so / in frontmatter values does not break sed.
+# Frontmatter containing null byte cannot be validated safely; command substitution typically strips nulls.
+get_yaml() {
+  local block="$1"
+  local key="$2"
+  echo "$block" | sed -n "/^${key}:/s#^${key}:[[:space:]]*[\"']*\(.*\)[\"']*#\1#p" | head -1 | sed 's/^["'\'']//;s/["'\'']$//'
+}
+skill_brief() {
+  local dir="$1"
+  local skill_md="$dir/SKILL.md"
+  [[ -f "$skill_md" ]] || return 1
+  local fm
+  fm="$(extract_frontmatter "$skill_md")"
+  local name
+  name="$(get_yaml "$fm" "name")"
+  [[ -n "$name" ]] || return 1
+  local desc
+  desc="$(get_yaml "$fm" "description")"
+  # Directory name should match name per spec
+  local dirname
+  dirname="$(basename "$dir")"
+  echo "---"
+  echo "Skill: $name"
+  echo "Directory: $dirname"
+  echo "Description: $desc"
+  # What it has
+  for sub in scripts references assets; do
+    if [[ -d "$dir/$sub" ]]; then
+      echo "Has $sub:"
+      find "$dir/$sub" -type f 2>/dev/null | while read -r f; do
+        echo "  - $(basename "$f") ($(file -b "$f" 2>/dev/null || echo "?"))"
+      done
+    fi
+  done
+  # Code types (extensions in scripts)
+  if [[ -d "$dir/scripts" ]]; then
+    echo "Code types: $(find "$dir/scripts" -type f 2>/dev/null | sed 's/.*\.//' | sort -u | tr '\n' ' ')"
+  fi
+  # Security screen (heuristic): skip SKILL.md and references so docs that mention eval/curl are not flagged
+  local hits
+  hits="$(grep -rnE "$SECURITY_PATTERNS" "$dir/scripts" "$dir/assets" 2>/dev/null || true)"
+  if [[ -n "$hits" ]]; then
+    echo "Security: REVIEW (heuristic flags)"
+    echo "$hits" | head -5 | while read -r line; do echo "  $line"; done
+  else
+    echo "Security: No heuristic concerns"
+  fi
+  # Content safety: pattern file + English-only check (references only; no skill content in output)
+  if [[ -f "$VALIDATION_SCRIPT" ]] && command -v python3 >/dev/null 2>&1; then
+    if ! python3 "$VALIDATION_SCRIPT" --scan-root "$SCAN_ROOT" "$dir"; then
+      echo "  Content safety: ERROR (validation script failed)." >&2
+    fi
+  fi
+  echo ""
+}
+
+count=0
+while IFS= read -r -d '' skill_md; do
+  d="$(dirname "$skill_md")"
+  fm="$(extract_frontmatter "$skill_md")"
+  [[ -n "$(get_yaml "$fm" "name")" ]] || continue
+  skill_brief "$d"
+  count=$((count + 1))
+done < <(find "$SCAN_ROOT" -maxdepth 6 -name "SKILL.md" -type f -print0 2>/dev/null)
+
+[[ $count -gt 0 ]] && exit 0 || { echo "No valid skills found (SKILL.md with name/description)." >&2; exit 1; }

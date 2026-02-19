@@ -1,0 +1,15 @@
+# Localsetup v2 source repo
+*.backup
+*.local
+.DS_Store
+*.log
+
+# Deploy artifact (docs copy created when running deploy from repo root)
+framework/_localsetup/
+
+# Local-only generated maintenance docs
+_internal_docs/
+
+# Python
+__pycache__/
+*.pyc

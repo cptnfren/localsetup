@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+# Localsetup v2  - Version bump (Conventional Commits)
+# Purpose: Read VERSION, determine bump from commit message or flag, write new VERSION.
+# Usage:
+#   bump-version [path/to/commit-msg-file]   # conventional commit from file
+#   bump-version --major | --minor | --patch
+#   bump-version --no-bump                   # no change, exit 0
+# Exit: 0 if bumped (or --no-bump), 1 on error. Prints new version to stdout.
+
+set -euo pipefail
+
+# Repo root: from Git (when in a repo) or parent of scripts/
+REPO_ROOT=""
+if command -v git >/dev/null 2>&1; then
+  REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || true
+fi
+[[ -z "$REPO_ROOT" ]] || [[ ! -d "$REPO_ROOT" ]] && REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+VERSION_FILE="$REPO_ROOT/VERSION"
+
+# Optional: files to sync "**Version:** X.Y.Z" (one per line)
+SYNC_FILES="${BumpVersionSyncFiles:-$REPO_ROOT/README.md $REPO_ROOT/framework/README.md}"
+
+read_version() {
+  if [[ -f "$VERSION_FILE" ]]; then
+    cat "$VERSION_FILE" | tr -d '\r\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+  else
+    echo "0.0.0"
+  fi
+}
+
+parse_semver() {
+  local v="$1"
+  local major minor patch
+  major="${v%%.*}"
+  minor="${v#*.}"; minor="${minor%%.*}"
+  patch="${v##*.}"
+  # strip any suffix (e.g. -alpha)
+  patch="${patch%%-*}"
+  echo "$major $minor $patch"
+}
+
+bump() {
+  local major minor patch
+  read -r major minor patch <<< "$(parse_semver "$(read_version)")"
+  case "$1" in
+    major) echo "$((major + 1)).0.0" ;;
+    minor) echo "$major.$((minor + 1)).0" ;;
+    patch) echo "$major.$minor.$((patch + 1))" ;;
+    *)    echo "0.0.0"; return 1 ;;
+  esac
+}
+
+# Determine bump type from conventional commit message (first line + body)
+bump_type_from_message() {
+  local msg="$1"
+  if echo "$msg" | grep -qEi '^[a-z]+(!|\([^)]*\)!):'; then
+    echo "major"; return
+  fi
+  if echo "$msg" | grep -qEi 'BREAKING CHANGE:'; then
+    echo "major"; return
+  fi
+  if echo "$msg" | grep -qE '^feat(\([^)]*\))?:'; then
+    echo "minor"; return
+  fi
+  if echo "$msg" | grep -qE '^(fix|docs|chore|style|refactor|perf|test|ci|build)(\([^)]*\))?:'; then
+    echo "patch"; return
+  fi
+  # default: patch for any other commit
+  echo "patch"
+}
+
+write_version() {
+  local newver="$1"
+  echo "$newver" > "$VERSION_FILE"
+  # major.minor for YAML front matter (e.g. 2.0.0 -> 2.0)
+  local major_minor="${newver%.*}"
+
+  # Sync **Version:** in READMEs if they exist (portable sed)
+  for f in $SYNC_FILES; do
+    if [[ -f "$f" ]]; then
+      sed "s/\*\*Version:\*\* [0-9]*\.[0-9]*\.[0-9]*/\*\*Version:\*\* $newver/" "$f" > "${f}.bump" && mv "${f}.bump" "$f"
+    fi
+  done
+
+  # Sync YAML front matter "version: X.Y" in framework/docs and repo docs
+  local docdir
+  for docdir in "$REPO_ROOT/framework/docs" "$REPO_ROOT/docs"; do
+    [[ ! -d "$docdir" ]] && continue
+    for f in "$docdir"/*.md; do
+      [[ -f "$f" ]] || continue
+      sed "s/^version:[[:space:]]*[0-9]*\.[0-9]*/version: $major_minor/" "$f" > "${f}.bump" && mv "${f}.bump" "$f"
+    done
+  done
+}
+
+# Main
+BUMP_KIND=""
+MSG_FILE=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --major) BUMP_KIND="major"; shift ;;
+    --minor) BUMP_KIND="minor"; shift ;;
+    --patch) BUMP_KIND="patch"; shift ;;
+    --no-bump) read_version; exit 0 ;;
+    --version-file) VERSION_FILE="$2"; shift 2 ;;
+    -h|--help)
+      sed -n '2,10p' "$0" | sed 's/^# \?//'
+      exit 0
+      ;;
+    *)
+      if [[ -z "$MSG_FILE" ]] && [[ -f "$1" ]]; then
+        MSG_FILE="$1"
+      fi
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$BUMP_KIND" ]] && [[ -n "$MSG_FILE" ]]; then
+  MSG="$(cat "$MSG_FILE")"
+  # Skip version bump for merge commits
+  if echo "$MSG" | head -1 | grep -qE '^Merge '; then
+    read_version
+    exit 0
+  fi
+  BUMP_KIND="$(bump_type_from_message "$MSG")"
+fi
+
+if [[ -z "$BUMP_KIND" ]]; then
+  echo "bump-version: need --major, --minor, --patch, commit message file, or --no-bump" >&2
+  exit 1
+fi
+
+NEWVER="$(bump "$BUMP_KIND")"
+write_version "$NEWVER"
+echo "$NEWVER"

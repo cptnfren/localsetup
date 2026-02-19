@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+# Localsetup v2  - Deploy step: write platform-specific context loaders and skills
+# Called by install script. Run from repo root or with --root.
+# Usage: deploy --tools "cursor,claude-code,codex,openclaw" --root /path/to/client/repo
+# Supported platforms (canonical list): framework/docs/PLATFORM_REGISTRY.md
+# Requires: FRAMEWORK_DIR (parent of tools/) and ROOT (client repo root).
+# On Windows (Git Bash): delegates to deploy.ps1.
+
+set -euo pipefail
+
+# Delegate to PowerShell on Windows
+if [[ -n "${WINDIR:-}" ]] || [[ "${OSTYPE:-}" == "msys" ]] || [[ "${OSTYPE:-}" == "cygwin" ]]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if command -v pwsh >/dev/null 2>&1; then
+    exec pwsh -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/deploy.ps1" "$@"
+  else
+    exec powershell -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/deploy.ps1" "$@"
+  fi
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+FRAMEWORK_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+ROOT=""
+TOOLS_CSV=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --root)   ROOT="$2"; shift 2 ;;
+    --tools)  TOOLS_CSV="$2"; shift 2 ;;
+    *)        echo "Unknown option: $1" >&2; exit 1 ;;
+  esac
+done
+if [[ -z "$ROOT" ]]; then
+  ROOT="$(cd "$FRAMEWORK_DIR/../.." 2>/dev/null && pwd)" || ROOT="$(pwd)"
+fi
+[[ "$ROOT" != /* ]] && ROOT="$(cd "$ROOT" && pwd)"
+TEMPLATES="$FRAMEWORK_DIR/templates"
+SKILLS_SRC="$FRAMEWORK_DIR/skills"
+
+deploy_cursor() {
+  local rules_dir="$ROOT/.cursor/rules"
+  local skills_dir="$ROOT/.cursor/skills"
+  mkdir -p "$rules_dir" "$skills_dir"
+  if [[ -f "$TEMPLATES/cursor/localsetup-context.mdc" ]]; then
+    cp "$TEMPLATES/cursor/localsetup-context.mdc" "$rules_dir/"
+    cp "$TEMPLATES/cursor/localsetup-context-index.md" "$rules_dir/"
+  fi
+  for skill in "$SKILLS_SRC"/localsetup-*/; do
+    [[ -d "$skill" ]] || continue
+    name="$(basename "$skill")"
+    mkdir -p "$skills_dir/$name"
+    cp -r "$skill"/* "$skills_dir/$name/" 2>/dev/null || true
+  done
+}
+
+deploy_claude_code() {
+  local claude_dir="$ROOT/.claude"
+  local skills_dir="$ROOT/.claude/skills"
+  mkdir -p "$claude_dir" "$skills_dir"
+  if [[ -f "$TEMPLATES/claude-code/CLAUDE.md" ]]; then
+    cp "$TEMPLATES/claude-code/CLAUDE.md" "$claude_dir/"
+  fi
+  for skill in "$SKILLS_SRC"/localsetup-*/; do
+    [[ -d "$skill" ]] || continue
+    name="$(basename "$skill")"
+    mkdir -p "$skills_dir/$name"
+    cp -r "$skill"/* "$skills_dir/$name/" 2>/dev/null || true
+  done
+}
+
+deploy_codex() {
+  local skills_dir="$ROOT/.agents/skills"
+  mkdir -p "$skills_dir"
+  if [[ -f "$TEMPLATES/codex/AGENTS.md" ]]; then
+    cp "$TEMPLATES/codex/AGENTS.md" "$ROOT/AGENTS.md"
+  fi
+  for skill in "$SKILLS_SRC"/localsetup-*/; do
+    [[ -d "$skill" ]] || continue
+    name="$(basename "$skill")"
+    mkdir -p "$skills_dir/$name"
+    cp -r "$skill"/* "$skills_dir/$name/" 2>/dev/null || true
+  done
+}
+
+deploy_openclaw() {
+  local skills_dir="$ROOT/skills"
+  local localsetup_base="$ROOT/_localsetup"
+  local docs_dir="$localsetup_base/docs"
+  mkdir -p "$skills_dir" "$docs_dir"
+  if [[ -f "$TEMPLATES/openclaw/OPENCLAW_CONTEXT.md" ]]; then
+    cp "$TEMPLATES/openclaw/OPENCLAW_CONTEXT.md" "$docs_dir/"
+  fi
+  for skill in "$SKILLS_SRC"/localsetup-*/; do
+    [[ -d "$skill" ]] || continue
+    name="$(basename "$skill")"
+    mkdir -p "$skills_dir/$name"
+    cp -r "$skill"/* "$skills_dir/$name/" 2>/dev/null || true
+  done
+}
+
+# Sync docs to _localsetup/docs so _localsetup/docs/... links work
+LOCALSETUP_BASE="$ROOT/_localsetup"
+if [[ -d "$FRAMEWORK_DIR/docs" ]]; then
+  mkdir -p "$LOCALSETUP_BASE/docs"
+  cp -r "$FRAMEWORK_DIR/docs/"* "$LOCALSETUP_BASE/docs/" 2>/dev/null || true
+fi
+
+# Main
+IFS=',' read -ra TOOLS <<< "$TOOLS_CSV"
+for t in "${TOOLS[@]}"; do
+  t="$(echo "$t" | tr -d ' ')"
+  case "$t" in
+    cursor)      deploy_cursor ;;
+    claude-code) deploy_claude_code ;;
+    codex)       deploy_codex ;;
+    openclaw)    deploy_openclaw ;;
+    *)           echo "Unknown tool: $t" >&2 ;;
+  esac
+done

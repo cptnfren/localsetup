@@ -1,0 +1,203 @@
+#!/usr/bin/env bash
+# Localsetup v2  - Front-end install script
+# Purpose: Deploy Localsetup v2 into a client repo at _localsetup/ and write
+#   platform-specific context loaders and skills per selected tools.
+#
+# Usage:
+#   Interactive:   curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash
+#   Non-interactive: curl ... | bash -s -- --directory . --tools cursor --yes
+#   Help:          install --help  or  install -h
+#
+# Options:
+#   --directory PATH   Client repo root (default: . or prompt). Must exist.
+#   --tools LIST       Comma-separated tools (required with --yes). See below.
+#   --yes              Non-interactive; no prompts. Requires --tools.
+#   --help, -h         Print this help and exit.
+#
+# Tools (valid values for --tools):
+#   cursor       Cursor IDE (.cursor/rules, .cursor/skills)
+#   claude-code  Claude Code (.claude/CLAUDE.md, .claude/skills)
+#   codex        OpenAI Codex CLI (AGENTS.md, .agents/skills)
+#   openclaw     OpenClaw (skills/, _localsetup/docs/OPENCLAW_CONTEXT.md)
+#
+# Examples:
+#   install --directory . --tools cursor --yes
+#   install --tools cursor,claude-code --yes
+#   install
+#
+# On Windows: run install.ps1; or from Git Bash this script delegates to install.ps1.
+
+set -euo pipefail
+
+# Delegate to PowerShell on Windows when run from Git Bash / MSYS / Cygwin
+if [[ -n "${WINDIR:-}" ]] || [[ "${OSTYPE:-}" == "msys" ]] || [[ "${OSTYPE:-}" == "cygwin" ]]; then
+  INSTALL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if command -v pwsh >/dev/null 2>&1; then
+    exec pwsh -NoProfile -ExecutionPolicy Bypass -File "$INSTALL_DIR/install.ps1" "$@"
+  else
+    exec powershell -NoProfile -ExecutionPolicy Bypass -File "$INSTALL_DIR/install.ps1" "$@"
+  fi
+fi
+
+REPO_URL="${LOCALSETUP_2_REPO:-https://github.com/cptnfren/localsetup.git}"
+FRAMEWORK_DIRNAME="_localsetup"
+TARGET_DIR=""
+TOOLS_CSV=""
+NONINTERACTIVE=false
+
+# Help text inline so it works when script is piped (curl | bash); $0 is not the script then.
+usage() {
+  cat << 'USAGE_END'
+Localsetup v2  - Front-end install script
+Purpose: Deploy Localsetup v2 into a client repo at _localsetup/ and write
+  platform-specific context loaders and skills per selected tools.
+
+Usage:
+  Interactive:   curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash
+  Non-interactive: curl ... | bash -s -- --directory . --tools cursor --yes
+  Help:          install --help  or  install -h
+
+Options:
+  --directory PATH   Client repo root (default: . or prompt). Must exist.
+  --tools LIST       Comma-separated tools (required with --yes). See below.
+  --yes              Non-interactive; no prompts. Requires --tools.
+  --help, -h         Print this help and exit.
+
+Tools (valid values for --tools):
+  cursor       Cursor IDE (.cursor/rules, .cursor/skills)
+  claude-code  Claude Code (.claude/CLAUDE.md, .claude/skills)
+  codex        OpenAI Codex CLI (AGENTS.md, .agents/skills)
+  openclaw     OpenClaw (skills/, _localsetup/docs/OPENCLAW_CONTEXT.md)
+
+Examples:
+  install --directory . --tools cursor --yes
+  install --tools cursor,claude-code --yes
+  install
+
+On Windows: run install.ps1; or from Git Bash this script delegates to install.ps1.
+USAGE_END
+}
+
+show_help_and_exit() {
+  usage
+  exit 0
+}
+
+show_usage_and_exit() {
+  echo "Error: $1" >&2
+  usage >&2
+  exit 1
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --directory)
+      if [[ $# -lt 2 ]]; then
+        show_usage_and_exit "Missing value for --directory"
+      fi
+      TARGET_DIR="$2"
+      shift 2
+      ;;
+    --tools)
+      if [[ $# -lt 2 ]]; then
+        show_usage_and_exit "Missing value for --tools"
+      fi
+      TOOLS_CSV="$2"
+      shift 2
+      ;;
+    --yes)
+      NONINTERACTIVE=true
+      shift
+      ;;
+    --help|-h)
+      show_help_and_exit
+      ;;
+    *)
+      show_usage_and_exit "Unknown option: $1"
+      ;;
+  esac
+done
+
+# Resolve target directory (client repo root)
+if [[ -z "$TARGET_DIR" ]]; then
+  if $NONINTERACTIVE; then
+    TARGET_DIR="."
+  else
+    echo "Enter client repo root directory (default: .):"
+    if [[ -e /dev/tty ]]; then
+      read -r TARGET_DIR < /dev/tty
+    else
+      TARGET_DIR="."
+      echo "(using current directory)"
+    fi
+    TARGET_DIR="${TARGET_DIR:-.}"
+  fi
+fi
+if [[ ! -d "$TARGET_DIR" ]]; then
+  show_usage_and_exit "Directory does not exist: $TARGET_DIR"
+fi
+if [[ "$TARGET_DIR" != /* ]]; then
+  TARGET_DIR="$(cd "$TARGET_DIR" && pwd)"
+fi
+FRAMEWORK_DIR="$TARGET_DIR/$FRAMEWORK_DIRNAME"
+
+# Resolve tools
+if [[ -z "$TOOLS_CSV" ]]; then
+  if $NONINTERACTIVE; then
+    show_usage_and_exit "--tools is required when using --yes"
+  fi
+  echo "Select platform(s) to install (comma-separated):"
+  echo "  1) cursor"
+  echo "  2) claude-code"
+  echo "  3) codex"
+  echo "  4) openclaw"
+  echo "Example: 1,2 for Cursor and Claude Code"
+  if [[ -e /dev/tty ]]; then
+    read -r TOOLS_CSV < /dev/tty
+  else
+    TOOLS_CSV="cursor"
+    echo "(using cursor)"
+  fi
+fi
+# Normalize: allow "cursor" or "1" etc.
+TOOLS_CSV="$(echo "$TOOLS_CSV" | tr '[:upper:]' '[:lower:]' | sed 's/1/cursor/g; s/2/claude-code/g; s/3/codex/g; s/4/openclaw/g' | tr -d ' ')"
+# Validate: each tool must be one of the supported four
+VALID_TOOLS="cursor,claude-code,codex,openclaw"
+for t in ${TOOLS_CSV//,/ }; do
+  case "$t" in
+    cursor|claude-code|codex|openclaw) ;;
+    *)
+      show_usage_and_exit "Invalid tool: '$t'. Valid values: cursor, claude-code, codex, openclaw"
+      ;;
+  esac
+done
+[[ -z "$TOOLS_CSV" ]] && show_usage_and_exit "At least one tool must be specified (e.g. --tools cursor)"
+
+# Clone or update framework
+if [[ -d "$FRAMEWORK_DIR/.git" ]]; then
+  echo "Updating existing _localsetup..."
+  (cd "$FRAMEWORK_DIR" && git pull --rebase 2>/dev/null) || true
+else
+  echo "Cloning Localsetup v2 into $FRAMEWORK_DIR..."
+  mkdir -p "$TARGET_DIR" || { echo "Error: Cannot create directory $TARGET_DIR" >&2; exit 1; }
+  if ! git clone "$REPO_URL" "$FRAMEWORK_DIR" 2>/dev/null; then
+    echo "Error: Clone failed. Check network and repo URL (set LOCALSETUP_2_REPO to override)." >&2
+    echo "If the repo is not yet published, copy the framework into $FRAMEWORK_DIR and run:" >&2
+    echo "  $FRAMEWORK_DIR/framework/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
+    exit 1
+  fi
+fi
+
+# Run deploy step (deploy lives at framework/tools/deploy inside the clone)
+DEPLOY_SCRIPT="$FRAMEWORK_DIR/framework/tools/deploy"
+if [[ -x "$DEPLOY_SCRIPT" ]]; then
+  "$DEPLOY_SCRIPT" --tools "$TOOLS_CSV" --root "$TARGET_DIR" || { echo "Error: Deploy failed." >&2; exit 1; }
+elif [[ -x "$FRAMEWORK_DIR/tools/deploy" ]]; then
+  "$FRAMEWORK_DIR/tools/deploy" --tools "$TOOLS_CSV" --root "$TARGET_DIR" || { echo "Error: Deploy failed." >&2; exit 1; }
+else
+  echo "Error: Deploy script not found at $DEPLOY_SCRIPT" >&2
+  echo "Run manually: $FRAMEWORK_DIR/framework/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
+  exit 1
+fi
+
+echo "Done. Framework at $FRAMEWORK_DIR; platform files written to $TARGET_DIR."

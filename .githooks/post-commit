@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Localsetup v2  - post-commit: set committer to author so IDEs/agents (e.g. Cursor) cannot appear as contributor.
+# Policy: only humans are contributors. Cursor and others sometimes set GIT_COMMITTER_* to themselves; we override.
+
+set -euo pipefail
+# Skip when we are amending from commit-msg (version bump); avoid re-entry
+[[ -n "${LOCALSETUP_HOOK_AMEND:-}" ]] && exit 0
+
+GIT_DIR="$(git rev-parse --git-dir)"
+[[ -f "$GIT_DIR/MERGE_HEAD" ]] && exit 0
+[[ -d "$GIT_DIR/rebase-merge" ]] || [[ -d "$GIT_DIR/rebase-apply" ]] && exit 0
+
+AUTHOR_NAME="$(git log -1 --format=%an)"
+AUTHOR_EMAIL="$(git log -1 --format=%ae)"
+COMMITTER_NAME="$(git log -1 --format=%cn)"
+COMMITTER_EMAIL="$(git log -1 --format=%ce)"
+
+# Normalize: treat same name+email as equal (avoid amend when already correct)
+if [[ "$AUTHOR_NAME" == "$COMMITTER_NAME" && "$AUTHOR_EMAIL" == "$COMMITTER_EMAIL" ]]; then
+  exit 0
+fi
+
+# Rewrite the commit so committer = author (no message change)
+LOCALSETUP_HOOK_AMEND=1 GIT_COMMITTER_NAME="$AUTHOR_NAME" GIT_COMMITTER_EMAIL="$AUTHOR_EMAIL" \
+  git commit --amend --no-edit
+exit 0
