@@ -5,7 +5,7 @@ version: 2.2
 
 # Versioning (Localsetup v2)
 
-**Purpose:** How version is defined and displayed. The framework uses semantic versioning; public version and docs are updated through the public publish scripts.
+**Purpose:** How version is defined and displayed. The framework uses semantic versioning; public version and docs are maintained through the maintainer workflow.
 
 ## Source of truth
 
@@ -18,23 +18,8 @@ version: 2.2
 
 Version bumps follow [Conventional Commits](https://www.conventionalcommits.org/): `feat:` implies minor, `fix:`/`docs:` imply patch, `feat!:` or `BREAKING CHANGE` imply major.
 
-## Public workflow
+## Public release workflow
 
-From public repo root:
+Public version bumps and generated docs sync are executed by maintainers from the private maintainer repository workflow, then pushed to this public repository.
 
-```bash
-./scripts/publish --push
-```
-
-This workflow:
-
-1. bumps `VERSION` based on last commit message (or explicit `--major|--minor|--patch`);
-2. regenerates docs artifacts;
-3. commits version/doc sync updates;
-4. pushes to `origin main` when `--push` is provided.
-
-Patch-only shortcut:
-
-```bash
-./scripts/maintain
-```
+For contributors: update public-facing docs for your feature in this repo, then hand off to the maintainer publish workflow for final version/doc sync.

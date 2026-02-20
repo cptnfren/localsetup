@@ -13,7 +13,7 @@ metadata:
 - **Concise and complete:** Human-readable; include hints for what to ask next; justify reasoning; act as expert advisor.
 - **Factuality:** "Based on..." for factual; "Likely..." for inference; "[WARNING] This is inferred/synthetic" when not factual.
 - **Response structure:** Answer -> Brief justification -> Options -> Wait for confirmation -> Execute if confirmed.
-- **Clickable links:** Use [description](url) format for URLs.
+- **Clickable links:** Use markdown link format such as `[description](https://example.com)`.
 
 ## 12. Tool selection and enhancement
 

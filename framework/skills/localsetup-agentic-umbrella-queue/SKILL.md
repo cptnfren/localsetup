@@ -21,6 +21,6 @@ This rule applies when **queue or PRD is in scope** (e.g. user is editing `.agen
 
 ## References
 
-- [_localsetup/docs/WORKFLOW_REGISTRY.md](_localsetup/docs/WORKFLOW_REGISTRY.md)  - list of named workflows, when to use, impact review required.
-- [_localsetup/docs/AGENTIC_UMBRELLA_WORKFLOWS.md](_localsetup/docs/AGENTIC_UMBRELLA_WORKFLOWS.md)  - umbrella definition, no mid-run stop, PHC gates, single final webhook.
-- [_localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md](_localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md)  - spec format, external confirmation protocol.
+- [framework/docs/WORKFLOW_REGISTRY.md](../../docs/WORKFLOW_REGISTRY.md)  - list of named workflows, when to use, impact review required.
+- [framework/docs/AGENTIC_UMBRELLA_WORKFLOWS.md](../../docs/AGENTIC_UMBRELLA_WORKFLOWS.md)  - umbrella definition, no mid-run stop, PHC gates, single final webhook.
+- [framework/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md](../../docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md)  - spec format, external confirmation protocol.

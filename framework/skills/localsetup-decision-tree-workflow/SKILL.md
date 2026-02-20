@@ -7,7 +7,7 @@ metadata:
 
 # Decision tree workflow (reverse prompt)
 
-When the user says **decision tree**, **decision tree questions**, **decision tree workflow**, **run the decision tree**, **reverse prompt**, **reverse prompt workflow**, or any synonymous phrase, **read this rule** and then run the process in [_localsetup/docs/DECISION_TREE_WORKFLOW.md](_localsetup/docs/DECISION_TREE_WORKFLOW.md). This is a **reverse prompt**: the AI prompts the user to gather context and decisions before implementing.
+When the user says **decision tree**, **decision tree questions**, **decision tree workflow**, **run the decision tree**, **reverse prompt**, **reverse prompt workflow**, or any synonymous phrase, **read this rule** and then run the process in [framework/docs/DECISION_TREE_WORKFLOW.md](../../docs/DECISION_TREE_WORKFLOW.md). This is a **reverse prompt**: the AI prompts the user to gather context and decisions before implementing.
 
 ## Summary (full procedure in framework-docs)
 
@@ -15,4 +15,4 @@ When the user says **decision tree**, **decision tree questions**, **decision tr
 - **When to use:** User explicitly invokes "decision tree" / "reverse prompt" (or "reverse prompt workflow") or when clarifying a draft PRD/spec with structured Q&A.
 - **Do not run** unless user has clearly requested the workflow (e.g. "run the decision tree", "reverse prompt workflow", "use the decision tree process").
 
-See [_localsetup/docs/DECISION_TREE_WORKFLOW.md](_localsetup/docs/DECISION_TREE_WORKFLOW.md) for full format, flow, and checklist.
+See [framework/docs/DECISION_TREE_WORKFLOW.md](../../docs/DECISION_TREE_WORKFLOW.md) for full format, flow, and checklist.

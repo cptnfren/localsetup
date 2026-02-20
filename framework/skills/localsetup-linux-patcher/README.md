@@ -1,6 +1,6 @@
 # Linux Patcher - OpenClaw Skill
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](../../../LICENSE)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-Skill-orange)](https://openclaw.ai)
 
 Automated Linux server patching with PatchMon integration for OpenClaw.
@@ -202,7 +202,7 @@ Please open an issue or pull request.
 
 ## 📄 License
 
-MIT License - See [LICENSE](LICENSE) file for details.
+MIT License - See [LICENSE](../../../LICENSE) file for details.
 
 ## 🆘 Support
 
