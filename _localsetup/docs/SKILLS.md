@@ -7,12 +7,13 @@ version: 2.3
 
 This page is generated from `_localsetup/skills/*/SKILL.md`.
 
-Total shipped skills: 32
+Total shipped skills: 33
 
 | Skill ID | Name | Version | Description |
 |---|---|---|---|
 | `localsetup-agentic-prd-batch` | `localsetup-agentic-prd-batch` | `1.2` | Agentic PRD batch: when user says 'process PRDs' or 'run batch from PRD folder'; implement per spec; update status; write outcome; reference PRD schema + external-agent guide. Use when editing .agent/queue/**, prds/**, *.prd.md. |
 | `localsetup-agentic-umbrella-queue` | `localsetup-agentic-umbrella-queue` | `1.1` | Umbrella/queue: only when queue or PRD in scope; named workflows; impact summary + user confirmation before big/destructive runs. Use when editing .agent/queue/**, .agent/**, PRD.md, *.prd.md or when user invokes a named umbrella workflow. |
+| `localsetup-agentlens` | `localsetup-agentlens` | `1.0` | Navigate and understand codebases using agentlens hierarchical documentation. Use when exploring new projects, finding modules, locating symbols in large files, finding TODOs/warnings, or understanding code structure. |
 | `localsetup-ansible-skill` | `localsetup-ansible-skill` | `1.1` | Infrastructure automation with Ansible. Use for server provisioning, configuration management, application deployment, and multi-host orchestration. Includes example playbooks for VPS setup, security hardening, and common server configurations. Bundled examples may reference one platform; adapt paths and commands for your environment. |
 | `localsetup-arbiter` | `localsetup-arbiter` | `1.2` | Push decisions to Arbiter Zebu for async human review. Use when you need human input on plans, architectural choices, or approval before proceeding. |
 | `localsetup-automatic-versioning` | `localsetup-automatic-versioning` | `1.1` | Use and maintain automatic versioning from conventional commits; VERSION as source of truth; sync to READMEs and docs. Use when working on version bumps, release workflow, or when the user asks about versioning or conventional commits. |

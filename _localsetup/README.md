@@ -1,6 +1,6 @@
 # Localsetup v2 Framework
 
-**Version:** 2.3.2  
+**Version:** 2.3.3  
 **Last updated:** 2026-02-19
 
 This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.
@@ -225,6 +225,7 @@ Skills are task-based instructions (SKILL.md with `name` and `description` front
 | `localsetup-linux-service-triage` | Diagnose Linux service issues (logs, systemd, PM2, Nginx, DNS); failing or misconfigured server apps |
 | `localsetup-linux-patcher` | Automated Linux patching and Docker container updates; multi-host server maintenance |
 | `localsetup-skill-normalizer` | Normalize skills for spec compliance and platform-neutral wording; one skill or all |
+| `localsetup-agentlens` | Codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs |
 
 Skills follow the [Agent Skills](https://agentskills.io/specification) specification and are interchangeable with other spec-compliant hosts (import from URLs or local path; export framework skills for use elsewhere). See [SKILLS_AND_RULES.md](docs/SKILLS_AND_RULES.md), [PLATFORM_REGISTRY.md](docs/PLATFORM_REGISTRY.md), [SKILL_INTEROPERABILITY.md](docs/SKILL_INTEROPERABILITY.md), and [SKILL_IMPORTING.md](docs/SKILL_IMPORTING.md) for platform paths, loading behavior, and import/export.
 
