@@ -10,7 +10,7 @@
   <a href="_localsetup/docs/PLATFORM_REGISTRY.md"><img src="https://img.shields.io/badge/platforms-cursor%20%7C%20claude--code%20%7C%20codex%20%7C%20openclaw-1f6feb" alt="Supported platforms"></a>
 </p>
 
-**Version:** 2.3.3  
+**Version:** 2.3.4  
 **Last updated:** 2026-02-19
 
 Localsetup v2 is a portable, repo-local workflow engine for AI agents. Everything the agent needs, context files, skills, and docs, lives under a single folder in your project. Clone or move the repo and the entire setup moves with it; no home-directory state, no cloud dependency, no hidden drift. The framework installs with one command and works identically across Cursor, Claude Code, OpenAI Codex CLI, and OpenClaw. Add more platforms later by editing one registry file.
@@ -26,7 +26,7 @@ In practice, you run a single install command, verify with one script, and start
 <!-- facts-block:start -->
 | Fact | Value |
 |---|---|
-| Current version | `2.3.3` |
+| Current version | `2.3.4` |
 | Supported platforms | `cursor, claude-code, codex, openclaw` |
 | Shipped skills | `33` |
 | Source | `_localsetup/docs/_generated/facts.json` |
@@ -68,7 +68,7 @@ The installer runs a dependency preflight and prints missing items with copy-pas
 2. **Repo-local engine** - the entire framework lives at `_localsetup/`; clone or move your repo and everything travels together. No home-directory state, no cloud sync, no hidden drift.
 3. **Multi-platform install** - one command deploys context and skills for Cursor, Claude Code, Codex CLI, or OpenClaw. Add platforms later by editing one registry file.
 4. **Agent Skills spec compatible** - skills follow the open Agent Skills specification, so you can import from Anthropic's public repo, awesome lists, or your own library and export yours for others.
-5. **32 shipped skills** - debugging, TDD, PR review, git recovery, Linux patching, Ansible orchestration, tmux handoff, PRD batching, decision trees, and more, ready to use out of the box.
+5. **Shipped skills** - debugging, TDD, PR review, git recovery, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux handoff, PRD batching, decision trees, and more, ready to use out of the box. See _localsetup/docs/SKILLS.md for the full catalog.
 6. **Human-in-the-loop gates** - tmux shared sessions, sudo discovery, and approval flow before destructive ops. The agent pauses and waits for you when it matters.
 7. **Versioning** - VERSION at repo root; conventional commits; version and docs are maintained by repo maintainers (see docs/VERSIONING.md).
 8. **Skill metadata patching** - staged `SKILL.md` files get their `metadata.version` incremented automatically so skill docs stay accurate.
@@ -90,7 +90,7 @@ The full feature catalog contains additional capabilities. See [_localsetup/docs
 9. `localsetup-skill-importer` - import external skills from URL or local path with security screening.
 10. `localsetup-humanizer` - remove AI-writing patterns from text based on Wikipedia cleanup guide.
 
-The generated shipped skills catalog lists all 32 skills with descriptions and versions. See [_localsetup/docs/SKILLS.md](_localsetup/docs/SKILLS.md).
+The generated shipped skills catalog lists all skills with descriptions and versions. See [_localsetup/docs/SKILLS.md](_localsetup/docs/SKILLS.md).
 
 ## 📚 Read more
 

@@ -33,7 +33,7 @@
 | localsetup-ansible-skill | Ansible infra automation; server provisioning, config management, deployment | Ansible playbooks, multi-host orchestration, server config |
 | localsetup-linux-service-triage | Diagnose Linux service issues (logs, systemd, PM2, Nginx, DNS) | Failing or misconfigured server apps, service triage |
 | localsetup-linux-patcher | Automated Linux patching and Docker container updates | Server maintenance, security updates, multi-host patching |
-| localsetup-skill-normalizer | Normalize skills for spec compliance and platform-neutral wording | Normalize one or all skills in tree; batch review imported or dropped-in skills |
+| localsetup-skill-normalizer | Phase 1: documents (platform choice when platform-specific); Phase 2: tooling to framework standard | Normalize one or all skills; batch review imported or dropped-in skills |
 | localsetup-agentlens | Codebase navigation with agentlens hierarchy (INDEX.md, modules, outline, memory) | Explore codebases, find modules/symbols, TODOs/warnings; large repos |
 
 Framework docs: _localsetup/docs/ (AGENTIC_DESIGN_INDEX.md, WORKFLOW_REGISTRY.md, PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md).

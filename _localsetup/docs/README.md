@@ -10,7 +10,7 @@ This is the public documentation index for Localsetup v2. Use it to navigate fra
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.3.3`
+- Current version: `2.3.4`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `33`
 - Source: `_localsetup/docs/_generated/facts.json`
@@ -56,7 +56,7 @@ How to use, import, create, and vet skills.
 | [Skill importing](SKILL_IMPORTING.md) | Import skills from URL or local path with validation |
 | [Skill discovery](SKILL_DISCOVERY.md) | Public registry index and recommendations for similar skills |
 | [Skill interoperability](SKILL_INTEROPERABILITY.md) | Agent Skills spec compliance and cross-ecosystem compatibility |
-| [Skill normalization](SKILL_NORMALIZATION.md) | Normalize skills for spec compliance and platform-neutral wording |
+| [Skill normalization](SKILL_NORMALIZATION.md) | Phase 1: documents (platform choice when platform-specific); Phase 2: tooling rewrite to framework standard. Spec compliance and platform handling. |
 | [Task skill matching](TASK_SKILL_MATCHING.md) | Match incoming tasks to installed skills |
 
 ---

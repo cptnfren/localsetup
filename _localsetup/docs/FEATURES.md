@@ -10,7 +10,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.3.3`
+- Current version: `2.3.4`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `33`
 - Source: `_localsetup/docs/_generated/facts.json`
@@ -35,11 +35,11 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | Capability | Description |
 |---|---|
 | **Agent Skills spec compliance** | All shipped skills follow the [Agent Skills specification](https://agentskills.io/specification). Import skills from Anthropic's repo or any spec-compliant source. |
-| **32 shipped skills** | Debugging, TDD, PR review, git recovery, Linux triage, Linux patching, Ansible orchestration, tmux handoff, PRD batching, decision trees, humanizer, and more. |
+| **Shipped skills** | Debugging, TDD, PR review, git recovery, Linux triage, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux handoff, PRD batching, decision trees, humanizer, and more. See SKILLS.md for the full catalog. |
 | **Skill importing** | Import external skills from a GitHub URL or local path. The importer discovers, validates, runs a heuristic security screen, and summarizes each skill before you decide to add it. |
 | **Skill discovery** | Maintain a public skill registry (`PUBLIC_SKILL_REGISTRY.urls`) and index (`PUBLIC_SKILL_INDEX.yaml`). Get recommendations for similar public skills when creating or importing. |
 | **Skill version metadata** | Each `SKILL.md` carries a `metadata.version` field. The commit hook auto-increments patch version on staged skill changes so skill docs stay accurate. |
-| **Skill normalization** | Normalize imported or hand-written skills for spec compliance and platform-neutral wording with the `localsetup-skill-normalizer` skill. |
+| **Skill normalization** | Normalize imported or in-tree skills: Phase 1 (documents) offers a choice when the skill is platform-specific (keep as is, keep platform-specific but normalized, or fully normalize); Phase 2 (tooling) rewrites bundled scripts to the framework standard unless the user requests an exception. Use the `localsetup-skill-normalizer` skill or run during import. |
 
 ---
 
@@ -84,6 +84,7 @@ These skills ship with the framework and are ready to use immediately.
 | `localsetup-linux-service-triage` | Diagnose common Linux service issues using logs, systemd/PM2, file permissions, Nginx checks, DNS sanity checks. |
 | `localsetup-linux-patcher` | Automated server patching and Docker container updates across Ubuntu, Debian, RHEL, AlmaLinux, Rocky, CentOS, Amazon Linux, SUSE. |
 | `localsetup-ansible-skill` | Ansible playbook-driven provisioning, configuration management, and multi-host orchestration. Includes example playbooks. |
+| `localsetup-agentlens` | Codebase navigation using agentlens hierarchy (INDEX.md, modules, outline, memory); explore projects, find modules/symbols, TODOs. |
 | `localsetup-mcp-builder` | Guide for creating high-quality MCP servers that enable LLMs to interact with external services. Python and Node/TypeScript. |
 
 ---
@@ -126,13 +127,13 @@ These skills ship with the framework and are ready to use immediately.
 | `localsetup-skill-importer` | Import from URL or path with discovery, validation, and security screening. |
 | `localsetup-skill-creator` | Create Agent Skills-compliant skills; import from Anthropic or elsewhere; export yours. |
 | `localsetup-skill-discovery` | Discover public skills from registries; recommend similar; in-depth summary. |
-| `localsetup-skill-normalizer` | Normalize skills for spec compliance and platform-neutral wording. |
+| `localsetup-skill-normalizer` | Normalize skills: Phase 1 (documents, with platform choice when platform-specific); Phase 2 (tooling rewrite to framework standard, or exception). |
 
 ---
 
 ## 📖 Next steps
 
-- [Shipped skills catalog](SKILLS.md) - generated list of all 32 skills with descriptions and versions
+- [Shipped skills catalog](SKILLS.md) - generated list of all shipped skills with descriptions and versions
 - [Platform registry](PLATFORM_REGISTRY.md) - canonical platform definitions
 - [Workflow registry](WORKFLOW_REGISTRY.md) - named workflows and when to use them
 - [Agentic design index](AGENTIC_DESIGN_INDEX.md) - index of agentic design docs

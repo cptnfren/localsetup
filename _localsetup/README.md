@@ -1,6 +1,6 @@
 # Localsetup v2 Framework
 
-**Version:** 2.3.3  
+**Version:** 2.3.4  
 **Last updated:** 2026-02-19
 
 This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.
@@ -31,7 +31,7 @@ The emphasis is on **transparency**, **security**, and **high-quality operations
 
 ## Overview
 
-**Summary of features:** One-line install (Bash/PowerShell); multi-platform deploy (cursor, claude-code, codex, openclaw); always-loaded context per platform; 32 built-in skills (decision tree, PRD batch, safety, tmux, versioning, publishing, skill-creator, skill-importer, skill-discovery, and more); duplicate/overlap/namespace checks when creating or importing; heuristic security screening on import; public skill registry and index with refresh and top-5 similar recommendations; versioning (VERSION, conventional commits, per-skill metadata.version); cross-platform tools (deploy, verify_context, verify_rules, skill_importer_scan); docs under [docs/](docs/) and [AGENTIC_DESIGN_INDEX.md](docs/AGENTIC_DESIGN_INDEX.md).
+**Summary of features:** One-line install (Bash/PowerShell); multi-platform deploy (cursor, claude-code, codex, openclaw); always-loaded context per platform; built-in skills (decision tree, PRD batch, safety, tmux, versioning, publishing, skill-creator, skill-importer, skill-discovery, agentlens, and more); duplicate/overlap/namespace checks when creating or importing; heuristic security screening on import; public skill registry and index with refresh and top-5 similar recommendations; versioning (VERSION, conventional commits, per-skill metadata.version); cross-platform tools (deploy, verify_context, verify_rules, skill_importer_scan); docs under [docs/](docs/) and [AGENTIC_DESIGN_INDEX.md](docs/AGENTIC_DESIGN_INDEX.md).
 
 Localsetup v2 provides:
 
@@ -224,7 +224,7 @@ Skills are task-based instructions (SKILL.md with `name` and `description` front
 | `localsetup-ansible-skill` | Ansible playbooks, server provisioning, config management, multi-host orchestration |
 | `localsetup-linux-service-triage` | Diagnose Linux service issues (logs, systemd, PM2, Nginx, DNS); failing or misconfigured server apps |
 | `localsetup-linux-patcher` | Automated Linux patching and Docker container updates; multi-host server maintenance |
-| `localsetup-skill-normalizer` | Normalize skills for spec compliance and platform-neutral wording; one skill or all |
+| `localsetup-skill-normalizer` | Normalize skills: Phase 1 (documents, platform choice when platform-specific); Phase 2 (tooling rewrite to framework standard). One skill or all. |
 | `localsetup-agentlens` | Codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs |
 
 Skills follow the [Agent Skills](https://agentskills.io/specification) specification and are interchangeable with other spec-compliant hosts (import from URLs or local path; export framework skills for use elsewhere). See [SKILLS_AND_RULES.md](docs/SKILLS_AND_RULES.md), [PLATFORM_REGISTRY.md](docs/PLATFORM_REGISTRY.md), [SKILL_INTEROPERABILITY.md](docs/SKILL_INTEROPERABILITY.md), and [SKILL_IMPORTING.md](docs/SKILL_IMPORTING.md) for platform paths, loading behavior, and import/export.

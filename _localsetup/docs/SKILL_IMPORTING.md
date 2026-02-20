@@ -72,7 +72,7 @@ If the agent cannot create a temp directory (permissions, no space), report that
 
 ## Reference
 
-- [SKILL_NORMALIZATION.md](SKILL_NORMALIZATION.md)  - Spec-compliance checklist, frontmatter examples, platform-neutralization rules and generic snippets; applied mandatorily during import after security is verified, or when using the standalone normalizer.
+- [SKILL_NORMALIZATION.md](SKILL_NORMALIZATION.md)  - Phase 1: document normalization (user choice when platform-specific: keep as is, keep platform-specific but normalized, or fully normalize). Phase 2: tooling normalization (rewrite to framework standard; exception available). Applied mandatorily during import after security is verified, or when using the standalone normalizer.
 - [SKILL_VALIDATION_PATTERNS.md](SKILL_VALIDATION_PATTERNS.md)  - Pattern file location, fetch URL, 7-day refresh, content safety flow.
 - [SKILL_INTEROPERABILITY.md](SKILL_INTEROPERABILITY.md)  - Import/export and spec alignment.
 - [PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md)  - Where to register newly imported skills.
