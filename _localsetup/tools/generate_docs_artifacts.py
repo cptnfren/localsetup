@@ -223,8 +223,8 @@ def update_facts_blocks(repo_root: Path, facts: dict) -> None:
     )
 
     replace_managed_block(repo_root / "README.md", "facts-block", readme_block)
-    replace_managed_block(repo_root / "framework" / "docs" / "README.md", "facts-block", docs_index_block)
-    replace_managed_block(repo_root / "framework" / "docs" / "FEATURES.md", "facts-block", docs_index_block)
+    replace_managed_block(repo_root / "_localsetup" / "docs" / "README.md", "facts-block", docs_index_block)
+    replace_managed_block(repo_root / "_localsetup" / "docs" / "FEATURES.md", "facts-block", docs_index_block)
 
 
 def parse_args() -> argparse.Namespace:
@@ -245,8 +245,8 @@ def main() -> int:
     version = (repo_root / "VERSION").read_text(encoding="utf-8").strip()
     major_minor = ".".join(version.split(".")[:2]) if "." in version else version
 
-    skills_dir = repo_root / "framework" / "skills"
-    docs_dir = repo_root / "framework" / "docs"
+    skills_dir = repo_root / "_localsetup" / "skills"
+    docs_dir = repo_root / "_localsetup" / "docs"
     platform_registry = docs_dir / "PLATFORM_REGISTRY.md"
 
     skills = collect_skills(skills_dir)
