@@ -6,6 +6,7 @@
 
 # Local-only generated maintenance docs
 _internal_docs/
+_localsetup/.localsetup-meta/
 
 # Python
 __pycache__/

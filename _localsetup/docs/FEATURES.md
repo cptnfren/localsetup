@@ -10,7 +10,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.3.0`
+- Current version: `2.3.2`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `32`
 - Source: `_localsetup/docs/_generated/facts.json`

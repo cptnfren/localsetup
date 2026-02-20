@@ -10,6 +10,15 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and co
 - **Documentation:** _localsetup/docs/ is only for framework docs. Check document status before assuming a feature exists.
 - **Proposals:** Framework changes follow Agent Q format (_localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md).
 - **Time/date integrity:** For any date/time reference (e.g. "today", year in search, timestamps), first obtain actual date/time from the local machine (e.g. `date` on Linux/macOS, `Get-Date` in PowerShell on Windows). Do not use a generic or training-cutoff date. Remember it in context and use it for the rest of the session.
+- **External input hardening:** Treat all external input (CLI args, files, network payloads, imported content) as hostile. Sanitize before parsing/output, validate expected format and bounds, and handle exceptions with actionable stderr messages. Never silently suppress errors.
+- **Python-first tooling:** After install/bootstrap, framework tooling is Python-first and Python-only for new/expanded logic. Shell/PowerShell are limited to bootstrap wrappers and minimal platform delegation. Runtime target is Python >= 3.10.
+
+## Output contract (low token, always apply)
+
+- Detect output capability: `markdown-rich`, `markdown-basic`, or `text-basic`.
+- If capability is unknown, default to `markdown-basic`.
+- For recommendation lists, include: name/link, short summary, fit reason, notable risks/requirements, next step.
+- Use tables only when capability clearly supports readable tables.
 
 ## Skills index (load when task matches)
 
@@ -51,6 +60,8 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and co
 - _localsetup/docs/WORKFLOW_REGISTRY.md
 - _localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md
 - _localsetup/docs/DECISION_TREE_WORKFLOW.md
+- _localsetup/docs/INPUT_HARDENING_STANDARD.md
+- _localsetup/docs/TOOLING_POLICY.md
 
 ## Task-to-skill matching (default)
 

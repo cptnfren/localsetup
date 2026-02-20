@@ -14,6 +14,12 @@ metadata:
 - **Factuality:** "Based on..." for factual; "Likely..." for inference; "[WARNING] This is inferred/synthetic" when not factual.
 - **Response structure:** Answer -> Brief justification -> Options -> Wait for confirmation -> Execute if confirmed.
 - **Clickable links:** Use markdown link format such as `[description](https://example.com)`.
+- **Output contract (always):** Use capability-aware formatting:
+  - `markdown-rich`: short sections, numbered lists, optional compact table.
+  - `markdown-basic`: short sections, numbered lists, no table.
+  - `text-basic`: labeled lines and ASCII separators only.
+  - If platform capability is unknown, default to `markdown-basic`.
+- **Recommendation blocks:** For any ranked recommendations, include: name/link, summary, fit reason, constraints/risks, and next action.
 
 ## 12. Tool selection and enhancement
 

@@ -70,9 +70,15 @@ metadata:
 
 ## Output style
 
-- Keep outputs short and actionable.
+- Keep outputs short, actionable, and consistently structured.
 - For uncertain match: show top 3 installed candidates, each with one-line reason, then ask user to choose or say "pick the best".
 - For single clear match: ask once, then show complementary public options in the same response.
+- For public complementary suggestions, use available enriched fields from `_localsetup/docs/PUBLIC_SKILL_INDEX.yaml`:
+  - Prefer `summary_short` over raw description.
+  - Include notable `requirements` or `risk_flags` in one short line.
+- Rendering fallback:
+  - Rich/basic markdown: numbered list with labeled fields.
+  - Plain text/ascii: numbered list with `Skill:`, `Why:`, `Risks:`.
 
 ## References
 

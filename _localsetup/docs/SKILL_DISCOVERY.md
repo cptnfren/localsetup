@@ -23,7 +23,7 @@ version: 2.3
 ## Public skill index
 
 - **File:** `_localsetup/docs/PUBLIC_SKILL_INDEX.yaml`
-- **Schema:** `sources` (optional list of URLs), `updated` (ISO8601 date or datetime of last refresh), `skills` (list of entries with `name`, `description`, `url`, `source_registry`, optional `category`). Used for similarity matching and recommendations.
+- **Schema:** `schema_version`, `sources` (optional list of URLs), `updated` (ISO8601 date or datetime of last refresh), `skills`. Each skill entry includes `name`, `description`, `url`, `source_registry`, optional `category`, and enriched metadata (`summary_short`, `summary_long`, `capabilities`, `requirements`, `risk_flags`, `quality_signals`). Used for stronger similarity matching and richer recommendation output.
 - **Refresh:** The agent or a script updates the index from the registry URLs: fetch each URL, parse the list (e.g. awesome list markdown, ClawHub API), write normalized entries to the YAML, and set `updated` to the current date/time (ISO8601). To run the refresh script locally: `python3 _localsetup/tools/refresh_public_skill_index.py` (requires Python deps in `_localsetup/requirements.txt`; run `pip install -r _localsetup/requirements.txt` first).
 
 ## Index refresh and user prompts
@@ -48,11 +48,12 @@ version: 2.3
 
 ### Default recommendation output format
 
-Discovery **always** presents the top 5 (or fewer) matches in this structure. Do not use a shorter list or bare names only.
+Discovery always presents the top 5 (or fewer) matches as a ranked structure. Do not use bare names only.
 
-- **Intro line:** One sentence naming the topic or query (e.g. "Top 5: DevOps on a Linux server" or "Top 5 similar to your description: …").
-- **For each skill:** Bold skill name; **URL:** (full link from index); **Description:** (index description verbatim); **Why it's a good fit:** one to three sentences tying the skill to the user's intent (specific, not generic).
-- **After the list:** Optional short line on using these in the framework (e.g. "To add any of these, use the skill-importer with the skill URL."), then the four options.
+- **Intro line:** one sentence naming the topic and result count.
+- **For each skill:** markdown link name, 2-4 sentence summary (prefer `summary_long`, fallback `summary_short`, then `description`), fit rationale, constraints/risks (`requirements`, `risk_flags`), and recommendation status (`import now`, `evaluate later`, `skip`).
+- **Rendering fallback:** use rich markdown when available; fallback to numbered blocks; fallback to plain text with labeled lines (`Skill:`, `Summary:`, `Risks:`) when markdown is limited.
+- **After the list:** provide the four options (in-depth summary, use public skill, continue on own, adapt from one).
 
 The skill **localsetup-skill-discovery** (SKILL.md) contains the full format and an example; agents must follow it when returning recommendations.
 

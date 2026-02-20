@@ -47,7 +47,7 @@ TARGET_DIR=""
 TOOLS_CSV=""
 NONINTERACTIVE=false
 MIN_GIT_VERSION="2.20.0"
-MIN_PYTHON_VERSION="3.8.0"
+MIN_PYTHON_VERSION="3.10.0"
 UPGRADE_POLICY="preserve"
 
 # Help text inline so it works when script is piped (curl | bash); $0 is not the script then.
@@ -114,8 +114,8 @@ preflight_checks() {
   local required_fail=0
   local recommend_fail=0
   local git_status="MISSING"
-  local python_status="MISSING (recommended for skill validation/discovery tooling)"
-  local pyyaml_status="MISSING (recommended for skill validation/discovery tooling)"
+  local python_status="MISSING (recommended for Python-first framework tooling)"
+  local pyyaml_status="MISSING (recommended for Python-first framework tooling)"
   local git_version=""
   local python_bin=""
   local python_version=""
@@ -165,7 +165,7 @@ PY
   echo "Dependency preflight:"
   echo "  Required:"
   echo "    - git: $git_status"
-  echo "  Recommended for full framework tooling:"
+  echo "  Recommended for full Python framework tooling:"
   echo "    - python: $python_status"
   echo "    - pyyaml module: $pyyaml_status"
 

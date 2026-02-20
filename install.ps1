@@ -50,7 +50,7 @@ $REPO_URL = if ($env:LOCALSETUP_2_REPO) { $env:LOCALSETUP_2_REPO } else { 'https
 $FRAMEWORK_DIRNAME = '_localsetup'
 $ValidTools = @('cursor', 'claude-code', 'codex', 'openclaw')
 $MinGitVersion = [Version]'2.20.0'
-$MinPythonVersion = [Version]'3.8.0'
+$MinPythonVersion = [Version]'3.10.0'
 
 function Show-Usage {
     @'
@@ -111,7 +111,7 @@ function Run-PreflightChecks {
     $requiredFail = $false
     $recommendFail = $false
     $gitStatus = 'MISSING'
-    $pythonStatus = 'MISSING (recommended for skill validation/discovery tooling)'
+    $pythonStatus = 'MISSING (recommended for Python-first framework tooling)'
     $pyyamlStatus = "MISSING (python module 'yaml')"
 
     $gitCmd = Get-ToolVersion -ToolName 'git'
@@ -165,7 +165,7 @@ function Run-PreflightChecks {
     Write-Host 'Dependency preflight:'
     Write-Host '  Required:'
     Write-Host "    - git: $gitStatus"
-    Write-Host '  Recommended for full framework tooling:'
+    Write-Host '  Recommended for full Python framework tooling:'
     Write-Host "    - python: $pythonStatus"
     Write-Host "    - pyyaml module: $pyyamlStatus"
 

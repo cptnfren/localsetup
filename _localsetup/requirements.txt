@@ -1,5 +1,6 @@
 # Python deps for framework tools (e.g. skill validation and public skill index refresh).
 # Install with any Python package manager, for example:
 #   python3 -m pip install -r _localsetup/requirements.txt
+# Runtime target: Python >= 3.10 (Ubuntu 22.04 LTS baseline).
 # Used by: tools/refresh_public_skill_index.py
 PyYAML>=6.0

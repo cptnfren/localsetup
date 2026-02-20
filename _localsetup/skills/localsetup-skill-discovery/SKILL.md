@@ -1,6 +1,6 @@
 ---
 name: localsetup-skill-discovery
-description: "Discover and recommend public skills from external registries (e.g. awesome lists, skill hubs). Use when the user is creating a new skill, importing a skill, or asking to find similar public skills. Maintains PUBLIC_SKILL_REGISTRY.urls and PUBLIC_SKILL_INDEX.yaml; returns top 5 similar matches and offers in-depth summary, use public skill (pull + import), continue on own, or adapt."
+description: "Discover and recommend public skills from external registries (e.g. awesome lists, skill hubs). Use when the user is creating a new skill, importing a skill, or asking to find similar public skills. Maintains PUBLIC_SKILL_REGISTRY.urls and PUBLIC_SKILL_INDEX.yaml; returns top 5 similar matches with rich summaries and clear next actions."
 metadata:
   version: "1.3"
 ---
@@ -18,7 +18,7 @@ metadata:
 ## Registry and index
 
 - **Public repo registry:** `_localsetup/docs/PUBLIC_SKILL_REGISTRY.urls`  - One URL per line (skill collections, awesome lists, GitHub repos). Lines starting with `#` are ignored. This defines where to look for public skills.
-- **Public skill index:** `_localsetup/docs/PUBLIC_SKILL_INDEX.yaml`  - YAML with `sources`, `updated` (ISO8601 date/datetime of last refresh), and `skills`. Used for similarity matching. Refresh from registry URLs; set `updated` when done. See "Index refresh and prompts" below.
+- **Public skill index:** `_localsetup/docs/PUBLIC_SKILL_INDEX.yaml`  - YAML with `schema_version`, `sources`, `updated` (ISO8601 date/datetime of last refresh), and `skills`. Each skill entry includes richer matching data: `summary_short`, `summary_long`, `capabilities`, `requirements`, `risk_flags`, `quality_signals`.
 - **Project-maintained copies:** The framework's GitHub repository keeps its own copy of the registry and index. Users who do not want to maintain their own can download these files from the project repo (e.g. raw URLs from the default branch) or update the framework so `_localsetup/docs/` gets the latest; alternatively they can edit and refresh locally.
 
 ## Index refresh and prompts
@@ -32,8 +32,8 @@ metadata:
 ## Workflow (agent steps)
 
 1. **Check index and last refresh**  - Read PUBLIC_SKILL_INDEX.yaml (or confirm it is missing). Get current date from the environment. If file missing or `updated` is null/empty: prompt user to build the index; do not continue until built or user declines. Otherwise compute age (days/weeks/years since `updated`) and show: "Last index refresh: <date> (<X days/weeks/years ago>)." If age >= 7 days, prompt: "The index is over 7 days old. Would you like to refresh it now?" If user says yes, refresh (fetch registry URLs, parse, write YAML, set `updated` to now).
-2. **Match and rank**  - Read the user's intent (proposed skill description, or candidate skill name/description). Compare to each index entry (e.g. keyword overlap, description similarity). Return the **top 5** best matches. If fewer than 5 exist, return what is available.
-3. **Present recommendations**  - Always use the **default recommendation format** (see below). After the formatted list, offer: "Would you like: **(1) In-depth summary** of each, **(2) Use a public skill** (I'll pull it from the source and run it through our import process so it's compliant), **(3) Continue on your own** (ignore these and keep creating/importing as planned), or **(4) Adapt from one** (use one as a base and customize)?" Ask the user to choose.
+2. **Match and rank**  - Read the user's intent (proposed skill description, or candidate skill name/description). Compare to each index entry using `summary_*`, `capabilities`, and `description` with keyword overlap and intent similarity. Return the **top 5** best matches. If fewer than 5 exist, return what is available.
+3. **Present recommendations**  - Always use the **default recommendation format** (see below). Each recommendation must include a concise but rich summary (2-4 sentences), constraints, and a clear recommendation status. After the formatted list, offer: "Would you like: **(1) In-depth summary** of each, **(2) Use a public skill** (I'll pull it from the source and run it through our import process so it's compliant), **(3) Continue on your own** (ignore these and keep creating/importing as planned), or **(4) Adapt from one** (use one as a base and customize)?" Ask the user to choose.
 4. **Handle choice**  - (1) For each of the top 5, fetch or summarize the skill (e.g. from README or SKILL.md) and present a short in-depth summary. (2) Resolve the skill URL (e.g. from awesome list to actual repo), then run the **skill-importer** workflow: fetch, run skill_importer_scan, validate, security screen, user selects, duplicate/overlap check, import. The result is a framework-compliant skill; no need to recreate. (3) Do nothing; continue with skill-creator or skill-importer as before. (4) Same as (2) but after import, help the user adapt the skill (edit name, description, add/remove sections) so it fits their case.
 
 ## Integration with skill-creator and skill-importer
@@ -43,22 +43,25 @@ metadata:
 
 ## Default recommendation output format
 
-**Always** present the top 5 (or fewer) matches in this structure. Do not substitute a shorter list or bare names only.
+Always present the top 5 (or fewer) matches in a ranked structure. Do not return bare names only.
 
-1. **Intro line**  - One sentence that names the topic or query (e.g. "Top 5: DevOps on a Linux server" or "Top 5 similar to your description: …").
-2. **For each recommended skill**, output in order:
-   - **Skill name** (bold, as in the index).
-   - **URL:** the skill's `url` from the index (full link).
-   - **Description:** the index `description` verbatim (one line).
-   - **Why it's a good fit:** one to three sentences explaining why this skill matches the user's intent (e.g. relevance to their topic, use case, or query). Be specific; avoid generic praise.
-3. **After the list**  - One short line on how to use these in the framework (e.g. "To add any of these, use the skill-importer with the skill URL.") if relevant, then the four options (in-depth summary, use public skill, continue on own, adapt from one).
+Output contract:
 
-Example for one entry:
+1. Intro line naming the topic/query and the number of recommendations.
+2. Ranked recommendations (`1..N`), one block per skill:
+   - Skill name as clickable markdown link (`[name](url)`).
+   - Summary (2-4 sentences) using index fields in this order: `summary_long`, fallback to `summary_short`, then `description`.
+   - Why it fits this project or query (1-2 specific sentences).
+   - Constraints/risks (use `requirements` and `risk_flags` when available).
+   - Recommendation status: `import now`, `evaluate later`, or `skip`.
+3. Optional compact comparison table only when the platform clearly supports markdown tables. If uncertain, skip table and keep ranked blocks.
+4. End with the four next-action options.
 
-**senior-devops**  
-**URL:** https://github.com/openclaw/skills/tree/main/skills/alirezarezvani/senior-devops/SKILL.md  
-**Description:** Comprehensive DevOps skill for CI/CD, infrastructure.  
-**Why it's a good fit:** Directly targets "DevOps": CI/CD and infrastructure. Best single match when you want broad DevOps guidance (pipelines, infra as code, practices) that applies to Linux servers and beyond.
+Presentation fallback by platform capability:
+
+- Rich markdown: ranked blocks plus optional table.
+- Basic markdown: ranked blocks only.
+- Plain text/ascii: ranked blocks with labeled lines (`Skill:`, `Summary:`, `Risks:`), no table.
 
 ## Options summary
 

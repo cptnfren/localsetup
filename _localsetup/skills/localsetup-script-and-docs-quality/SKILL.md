@@ -21,6 +21,14 @@ metadata:
 - **Structure:** Break into functions; clear error messages with source/trace; actionable guidance.
 - **Bash:** set -euo pipefail, trap for cleanup. **Python:** type hints, docstrings, context managers. **PowerShell:** try/catch/finally, Write-* cmdlets.
 
+## 17. External input hardening (mandatory)
+
+- Treat every external input as hostile: CLI arguments, filesystem content, network payloads, copied text, imported archives.
+- Sanitize untrusted strings before parsing and before printing: strip control characters, normalize whitespace, enforce max length.
+- Validate type, schema, and allowed ranges before use; reject invalid values with clear error text.
+- Exception handling must be explicit and actionable: print source, exception type, and message to STDERR; return non-zero exit when task cannot continue.
+- Never swallow errors (`except: pass`, silent `|| true` on critical operations). Partial-failure mode is allowed only when warnings are emitted and processing decisions are explicit.
+
 ## 7. File creation discipline
 
 - Before creating any file: verify it belongs; minimal approach; "Is this essential?" Consolidate rather than duplicate.

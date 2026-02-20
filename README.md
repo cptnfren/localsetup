@@ -10,7 +10,7 @@
   <a href="_localsetup/docs/PLATFORM_REGISTRY.md"><img src="https://img.shields.io/badge/platforms-cursor%20%7C%20claude--code%20%7C%20codex%20%7C%20openclaw-1f6feb" alt="Supported platforms"></a>
 </p>
 
-**Version:** 2.3.0  
+**Version:** 2.3.2  
 **Last updated:** 2026-02-19
 
 Localsetup v2 is a portable, repo-local workflow engine for AI agents. Everything the agent needs, context files, skills, and docs, lives under a single folder in your project. Clone or move the repo and the entire setup moves with it; no home-directory state, no cloud dependency, no hidden drift. The framework installs with one command and works identically across Cursor, Claude Code, OpenAI Codex CLI, and OpenClaw. Add more platforms later by editing one registry file.
@@ -26,7 +26,7 @@ In practice, you run a single install command, verify with one script, and start
 <!-- facts-block:start -->
 | Fact | Value |
 |---|---|
-| Current version | `2.3.0` |
+| Current version | `2.3.2` |
 | Supported platforms | `cursor, claude-code, codex, openclaw` |
 | Shipped skills | `32` |
 | Source | `_localsetup/docs/_generated/facts.json` |
@@ -57,7 +57,7 @@ For non-interactive one-liners (CI, automation, or when you already know the pla
 - Required:
   - `git >= 2.20.0`
 - Recommended for full framework tooling:
-  - `python >= 3.8`
+  - `python >= 3.10`
   - Python module `yaml` (`PyYAML>=6.0`)
 
 The installer runs a dependency preflight and prints missing items with copy-paste install suggestions before proceeding.

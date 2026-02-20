@@ -10,7 +10,7 @@ Get Localsetup v2 running in your repo in under a minute. This page covers inter
 ## 📦 Prerequisites
 
 - **Required:** `git >= 2.20.0`
-- **Recommended for full framework tooling:** `python >= 3.8` and Python module `yaml` (`PyYAML>=6.0`)
+- **Recommended for full framework tooling:** `python >= 3.10` and Python module `yaml` (`PyYAML>=6.0`)
 - **Linux/macOS:** Bash and curl installed.
 - **Windows:** PowerShell 5.1+ or PowerShell Core.
 - **Any platform:** Network access to GitHub (or a local clone of this repo).
