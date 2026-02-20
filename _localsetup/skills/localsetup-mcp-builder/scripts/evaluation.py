@@ -1,6 +1,7 @@
 """MCP Server Evaluation Harness
 
-This script evaluates MCP servers by running test questions against them using Claude.
+Evaluates MCP servers by running test questions against them. Supports three
+providers: Claude (Anthropic), OpenAI-compatible APIs, and emulation (JSON-scripted, no LLM).
 """
 
 import argparse
@@ -8,49 +9,12 @@ import asyncio
 import json
 import re
 import sys
-import time
-import traceback
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Any
 
-from anthropic import Anthropic
-
-from connections import create_connection
-
-EVALUATION_PROMPT = """You are an AI assistant with access to tools.
-
-When given a task, you MUST:
-1. Use the available tools to complete the task
-2. Provide summary of each step in your approach, wrapped in <summary> tags
-3. Provide feedback on the tools provided, wrapped in <feedback> tags
-4. Provide your final response, wrapped in <response> tags
-
-Summary Requirements:
-- In your <summary> tags, you must explain:
-  - The steps you took to complete the task
-  - Which tools you used, in what order, and why
-  - The inputs you provided to each tool
-  - The outputs you received from each tool
-  - A summary for how you arrived at the response
-
-Feedback Requirements:
-- In your <feedback> tags, provide constructive feedback on the tools:
-  - Comment on tool names: Are they clear and descriptive?
-  - Comment on input parameters: Are they well-documented? Are required vs optional parameters clear?
-  - Comment on descriptions: Do they accurately describe what the tool does?
-  - Comment on any errors encountered during tool usage: Did the tool fail to execute? Did the tool return too many tokens?
-  - Identify specific areas for improvement and explain WHY they would help
-  - Be specific and actionable in your suggestions
-
-Response Requirements:
-- Your response should be concise and directly address what was asked
-- Always wrap your final response in <response> tags
-- If you cannot solve the task return <response>NOT_FOUND</response>
-- For numeric responses, provide just the number
-- For IDs, provide just the ID
-- For names or text, provide the exact text requested
-- Your response should go last"""
+# No top-level imports of anthropic, openai, or connections so that --help and emulation
+# can run without loading those dependencies. Provider and connection are created in main().
 
 
 def parse_evaluation_file(file_path: Path) -> list[dict[str, Any]]:
@@ -76,99 +40,48 @@ def parse_evaluation_file(file_path: Path) -> list[dict[str, Any]]:
         return []
 
 
-def extract_xml_content(text: str, tag: str) -> str | None:
+def extract_xml_content(text: str | None, tag: str) -> str | None:
     """Extract content from XML tags."""
+    if not text:
+        return None
     pattern = rf"<{tag}>(.*?)</{tag}>"
     matches = re.findall(pattern, text, re.DOTALL)
     return matches[-1].strip() if matches else None
 
 
-async def agent_loop(
-    client: Anthropic,
-    model: str,
-    question: str,
-    tools: list[dict[str, Any]],
-    connection: Any,
-) -> tuple[str, dict[str, Any]]:
-    """Run the agent loop with MCP tools."""
-    messages = [{"role": "user", "content": question}]
-
-    response = await asyncio.to_thread(
-        client.messages.create,
-        model=model,
-        max_tokens=4096,
-        system=EVALUATION_PROMPT,
-        messages=messages,
-        tools=tools,
-    )
-
-    messages.append({"role": "assistant", "content": response.content})
-
-    tool_metrics = {}
-
-    while response.stop_reason == "tool_use":
-        tool_use = next(block for block in response.content if block.type == "tool_use")
-        tool_name = tool_use.name
-        tool_input = tool_use.input
-
-        tool_start_ts = time.time()
-        try:
-            tool_result = await connection.call_tool(tool_name, tool_input)
-            tool_response = json.dumps(tool_result) if isinstance(tool_result, (dict, list)) else str(tool_result)
-        except Exception as e:
-            tool_response = f"Error executing tool {tool_name}: {str(e)}\n"
-            tool_response += traceback.format_exc()
-        tool_duration = time.time() - tool_start_ts
-
-        if tool_name not in tool_metrics:
-            tool_metrics[tool_name] = {"count": 0, "durations": []}
-        tool_metrics[tool_name]["count"] += 1
-        tool_metrics[tool_name]["durations"].append(tool_duration)
-
-        messages.append({
-            "role": "user",
-            "content": [{
-                "type": "tool_result",
-                "tool_use_id": tool_use.id,
-                "content": tool_response,
-            }]
-        })
-
-        response = await asyncio.to_thread(
-            client.messages.create,
-            model=model,
-            max_tokens=4096,
-            system=EVALUATION_PROMPT,
-            messages=messages,
-            tools=tools,
-        )
-        messages.append({"role": "assistant", "content": response.content})
-
-    response_text = next(
-        (block.text for block in response.content if hasattr(block, "text")),
-        None,
-    )
-    return response_text, tool_metrics
-
-
 async def evaluate_single_task(
-    client: Anthropic,
-    model: str,
+    provider: Any,
     qa_pair: dict[str, Any],
     tools: list[dict[str, Any]],
     connection: Any,
     task_index: int,
 ) -> dict[str, Any]:
-    """Evaluate a single QA pair with the given tools."""
+    """Evaluate a single QA pair using the given provider."""
+    import time
     start_time = time.time()
 
     print(f"Task {task_index + 1}: Running task with question: {qa_pair['question']}")
-    response, tool_metrics = await agent_loop(client, model, qa_pair["question"], tools, connection)
+    try:
+        response, tool_metrics = await provider.run_agent_loop(
+            qa_pair["question"], tools, connection, task_index
+        )
+    except Exception as e:
+        duration_seconds = time.time() - start_time
+        return {
+            "question": qa_pair["question"],
+            "expected": qa_pair["answer"],
+            "actual": None,
+            "score": 0,
+            "total_duration": duration_seconds,
+            "tool_calls": {},
+            "num_tool_calls": 0,
+            "summary": f"Provider error: {e}",
+            "feedback": "",
+        }
 
     response_value = extract_xml_content(response, "response")
     summary = extract_xml_content(response, "summary")
     feedback = extract_xml_content(response, "feedback")
-
     duration_seconds = time.time() - start_time
 
     return {
@@ -178,7 +91,7 @@ async def evaluate_single_task(
         "score": int(response_value == qa_pair["answer"]) if response_value else 0,
         "total_duration": duration_seconds,
         "tool_calls": tool_metrics,
-        "num_tool_calls": sum(len(metrics["durations"]) for metrics in tool_metrics.values()),
+        "num_tool_calls": sum(len(m.get("durations", [])) for m in tool_metrics.values()),
         "summary": summary,
         "feedback": feedback,
     }
@@ -220,23 +133,30 @@ TASK_TEMPLATE = """
 async def run_evaluation(
     eval_path: Path,
     connection: Any,
-    model: str = "claude-3-7-sonnet-20250219",
+    provider: Any,
 ) -> str:
-    """Run evaluation with MCP server tools."""
-    print("🚀 Starting Evaluation")
-
-    client = Anthropic()
+    """Run evaluation with MCP server tools and the given provider."""
+    print("Starting Evaluation")
 
     tools = await connection.list_tools()
-    print(f"📋 Loaded {len(tools)} tools from MCP server")
+    print(f"Loaded {len(tools)} tools from MCP server")
 
     qa_pairs = parse_evaluation_file(eval_path)
-    print(f"📋 Loaded {len(qa_pairs)} evaluation tasks")
+    print(f"Loaded {len(qa_pairs)} evaluation tasks")
+
+    # Emulation: validate task count alignment (Gap 3)
+    if hasattr(provider, "tasks"):
+        if len(provider.tasks) != len(qa_pairs):
+            msg = (
+                f"Emulation script has {len(provider.tasks)} tasks but evaluation file has {len(qa_pairs)} qa_pairs; counts must match."
+            )
+            print(msg, file=sys.stderr)
+            raise ValueError(msg)
 
     results = []
     for i, qa_pair in enumerate(qa_pairs):
         print(f"Processing task {i + 1}/{len(qa_pairs)}")
-        result = await evaluate_single_task(client, model, qa_pair, tools, connection, i)
+        result = await evaluate_single_task(provider, qa_pair, tools, connection, i)
         results.append(result)
 
     correct = sum(r["score"] for r in results)
@@ -272,12 +192,11 @@ async def run_evaluation(
     return report
 
 
-def parse_headers(header_list: list[str]) -> dict[str, str]:
+def parse_headers(header_list: list[str] | None) -> dict[str, str]:
     """Parse header strings in format 'Key: Value' into a dictionary."""
     headers = {}
     if not header_list:
         return headers
-
     for header in header_list:
         if ":" in header:
             key, value = header.split(":", 1)
@@ -287,12 +206,11 @@ def parse_headers(header_list: list[str]) -> dict[str, str]:
     return headers
 
 
-def parse_env_vars(env_list: list[str]) -> dict[str, str]:
+def parse_env_vars(env_list: list[str] | None) -> dict[str, str]:
     """Parse environment variable strings in format 'KEY=VALUE' into a dictionary."""
     env = {}
     if not env_list:
         return env
-
     for env_var in env_list:
         if "=" in env_var:
             key, value = env_var.split("=", 1)
@@ -304,39 +222,46 @@ def parse_env_vars(env_list: list[str]) -> dict[str, str]:
 
 async def main():
     parser = argparse.ArgumentParser(
-        description="Evaluate MCP servers using test questions",
+        description="Evaluate MCP servers using test questions (Claude, OpenAI-compatible, or emulation)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Evaluate a local stdio MCP server
+  # Claude (default)
   python evaluation.py -t stdio -c python -a my_server.py eval.xml
 
-  # Evaluate an SSE MCP server
-  python evaluation.py -t sse -u https://example.com/mcp -H "Authorization: Bearer token" eval.xml
+  # OpenAI-compatible (e.g. OpenAI or third-party API)
+  python evaluation.py --provider openai -t stdio -c python -a my_server.py eval.xml
 
-  # Evaluate an HTTP MCP server with custom model
-  python evaluation.py -t http -u https://example.com/mcp -m claude-3-5-sonnet-20241022 eval.xml
+  # Emulation (no API keys; JSON script drives tool calls)
+  python evaluation.py --provider emulation --emulation-script emulation.json -t stdio -c python -a my_server.py eval.xml
         """,
     )
-
     parser.add_argument("eval_file", type=Path, help="Path to evaluation XML file")
-    parser.add_argument("-t", "--transport", choices=["stdio", "sse", "http"], default="stdio", help="Transport type (default: stdio)")
-    parser.add_argument("-m", "--model", default="claude-3-7-sonnet-20250219", help="Claude model to use (default: claude-3-7-sonnet-20250219)")
-
+    parser.add_argument(
+        "--provider",
+        choices=["claude", "openai", "emulation"],
+        default="claude",
+        help="LLM provider: claude, openai, or emulation (default: claude)",
+    )
+    parser.add_argument("-m", "--model", help="Model name (default depends on provider)")
+    parser.add_argument("-t", "--transport", choices=["stdio", "sse", "http"], default="stdio", help="MCP transport (default: stdio)")
     stdio_group = parser.add_argument_group("stdio options")
     stdio_group.add_argument("-c", "--command", help="Command to run MCP server (stdio only)")
     stdio_group.add_argument("-a", "--args", nargs="+", help="Arguments for the command (stdio only)")
     stdio_group.add_argument("-e", "--env", nargs="+", help="Environment variables in KEY=VALUE format (stdio only)")
-
     remote_group = parser.add_argument_group("sse/http options")
     remote_group.add_argument("-u", "--url", help="MCP server URL (sse/http only)")
     remote_group.add_argument("-H", "--header", nargs="+", dest="headers", help="HTTP headers in 'Key: Value' format (sse/http only)")
-
+    parser.add_argument("--emulation-script", type=Path, help="Path to emulation JSON script (required when provider=emulation)")
+    parser.add_argument("--openai-base-url", help="OpenAI-compatible API base URL (optional)")
+    parser.add_argument("--openai-api-key", help="OpenAI API key (or set OPENAI_API_KEY)")
+    parser.add_argument("--temperature", type=float, help="Temperature (OpenAI provider)")
+    parser.add_argument("--max-tokens", type=int, default=4096, help="Max tokens (default: 4096)")
     parser.add_argument("-o", "--output", type=Path, help="Output file for evaluation report (default: stdout)")
 
     args = parser.parse_args()
 
-    # Input hardening: path and length limits per INPUT_HARDENING_STANDARD
+    # Input hardening
     eval_path = args.eval_file.resolve()
     if not eval_path.exists() or not eval_path.is_file():
         print(f"Error: Evaluation file not found: {args.eval_file}", file=sys.stderr)
@@ -344,11 +269,31 @@ Examples:
     if args.url and len(args.url) > 2048:
         print("Error: URL length exceeds 2048", file=sys.stderr)
         sys.exit(2)
+    if args.provider == "emulation" and not args.emulation_script:
+        print("Error: --emulation-script is required when --provider emulation", file=sys.stderr)
+        sys.exit(1)
 
+    # Create provider (lazy-loads provider modules)
+    try:
+        from llm_providers import create_provider  # noqa: PLC0415
+        provider = create_provider(
+            args.provider,
+            model=args.model,
+            openai_base_url=args.openai_base_url,
+            openai_api_key=args.openai_api_key or __import__("os").environ.get("OPENAI_API_KEY"),
+            openai_temperature=args.temperature,
+            openai_max_tokens=args.max_tokens,
+            emulation_script_path=str(args.emulation_script.resolve()) if args.emulation_script else None,
+        )
+    except Exception as e:
+        print(f"Error creating provider: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    # Build MCP connection (lazy import so --help does not load mcp)
     headers = parse_headers(args.headers) if args.headers else None
     env_vars = parse_env_vars(args.env) if args.env else None
-
     try:
+        from connections import create_connection
         connection = create_connection(
             transport=args.transport,
             command=args.command,
@@ -365,7 +310,7 @@ Examples:
 
     async with connection:
         print("Connected successfully", file=sys.stderr)
-        report = await run_evaluation(args.eval_file, connection, args.model)
+        report = await run_evaluation(eval_path, connection, provider)
 
         if args.output:
             args.output.write_text(report, encoding="utf-8", errors="replace")

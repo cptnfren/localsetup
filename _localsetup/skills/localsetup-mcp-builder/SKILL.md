@@ -3,7 +3,7 @@ name: localsetup-mcp-builder
 description: "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK)."
 metadata:
   version: "1.2"
-compatibility: "Python 3.10+. Scripts in scripts/ (evaluation.py, connections.py) follow framework tooling standard: input validation, actionable stderr, no silent failure. Requires anthropic, mcp dependencies."
+compatibility: "Python 3.10+. Scripts in scripts/ (evaluation.py, connections.py, llm_providers/) follow framework tooling standard. MCP connection: mcp. Claude: anthropic. OpenAI-compatible: openai. Emulation: no extra deps; uses JSON script to simulate LLM."
 license: Complete terms in LICENSE.txt
 ---
 
@@ -271,7 +271,17 @@ Each question must be:
 - **Verifiable**: Single, clear answer that can be verified by string comparison
 - **Stable**: Answer won't change over time
 
-#### 4.4 Output Format
+#### 4.4 Evaluation providers (how to run)
+
+The evaluation harness supports three providers (no vendor lock-in):
+
+- **Claude** (default): Uses Anthropic SDK. Set `ANTHROPIC_API_KEY`. Run with `python scripts/evaluation.py -t stdio -c python -a my_server.py eval.xml`.
+- **OpenAI-compatible**: Uses OpenAI or any third-party API that follows the OpenAI chat-completions + tool-calls contract. Set `OPENAI_API_KEY` or pass `--openai-api-key`; use `--openai-base-url` for third-party endpoints. Run with `--provider openai`.
+- **Emulation**: No LLM, no API keys. A JSON file defines scripted tool calls and the expected response text per task. Use for smoke tests or when you do not want to configure APIs. Run with `--provider emulation --emulation-script scripts/smoke_emulation.json` (script must have one task per qa_pair in the eval XML). Emulation fails the task on first tool error and reports it.
+
+Smoke check (no connection): `python scripts/evaluation.py --help`. Full emulation run requires an MCP server and a matching emulation JSON (see `scripts/smoke_emulation.json` and `scripts/smoke_eval.xml`).
+
+#### 4.5 Output Format
 
 Create an XML file with this structure:
 

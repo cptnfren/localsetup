@@ -1,13 +1,13 @@
 ---
 status: ACTIVE
-version: 2.3
+version: 2.4
 ---
 
 # Shipped skills catalog
 
 This page is generated from `_localsetup/skills/*/SKILL.md`.
 
-Total shipped skills: 33
+Total shipped skills: 34
 
 | Skill ID | Name | Version | Description |
 |---|---|---|---|
@@ -38,6 +38,7 @@ Total shipped skills: 33
 | `localsetup-skill-discovery` | `localsetup-skill-discovery` | `1.3` | Discover and recommend public skills from external registries (e.g. awesome lists, skill hubs). Use when the user is creating a new skill, importing a skill, or asking to find similar public skills. Maintains PUBLIC_SKILL_REGISTRY.urls and PUBLIC_SKILL_INDEX.yaml; returns top 5 similar matches with rich summaries and clear next actions. |
 | `localsetup-skill-importer` | `localsetup-skill-importer` | `1.3` | Import external skills from a URL (GitHub or other) or local path; discover, validate, security-screen, and summarize each skill so the user can choose which to import. Use when the user wants to add skills from a repo/URL or local folder, or when screening and selecting skills to add to the framework. |
 | `localsetup-skill-normalizer` | `localsetup-skill-normalizer` | `1.1` | Normalize skills already in the tree for Agent Skills spec compliance and platform-neutral wording. Use when the user wants to normalize one or more skills in _localsetup/skills/ (e.g. after import, or after copying files in), or when batch-reviewing previously imported skills. Applies _localsetup/docs/SKILL_NORMALIZATION.md; shows summary and key edits, then applies on approval. |
+| `localsetup-skill-sandbox-tester` | `localsetup-skill-sandbox-tester` | `1.0` | Test skills in an isolated sandbox before production. Run after vetting and normalization (not right after import). Creates a unique temp sandbox when the skill needs read/write; runs smoke checks; on failure uses localsetup-debug-pro to iterate until fixed; no writes to repo until user approves. Use when validating a skill after it is framework-compliant, testing a skill end-to-end, or ensuring it runs correctly on all supported platforms. |
 | `localsetup-skill-vetter` | `localsetup-skill-vetter` | `1.2` | Security-first skill vetting for AI agent skills. Use before installing any skill from public registries (e.g. skill hubs, GitHub) or other sources. Checks for red flags, permission scope, and suspicious patterns. |
 | `localsetup-task-skill-matcher` | `localsetup-task-skill-matcher` | `1.1` | Match user tasks to installed Localsetup skills, recommend top matches, and run single-task or batch skill-selection flow with minimal interruption. Includes top-3 complementary public-skill suggestions and public-index refresh handling. |
 | `localsetup-tdd-guide` | `localsetup-tdd-guide` | `1.1` | Test-driven development workflow with test generation, coverage analysis, and multi-framework support |

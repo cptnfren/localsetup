@@ -56,6 +56,7 @@ Localsetup v2 is deployed at `_localsetup/`. Framework and context are repo-loca
 - localsetup-linux-service-triage  - diagnose Linux service issues (logs, systemd, PM2, Nginx, DNS); failing or misconfigured server apps
 - localsetup-linux-patcher  - automated Linux patching and Docker container updates; multi-host server maintenance
 - localsetup-skill-normalizer  - normalize skills for spec compliance and platform-neutral wording; one skill or all
+- localsetup-skill-sandbox-tester  - test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until approved
 - localsetup-agentlens  - codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs
 
 ## Key docs

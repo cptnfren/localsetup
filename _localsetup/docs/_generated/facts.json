@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-02-20T09:41:53.441024+00:00",
-  "version": "2.3.4",
-  "major_minor": "2.3",
+  "generated_at": "2026-02-20T11:02:23.016450+00:00",
+  "version": "2.4.0",
+  "major_minor": "2.4",
   "platform_count": 4,
-  "skill_count": 33,
+  "skill_count": 34,
   "platforms": [
     {
       "id": "cursor",
@@ -192,6 +192,12 @@
       "name": "localsetup-skill-normalizer",
       "version": "1.1",
       "path": "_localsetup/skills/localsetup-skill-normalizer/SKILL.md"
+    },
+    {
+      "id": "localsetup-skill-sandbox-tester",
+      "name": "localsetup-skill-sandbox-tester",
+      "version": "1.0",
+      "path": "_localsetup/skills/localsetup-skill-sandbox-tester/SKILL.md"
     },
     {
       "id": "localsetup-skill-vetter",
