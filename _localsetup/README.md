@@ -1,9 +1,9 @@
 # Localsetup v2 Framework
 
-**Version:** 2.5.0  
+**Version:** 2.5.1  
 **Last updated:** 2026-02-19
 
-This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.
+This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw). For first-time setup and overview, see the [root README](../../README.md). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.
 
 The framework is for anyone who wants to execute tasks with agents: it provides a convenient, contained place for workflows and skills. It is **lightweight**, **does not interfere with existing projects**, and works for a **wide variety of tasks**; it is **compatible with all agentic design patterns** and **platform-independent** -the same skills and workflows run on any supported host.
 
@@ -40,7 +40,7 @@ Localsetup v2 provides:
 - **Named workflows** (decision tree, Agent Q queue, umbrella workflow, manual/lazy admin) with impact review where required.
 - **Repo-local everything**: engine at `_localsetup/`, user/context data under the repo; [git traceability](docs/GIT_TRACEABILITY.md) for PRDs, specs, and outcomes so operations stay transparent and auditable.
 
-After installation, the client repo contains `_localsetup/` (this framework plus docs) and platform-specific paths at repo root (e.g. `.cursor/rules/`, `.cursor/skills/` for Cursor). Version displayed in READMEs and framework docs is kept in sync with the repo **VERSION** file by the repository maintainers.
+After installation, the client repo contains `_localsetup/` (this framework plus docs) and platform-specific paths at repo root (e.g. `.cursor/rules/`, `.cursor/skills/` for Cursor). Version displayed in READMEs and framework docs is kept in sync with the repo **VERSION** file; release and publish are maintained in a separate maintainer repository.
 
 ---
 

@@ -138,7 +138,7 @@ If the original section mentioned a specific product's secret integration (e.g. 
 
 1. **Identify tooling**  - List all executable or script-like assets in the skill (e.g. `scripts/`, entrypoints, any file that implements behavior the skill relies on). Treat these as the skill's "tooling."
 2. **Rewrite in full**  - Replace each with an equivalent implementation written in the **framework's designated tooling language** and meeting the **framework's tooling and hardening requirements**:
-   - Input: hostile-by-default; sanitize and validate all external input (CLI, env, paths, network, imported content) per INPUT_HARDENING_STANDARD.md.
+   - Input: hostile-by-default; sanitize and validate all external input (CLI, env, paths, network, imported content) per [INPUT_HARDENING_STANDARD.md](INPUT_HARDENING_STANDARD.md).
    - No silent failure: no swallowed exceptions or quiet suppression on critical paths; partial-failure only when warnings are emitted and behavior is explicit.
    - Verbose, actionable errors: emit to STDERR with source context, exception type, and message so an AI agent or operator can correct inputs and self-debug. Error text must support a self-healing workflow (agent can fix the problem and retry).
    - Observability: errors must be specific enough for an agent to repair or retry; optional debug traces may be gated (e.g. env flag).

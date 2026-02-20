@@ -37,7 +37,7 @@ Purpose: define project-wide tooling language and dependency rules.
   - **Linter:** Run `ruff check` (or project-configured equivalent) from repo root or script directory. Fix all reported issues or document an explicit exception.
   - **Format:** Run `ruff format` for style; no trailing whitespace, consistent quotes.
   - **Types:** Use type hints for public functions and module boundaries. Use `pyright` or `mypy` in strict or standard mode if the project enables it; resolve type errors or add targeted ignores with a short comment.
-  - **Best practice:** Prefer explicit error handling and small functions; avoid broad `except` and untyped `**kwargs` in public APIs. See `INPUT_HARDENING_STANDARD.md` for input handling; this section covers static checks and style only.
+  - **Best practice:** Prefer explicit error handling and small functions; avoid broad `except` and untyped `**kwargs` in public APIs. See [INPUT_HARDENING_STANDARD.md](INPUT_HARDENING_STANDARD.md) for input handling; this section covers static checks and style only.
 - Audit and CI scripts may read this section to determine which commands to run for tooling/lint.
 
 ## Markdown output (reports and tool output)

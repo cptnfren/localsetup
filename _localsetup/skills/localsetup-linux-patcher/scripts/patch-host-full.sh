@@ -7,7 +7,7 @@ set -e
 if [ $# -lt 1 ]; then
     echo "Usage: $0 user@hostname [/docker/path]"
     echo "Example: $0 admin@webserver.example.com"
-    echo "Example (path is example only): $0 admin@webserver.example.com /path/to/docker"
+    echo "Example: $0 admin@webserver.example.com /home/admin/docker"
     exit 1
 fi
 

@@ -20,6 +20,6 @@ Version bumps follow [Conventional Commits](https://www.conventionalcommits.org/
 
 ## Public release workflow
 
-Public version bumps and generated docs sync are executed by maintainers from the private maintainer repository workflow, then pushed to this public repository.
+Public version bumps and generated docs sync are executed from a separate maintainer repository workflow, then pushed to this public repository.
 
-For contributors: update public-facing docs for your feature in this repo, then hand off to the maintainer publish workflow for final version/doc sync.
+For contributors: update public-facing docs for your feature in this repo, then hand off to that workflow for final version and doc sync.

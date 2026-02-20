@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-02-20T22:18:45.501773+00:00",
-  "version": "2.5.0",
+  "generated_at": "2026-02-20T23:52:05.310058+00:00",
+  "version": "2.5.1",
   "major_minor": "2.5",
   "platform_count": 4,
   "skill_count": 35,
@@ -26,7 +26,7 @@
     {
       "id": "openclaw",
       "display_name": "OpenClaw",
-      "context_loader": "_localsetup/docs/OPENCLAW_CONTEXT.md (merge into workspace MEMORY.md if desired)",
+      "context_loader": "[OPENCLAW_CONTEXT.md](OPENCLAW_CONTEXT.md) (merge into workspace MEMORY.md if desired)",
       "skills_path": "skills/localsetup-*/ (repo root)"
     }
   ],

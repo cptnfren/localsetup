@@ -18,14 +18,14 @@ version: 2.5
 - **Mode detection:** Treat as **batch** when user request includes multiple distinct subtasks, or says "batch", "multiple steps", or "run the whole thing". Otherwise treat as **single task**.
 - **Named skill override:** If user names a specific skill, load that skill directly. Do not run task-skill-matcher.
 - **When to invoke matcher:** When uncertain which skill fits, or when user asks "what skill should I use?" / "pick the best", load `localsetup-task-skill-matcher`.
-- **Single task behavior:** If one clear installed match exists, ask once "Use this skill?" before loading. In the same response, include up to 3 complementary public skills from `_localsetup/docs/PUBLIC_SKILL_INDEX.yaml` (one-line reason each). If index is missing or stale (`updated` older than 7 days), ask whether to refresh before complementary suggestions.
+- **Single task behavior:** If one clear installed match exists, ask once "Use this skill?" before loading. In the same response, include up to 3 complementary public skills from [PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml) (one-line reason each). If index is missing or stale (`updated` older than 7 days), ask whether to refresh before complementary suggestions.
 - **Batch behavior:** Prompt once at start with options: auto-pick for whole job, parcel-by-parcel prompts, or parcel auto-pick. If auto-pick is chosen, state planned skill sequence first, then proceed without repeated skill prompts.
 - **No installed fit:** Say that no installed skill fits, offer up to 3 complementary public skills to import, and optionally suggest creating a skill via `localsetup-skill-creator`.
-- **Reference:** Full procedure and output format live in skill `localsetup-task-skill-matcher` and `_localsetup/docs/TASK_SKILL_MATCHING.md`.
+- **Reference:** Full procedure and output format live in skill `localsetup-task-skill-matcher` and [TASK_SKILL_MATCHING.md](TASK_SKILL_MATCHING.md).
 
 ## Platform paths
 
-**Canonical list:** Supported platforms and their context/skills paths are defined in _localsetup/docs/PLATFORM_REGISTRY.md. Reference that file when listing platforms or adding a new one. Summary:
+**Canonical list:** Supported platforms and their context/skills paths are defined in [PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md). Reference that file when listing platforms or adding a new one. Summary:
 
 | Platform | Context loader | Skills |
 |----------|----------------|--------|

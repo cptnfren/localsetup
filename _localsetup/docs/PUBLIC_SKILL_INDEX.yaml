@@ -5,7 +5,7 @@ schema_version: 2
 sources:
 - https://github.com/VoltAgent/awesome-openclaw-skills
 - https://github.com/anthropics/skills/tree/main/skills
-updated: '2026-02-20T09:41:46Z'
+updated: '2026-02-20T23:51:57Z'
 skills:
 - name: achurch
   description: A 24/7 digital sanctuary for AI agents and humans — attend
@@ -1752,12 +1752,12 @@ skills:
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: github
 - name: quantum-lab
-  description: Run the quantum_lab Python scripts and demos (path configurable by user)
+  description: Run the /home/bram/work/quantum_lab Python scripts and demos inside
   url: https://github.com/openclaw/skills/tree/main/skills/bramdo/quantum-lab/SKILL.md
   source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
   category: Table of Contents
-  summary_short: Run the quantum_lab Python scripts and demos (path configurable by user)
-  summary_long: 'Run the quantum_lab Python scripts and demos (path configurable by user). Likely requirements: python. May require network access.'
+  summary_short: Run the /home/bram/work/quantum_lab Python scripts and demos inside
+  summary_long: 'Run the /home/bram/work/quantum_lab Python scripts and demos inside Likely requirements: python. May require network access.'
   capabilities: []
   requirements:
   - python
@@ -1771,12 +1771,12 @@ skills:
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: github
 - name: quantumlab
-  description: Run the quantum_lab Python scripts and demos (path configurable by user)
+  description: Run the /home/bram/work/quantum_lab Python scripts and demos inside
   url: https://github.com/openclaw/skills/tree/main/skills/bramdo/quantumlab/SKILL.md
   source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
   category: Table of Contents
-  summary_short: Run the quantum_lab Python scripts and demos (path configurable by user)
-  summary_long: 'Run the quantum_lab Python scripts and demos (path configurable by user). Likely requirements: python. May require network access.'
+  summary_short: Run the /home/bram/work/quantum_lab Python scripts and demos inside
+  summary_long: 'Run the /home/bram/work/quantum_lab Python scripts and demos inside Likely requirements: python. May require network access.'
   capabilities: []
   requirements:
   - python
@@ -30649,23 +30649,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: github
-- name: agentledger
-  description: Expense tracking and accounting for AI agents.
-  url: https://github.com/openclaw/skills/tree/main/skills/c-goro/agentledger/SKILL.md
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Expense tracking and accounting for AI agents.
-  summary_long: Expense tracking and accounting for AI agents. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 46
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: github
 - name: agentmail
   description: API-first email platform designed for AI agents.
   url: https://github.com/openclaw/skills/tree/main/skills/adboio/agentmail/SKILL.md
@@ -34686,24 +34669,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 48
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: github
-- name: skillguard
-  description: Security scanner for AgentSkill packages.
-  url: https://github.com/openclaw/skills/tree/main/skills/c-goro/skillguard/SKILL.md
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Security scanner for AgentSkill packages.
-  summary_long: 'Security scanner for AgentSkill packages. Primary capabilities: security. May require network access.'
-  capabilities:
-  - security
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 41
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: github

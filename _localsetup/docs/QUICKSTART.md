@@ -49,7 +49,7 @@ When prompted (or when using `--tools` / `-Tools`), use one or more of these IDs
 | `cursor` | Cursor IDE | `.cursor/rules/` | `.cursor/skills/localsetup-*/` |
 | `claude-code` | Claude Code | `.claude/CLAUDE.md` | `.claude/skills/localsetup-*/` |
 | `codex` | OpenAI Codex CLI | `AGENTS.md` (repo root) | `.agents/skills/localsetup-*/` |
-| `openclaw` | OpenClaw | `_localsetup/docs/OPENCLAW_CONTEXT.md` | `skills/localsetup-*/` |
+| `openclaw` | OpenClaw | [_localsetup/docs/OPENCLAW_CONTEXT.md](OPENCLAW_CONTEXT.md) | `skills/localsetup-*/` |
 
 You can deploy to multiple platforms at once by comma-separating: `cursor,claude-code`.
 
@@ -75,56 +75,169 @@ Expected output: confirmation that context file exists and skills directory is p
 
 ## ⚡ Non-interactive one-liners
 
-For CI pipelines, automation, or when you already know your platform, use flags to skip prompts.
+For CI pipelines, automation, or when you already know your platform, use flags to skip prompts. One command per box; pick the one that matches your OS and platform.
 
 ### Linux and macOS
+
+#### Cursor
+
+Install into the current directory and deploy context and skills for Cursor only.
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --directory . --tools cursor --yes
 ```
 
+#### Claude Code
+
+Install into the current directory and deploy context and skills for Claude Code only.
+
 ```bash
-curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --directory . --tools cursor,claude-code --yes
+curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --directory . --tools claude-code --yes
 ```
 
-### Windows
+#### Codex CLI
+
+Install into the current directory and deploy context and skills for OpenAI Codex CLI only.
+
+```bash
+curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --directory . --tools codex --yes
+```
+
+#### OpenClaw
+
+Install into the current directory and deploy context and skills for OpenClaw only.
+
+```bash
+curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --directory . --tools openclaw --yes
+```
+
+### Windows (PowerShell)
+
+#### Cursor
+
+Install into the current directory and deploy context and skills for Cursor only.
 
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Directory . -Tools cursor -Yes
 ```
 
+#### Claude Code
+
+Install into the current directory and deploy context and skills for Claude Code only.
+
 ```powershell
-& ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Directory . -Tools "cursor,claude-code" -Yes
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Directory . -Tools claude-code -Yes
+```
+
+#### Codex CLI
+
+Install into the current directory and deploy context and skills for OpenAI Codex CLI only.
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Directory . -Tools codex -Yes
+```
+
+#### OpenClaw
+
+Install into the current directory and deploy context and skills for OpenClaw only.
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Directory . -Tools openclaw -Yes
 ```
 
 ### From a local clone
 
-If you already have the repo on disk:
+If you already have the repo on disk, run from the repo root. One command per box.
+
+#### Linux and macOS
+
+**Cursor**
+
+Install from a local clone into the target directory for Cursor only.
 
 ```bash
 ./install --directory /path/to/your/project --tools cursor --yes
 ```
 
+**Claude Code**
+
+Install from a local clone into the target directory for Claude Code only.
+
+```bash
+./install --directory /path/to/your/project --tools claude-code --yes
+```
+
+**Codex CLI**
+
+Install from a local clone into the target directory for Codex CLI only.
+
+```bash
+./install --directory /path/to/your/project --tools codex --yes
+```
+
+**OpenClaw**
+
+Install from a local clone into the target directory for OpenClaw only.
+
+```bash
+./install --directory /path/to/your/project --tools openclaw --yes
+```
+
+#### Windows (PowerShell)
+
+**Cursor**
+
+Install from a local clone into the target directory for Cursor only.
+
 ```powershell
 .\install.ps1 -Directory "C:\path\to\your\project" -Tools cursor -Yes
 ```
 
+**Claude Code**
+
+Install from a local clone into the target directory for Claude Code only.
+
+```powershell
+.\install.ps1 -Directory "C:\path\to\your\project" -Tools claude-code -Yes
+```
+
+**Codex CLI**
+
+Install from a local clone into the target directory for Codex CLI only.
+
+```powershell
+.\install.ps1 -Directory "C:\path\to\your\project" -Tools codex -Yes
+```
+
+**OpenClaw**
+
+Install from a local clone into the target directory for OpenClaw only.
+
+```powershell
+.\install.ps1 -Directory "C:\path\to\your\project" -Tools openclaw -Yes
+```
+
 ## 🔄 Updating
 
-Re-run the same install command. Installer fetches latest framework source, performs an upgrade-aware sync in `_localsetup/`, and redeploys context and skills. Existing repo content outside `_localsetup/` is preserved.
+Re-run the install command with the same `--directory` and `--tools` (or `-Directory` and `-Tools` on Windows). Two policies:
 
-Optional policy:
+**Update with default policy (preserve local customizations)**
 
-- `--upgrade-policy preserve` (default)
-- `--upgrade-policy force`
-- `--upgrade-policy fail-on-conflict`
-
-Examples:
+Use this when you have customized context or rules and want to keep them. The installer merges framework updates but does not overwrite your local changes when it can avoid it.
 
 ```bash
 ./install --directory . --tools cursor --yes --upgrade-policy preserve
+```
+
+**Update and fail if there are conflicts**
+
+Use this in CI or when you want the run to exit with an error if the framework and your local changes conflict, instead of overwriting.
+
+```bash
 ./install --directory . --tools cursor --yes --upgrade-policy fail-on-conflict
 ```
+
+On Windows (PowerShell), use `.\install.ps1 -Directory . -Tools cursor -Yes -UpgradePolicy preserve` or `-UpgradePolicy FailOnConflict` for the same behavior.
 
 ## 🧰 If Python tooling is missing
 
@@ -153,7 +266,7 @@ py -m pip install "PyYAML>=6.0"
 ## 📖 Next steps
 
 - [Features](FEATURES.md) - full capability list
-- [Shipped skills catalog](SKILLS.md) - all 34 built-in skills
+- [Shipped skills catalog](SKILLS.md) - all shipped skills
 - [Platform registry](PLATFORM_REGISTRY.md) - canonical platform definitions
 - [Multi-platform install](MULTI_PLATFORM_INSTALL.md) - detailed cross-platform docs
 

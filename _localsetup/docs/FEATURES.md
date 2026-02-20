@@ -10,7 +10,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.5.0`
+- Current version: `2.5.1`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `35`
 - Source: `_localsetup/docs/_generated/facts.json`
@@ -26,7 +26,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | **Cross-platform installers** | Bash installer for Linux and macOS; PowerShell installer for Windows. Both support interactive and non-interactive modes. |
 | **Multi-host deployment** | Deploy context and skills to Cursor, Claude Code, OpenAI Codex CLI, or OpenClaw from a single install command. |
 | **Idempotent updates** | Re-running install updates the framework (via git pull) and redeploys context. Safe to run repeatedly. |
-| **Platform registry** | A single Markdown table (`PLATFORM_REGISTRY.md`) defines every supported platform ID, context path, and skills path. Add new platforms by editing one file. |
+| **Platform registry** | A single Markdown table ([PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md)) defines every supported platform ID, context path, and skills path. Add new platforms by editing one file. |
 
 ---
 
@@ -35,9 +35,9 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | Capability | Description |
 |---|---|
 | **Agent Skills spec compliance** | All shipped skills follow the [Agent Skills specification](https://agentskills.io/specification). Import skills from Anthropic's repo or any spec-compliant source. |
-| **Shipped skills** | Debugging, TDD, PR review, git recovery, Linux triage, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux handoff, PRD batching, decision trees, humanizer, and more. See SKILLS.md for the full catalog. |
+| **Shipped skills** | Debugging, TDD, PR review, git recovery, Linux triage, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux handoff, PRD batching, decision trees, humanizer, and more. See [SKILLS.md](SKILLS.md) for the full catalog. |
 | **Skill importing** | Import external skills from a GitHub URL or local path. The importer discovers, validates, runs a heuristic security screen, and summarizes each skill before you decide to add it. |
-| **Skill discovery** | Maintain a public skill registry (`PUBLIC_SKILL_REGISTRY.urls`) and index (`PUBLIC_SKILL_INDEX.yaml`). Get recommendations for similar public skills when creating or importing. |
+| **Skill discovery** | Maintain a public skill registry ([PUBLIC_SKILL_REGISTRY.urls](PUBLIC_SKILL_REGISTRY.urls)) and index ([PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml)). Get recommendations for similar public skills when creating or importing. |
 | **Skill version metadata** | Each `SKILL.md` carries a `metadata.version` field. The commit hook auto-increments patch version on staged skill changes so skill docs stay accurate. |
 | **Skill normalization** | Normalize imported or in-tree skills: Phase 1 (documents) offers a choice when the skill is platform-specific (keep as is, keep platform-specific but normalized, or fully normalize); Phase 2 (tooling) rewrites bundled scripts to the framework standard unless the user requests an exception. Use the `localsetup-skill-normalizer` skill or run during import. |
 

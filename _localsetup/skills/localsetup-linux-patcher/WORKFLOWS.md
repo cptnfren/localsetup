@@ -251,11 +251,11 @@ Visual representation of how the Linux Patcher skill operates.
                     │           │
                     │           ▼
                     │  ┌────────────────────────────┐
-                    │  │  Search common paths       │
-                    │  │  (examples):               │
-                    │  │  • $HOME/Docker            │
+                    │  │  Search Common Paths:      │
+                    │  │  • /home/user/Docker       │
                     │  │  • /opt/docker             │
                     │  │  • /srv/docker             │
+                    │  │  • $HOME/Docker            │
                     │  └────────────────────────────┘
                     │           │
                     │           ▼

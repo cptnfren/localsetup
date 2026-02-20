@@ -10,7 +10,7 @@ This is the public documentation index for Localsetup v2. Use it to navigate fra
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.5.0`
+- Current version: `2.5.1`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `35`
 - Source: `_localsetup/docs/_generated/facts.json`
@@ -26,7 +26,7 @@ New to Localsetup? Read these first.
 |---|---|
 | [Quickstart](QUICKSTART.md) | Installation, platform selection, verification, one-liners for CI |
 | [Features](FEATURES.md) | Full capability catalog with tables for every feature category |
-| [Shipped skills catalog](SKILLS.md) | All 34 built-in skills with IDs, descriptions, and versions |
+| [Shipped skills catalog](SKILLS.md) | All shipped skills with IDs, descriptions, and versions |
 | [Platform registry](PLATFORM_REGISTRY.md) | Canonical table of platform IDs, context paths, and skills paths |
 | [Multi-platform install](MULTI_PLATFORM_INSTALL.md) | Detailed cross-platform deployment instructions |
 

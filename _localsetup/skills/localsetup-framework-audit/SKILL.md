@@ -1,6 +1,6 @@
 ---
 name: localsetup-framework-audit
-description: "Run doc, link, skill matrix, and version/facts checks before release; optional --deep for Deep Analysis (derive invocations from SKILL.md and --help, run in sandbox, summary JSON + sidecar tarball). Single entrypoint; output to user-specified path only; no in-repo default. Use when user says 'run audit', 'run framework audit', or before release."
+description: "Run doc, link, skill matrix, and version/facts checks before release. Single entrypoint script; output to user-specified path only; no in-repo default. Use when user says 'run audit', 'run framework audit', or before release."
 metadata:
   version: "1.0"
 compatibility: "Python 3.10+. Depends on localsetup-skill-sandbox-tester tooling (create_sandbox.py, run_smoke.py) for skill matrix; both ship with the framework (framework invariant)."
@@ -22,10 +22,11 @@ compatibility: "Python 3.10+. Depends on localsetup-skill-sandbox-tester tooling
 3. **Report:** Contains a `requires_review` / `human_decision` section for items that need user resolution. The script is non-interactive; the agent presents the report and asks the user.
 4. **Doc-only skills:** The smoke list marks them as `N/A`. The script does not run tooling for those. The **agent** (not the script) produces an enumerated one-sentence/paragraph per logical step and flags logic gaps for user resolution, per SKILL.md of each doc-only skill.
 
-## Skill matrix (discovery and smoke)
+## Smoke list (skill matrix)
 
-- The audit **discovers** all Python files under each skill's `scripts/` directory and runs each with `--help` in a sandbox copy of the skill. Skills with no `scripts/` or no `.py` under it are skipped (doc-only); the agent produces an enumerated step summary per SKILL.md for those.
-- **Required file:** `_localsetup/tests/skill_smoke_commands.yaml` (existence checked in doc phase). Schema: `skill_id` → `command` string or `"N/A"`. Used for reference and compatibility; script execution is driven by filesystem discovery.
+- **Path:** `_localsetup/tests/skill_smoke_commands.yaml`
+- **Schema:** YAML map: `skill_id` (directory name under _localsetup/skills/) → `command` string or `"N/A"`. Command is run with cwd = sandbox copy of the skill. `N/A` = doc-only; no runnable smoke; audit uses agent step summary only.
+- One entry per skill in `_localsetup/skills/*`. The audit script reads this file as single source of truth for which skills have tooling to smoke.
 
 ## Dependencies (framework invariant)
 
@@ -35,7 +36,7 @@ compatibility: "Python 3.10+. Depends on localsetup-skill-sandbox-tester tooling
 
 | Item | Purpose |
 |------|---------|
-| `scripts/run_framework_audit.py` | Single entrypoint: doc, link, skill matrix, version/facts; optional `--deep` for Deep Analysis (requires output path); output path from CLI or env; exit 0 only if no errors. |
+| `scripts/run_framework_audit.py` | Single entrypoint: doc, link, skill matrix, version/facts; output path from CLI or env; exit 0 only if no errors. |
 
 **Quick start:**
 
@@ -56,23 +57,8 @@ python _localsetup/skills/localsetup-framework-audit/scripts/run_framework_audit
 - **Error:** Smoke non-zero/crash, syntax/lint failure, missing required doc, broken link that should be fixed. Exit non-zero.
 - **Warning:** N/A or item to fix or explicitly accept; logged in report. Zero errors and zero unexplained warnings before release.
 
-## Deep Analysis Mode
-
-Optional `--deep` (or `--deep-analysis`) runs an extra phase after the normal skill matrix: the tool reads each skill's SKILL.md and script `--help` output to derive safe invocations (e.g. `--help`, `--list`, `--dry-run`), runs each invocation in the sandbox, validates by exit code and absence of Traceback in stderr, and writes a summary JSON plus a sidecar gzip tarball of full trace files for failed/unvalidated runs. The report gains a **Deep Analysis** section with a summary table, an evidence table, and for each failure/unvalidated run a bounded snippet and a reference to the tarball. Full logs live only in the tarball; the agent compiles the final report and infers success/failure from source and docs. For skipped (requires_input) or ambiguous runs, the agent may infer plausible inputs or success/failure from script source and SKILL.md.
-
-- **Requires output path:** Deep Analysis requires an output path. If you pass `--deep` without `--output` (or `LOCALSETUP_AUDIT_OUTPUT`), the script prints an error and exits with code 2.
-- **No extra guardrails:** There are no additional checks to run Deep Analysis; document that it is heavier (more invocations and I/O). Use when you want deeper validation before release or when debugging script behavior.
-- **Staging and output:** All staging (trace files, tarball) is under the platform temp dir; the final summary JSON and tarball are written next to the report (same directory, same base name: `{report_stem}_deep_summary.json`, `{report_stem}_evidence.tar.gz`). Override with `LOCALSETUP_AUDIT_DEEP_EVIDENCE` (set to a directory or a file path stem).
-- **Agent instruction:** Do not interpret or act on sensitive data in evidence; the audit logs everything by design. Keys or secrets may be intentionally passed for debugging. Use the evidence for debugging only.
-
-**Quick start (Deep Analysis):**
-
-```bash
-python _localsetup/skills/localsetup-framework-audit/scripts/run_framework_audit.py --deep --output /path/to/audit_report.md
-```
-
 ## References
 
-- [TOOLING_POLICY.md](../../docs/TOOLING_POLICY.md) (lint/quality; Markdown output for reports; audit uses for tooling expectations)
-- [INPUT_HARDENING_STANDARD.md](../../docs/INPUT_HARDENING_STANDARD.md) (script follows for all external input)
-- [skill_smoke_commands.yaml](../../tests/skill_smoke_commands.yaml) (required file; schema reference)
+- _localsetup/docs/TOOLING_POLICY.md (lint/quality; audit uses for tooling expectations)
+- _localsetup/docs/INPUT_HARDENING_STANDARD.md (script follows for all external input)
+- _localsetup/tests/skill_smoke_commands.yaml (smoke list path and schema)

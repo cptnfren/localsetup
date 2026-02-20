@@ -28,7 +28,7 @@ Copyright (c) 2026 Crux Experts LLC. MIT License  - see repository root [LICENSE
 | [SKILL_INTEROPERABILITY.md](SKILL_INTEROPERABILITY.md) | Import external skills (e.g. Anthropic); export our skills; full interchange with spec-compliant hosts |
 | [SKILL_IMPORTING.md](SKILL_IMPORTING.md) | Import from URL or path; discover, validate, security-screen, summarize; user selects which skills to import; normalization (Phase 1 + Phase 2) mandatory |
 | [SKILL_NORMALIZATION.md](SKILL_NORMALIZATION.md) | Phase 1: document normalization (platform choice when platform-specific). Phase 2: tooling rewrite to framework standard. Spec compliance and approval flow. |
-| [SKILL_DISCOVERY.md](SKILL_DISCOVERY.md) | Public skill registries (PUBLIC_SKILL_REGISTRY.urls, PUBLIC_SKILL_INDEX.yaml); recommend similar when creating/importing |
+| [SKILL_DISCOVERY.md](SKILL_DISCOVERY.md) | Public skill registries ([PUBLIC_SKILL_REGISTRY.urls](PUBLIC_SKILL_REGISTRY.urls), [PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml)); recommend similar when creating/importing |
 | [TASK_SKILL_MATCHING.md](TASK_SKILL_MATCHING.md) | Task-to-installed-skill matching flow: single vs batch, auto-pick/parcel, complementary public-skill suggestions |
 
 ## Skills index (in repo)
@@ -37,12 +37,12 @@ Copyright (c) 2026 Crux Experts LLC. MIT License  - see repository root [LICENSE
 
 ## Quick reference
 
-- **Run decision tree:** Load skill localsetup-decision-tree-workflow; see DECISION_TREE_WORKFLOW.md.
-- **Process queue / PRDs:** Load localsetup-agentic-prd-batch; see PRD_SCHEMA_EXTERNAL_AGENT_GUIDE, WORKFLOW_REGISTRY.
-- **Umbrella workflow:** Load localsetup-agentic-umbrella-queue; see WORKFLOW_REGISTRY.
-- **Create a new skill:** Load localsetup-skill-creator; see SKILL_INTEROPERABILITY.md.
-- **Import skills from URL or path:** Load localsetup-skill-importer; run `_localsetup/tools/skill_importer_scan <path>`; see SKILL_IMPORTING.md.
-- **Discover similar public skills:** Load localsetup-skill-discovery when creating or importing; uses PUBLIC_SKILL_REGISTRY.urls and PUBLIC_SKILL_INDEX.yaml; see SKILL_DISCOVERY.md.
+- **Run decision tree:** Load skill localsetup-decision-tree-workflow; see [DECISION_TREE_WORKFLOW.md](DECISION_TREE_WORKFLOW.md).
+- **Process queue / PRDs:** Load localsetup-agentic-prd-batch; see [PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md](PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md), [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md).
+- **Umbrella workflow:** Load localsetup-agentic-umbrella-queue; see [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md).
+- **Create a new skill:** Load localsetup-skill-creator; see [SKILL_INTEROPERABILITY.md](SKILL_INTEROPERABILITY.md).
+- **Import skills from URL or path:** Load localsetup-skill-importer; run `_localsetup/tools/skill_importer_scan <path>`; see [SKILL_IMPORTING.md](SKILL_IMPORTING.md).
+- **Discover similar public skills:** Load localsetup-skill-discovery when creating or importing; uses [PUBLIC_SKILL_REGISTRY.urls](PUBLIC_SKILL_REGISTRY.urls) and [PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml); see [SKILL_DISCOVERY.md](SKILL_DISCOVERY.md).
 - **Tmux shared session and sudo:** Load localsetup-tmux-shared-session-workflow; skill defines sudo discovery (valid? timeout? required?), one-prompt gate (user joins session, runs trigger, agent waits then batches sudo until timeout), and output capture; see WORKFLOW_REGISTRY.md.
 - **Run framework audit:** Load localsetup-framework-audit; run from repo root with `--output /path/to/report.md` (or set `LOCALSETUP_AUDIT_OUTPUT`). Optional `--deep` runs Deep Analysis (derive invocations from SKILL.md and script `--help`, run in sandbox, summary JSON + sidecar tarball; requires output path). See [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md).
 

@@ -10,7 +10,7 @@ version: 2.5
 ## Scope
 
 - Applies to normal task execution when user does not name a specific skill.
-- Complements (does not replace) `SKILLS_AND_RULES.md`.
+- Complements (does not replace) [SKILLS_AND_RULES.md](SKILLS_AND_RULES.md).
 - Detailed execution procedure lives in skill `localsetup-task-skill-matcher`.
 
 ## Core behavior
@@ -42,7 +42,7 @@ version: 2.5
 
 ## Public index handling
 
-- Source: `_localsetup/docs/PUBLIC_SKILL_INDEX.yaml`
+- Source: [PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml)
 - Stale definition: file missing, missing `updated`, or `updated` older than 7 days.
 - If index is missing/stale while providing complementary suggestions:
   - Still present installed-skill match and "Use this skill?" first.
@@ -50,7 +50,7 @@ version: 2.5
 
 ## Platform paths
 
-Use the current platform context loader/index per `PLATFORM_REGISTRY.md`:
+Use the current platform context loader/index per [PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md):
 
 - Cursor: `.cursor/rules/localsetup-context-index.md` (or skills section in `.cursor/rules/localsetup-context.mdc`)
 - Claude Code: `.claude/CLAUDE.md`
@@ -59,8 +59,8 @@ Use the current platform context loader/index per `PLATFORM_REGISTRY.md`:
 
 ## References
 
-- `SKILLS_AND_RULES.md`
-- `PLATFORM_REGISTRY.md`
+- [SKILLS_AND_RULES.md](SKILLS_AND_RULES.md)
+- [PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md)
 - Skill: `localsetup-task-skill-matcher`
 
 ---

@@ -16,7 +16,7 @@ version: 2.5
 | cursor | Cursor | .cursor/rules/localsetup-context.mdc (and .cursor/rules/localsetup-context-index.md) | .cursor/skills/localsetup-*/ |
 | claude-code | Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ |
 | codex | OpenAI Codex CLI | AGENTS.md (repo root) | .agents/skills/localsetup-*/ |
-| openclaw | OpenClaw | _localsetup/docs/OPENCLAW_CONTEXT.md (merge into workspace MEMORY.md if desired) | skills/localsetup-*/ (repo root) |
+| openclaw | OpenClaw | [OPENCLAW_CONTEXT.md](OPENCLAW_CONTEXT.md) (merge into workspace MEMORY.md if desired) | skills/localsetup-*/ (repo root) |
 
 *More platforms may be added later. Update this table and the "Skill registration (new skills)" section when adding one.*
 
@@ -41,8 +41,8 @@ Add one row or bullet per new skill with a short "When to use" description. Use 
 ## Reference
 
 - Deploy script: `_localsetup/tools/deploy` (Bash) / `deploy.ps1` (PowerShell); accepts `--tools "cursor,claude-code,codex,openclaw"`.
-- Skills and rules (paths and model): _localsetup/docs/SKILLS_AND_RULES.md.
-- Packaging and sync checks before publish (e.g. .cursor vs packaged) are maintainer workflow and documented in the maintainer repo.
+- Skills and rules (paths and model): [SKILLS_AND_RULES.md](SKILLS_AND_RULES.md).
+- Release and publish (including packaging and sync checks) are maintained in a separate maintainer repository.
 
 ---
 
