@@ -70,7 +70,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Directory . -Tools curso
 Before clone/deploy, installer preflight checks:
 
 - **Required:** `git >= 2.20.0` (install aborts if missing or too old)
-- **Recommended for full framework tooling:** `python >= 3.8` and Python module `yaml` (`PyYAML>=6.0`)
+- **Recommended for full framework tooling:** `python >= 3.10` and Python module `yaml` (`PyYAML>=6.0`)
 
 If recommended Python tooling is missing, install continues and prints copy-paste command hints for your OS.
 
@@ -102,7 +102,7 @@ Use with:
 | Verify rules | `./_localsetup/tools/verify_rules` | `.\_localsetup\tools\verify_rules.ps1` |
 | Tests | `./_localsetup/tests/automated_test.sh` | `.\_localsetup\tests\automated_test.ps1` |
 
-Path resolution and OS detection exist in both: `lib/data_paths.sh` and `lib/data_paths.ps1`; `discovery/core/os_detector.sh` and `discovery/core/os_detector.ps1`.
+Path resolution stays in shell for install/skills: `lib/data_paths.sh` and `lib/data_paths.ps1`. Framework tooling (verify_context, verify_rules, deploy, tests, OS detection) is implemented in Python; the `.sh` and `.ps1` scripts in `tools/`, `tests/`, and `discovery/core/` are thin launchers that invoke the corresponding Python scripts.
 
 ## Repo-local
 

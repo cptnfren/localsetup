@@ -1,27 +1,11 @@
 #!/usr/bin/env bash
-# Localsetup v2 - Context verification (slim). On Windows (Git Bash): delegates to verify_context.ps1.
+# Localsetup v2 - Context verification. Thin wrapper; logic in verify_context.py.
+# On Windows (Git Bash): delegates to verify_context.ps1.
 set -euo pipefail
 if [[ -n "${WINDIR:-}" ]] || [[ "${OSTYPE:-}" == "msys" ]] || [[ "${OSTYPE:-}" == "cygwin" ]]; then
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  if command -v pwsh >/dev/null 2>&1; then
-    exec pwsh -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/verify_context.ps1"
-  else
-    exec powershell -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/verify_context.ps1"
-  fi
+  exec pwsh -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/verify_context.ps1" 2>/dev/null || exec powershell -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/verify_context.ps1"
 fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENGINE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-source "$ENGINE_DIR/lib/data_paths.sh"
-ROOT="$(get_project_root)"
-
-echo "Localsetup v2 - Context Verification"
-echo "====================================="
-
-MDC="$ROOT/.cursor/rules/localsetup-context.mdc"
-if [[ -f "$MDC" ]]; then
-    echo "[OK] .cursor/rules/localsetup-context.mdc exists ($(wc -c < "$MDC") bytes)"
-else
-    echo "[FAIL] No .cursor/rules/localsetup-context.mdc found. Run install then deploy for Cursor."
-    exit 1
-fi
-echo "[OK] Context verification complete."
+exec python3 "$ENGINE_DIR/tools/verify_context.py"

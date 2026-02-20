@@ -106,7 +106,7 @@ See [Multi-platform install](docs/MULTI_PLATFORM_INSTALL.md) for details.
 - **Linux/macOS:** Bash (for install, deploy, and framework scripts). **Windows:** PowerShell 5.1+ or PowerShell Core (for `install.ps1` and `*.ps1` tools).
 - **Git** (for install clone/update; optional for `verify_rules`).
 - One or more platforms from the [platform registry](docs/PLATFORM_REGISTRY.md) (e.g. cursor, claude-code, codex, openclaw), selected via `--tools` / `-Tools`.
-- **Recommended (Python tooling):** For full skill validation/discovery tooling and public skill index refresh (`tools/skill_validation_scan.py`, `tools/refresh_public_skill_index.py`), use Python `>= 3.8` with module `yaml` (`PyYAML>=6.0`). Install with your preferred package manager, or run `python3 -m pip install -r _localsetup/requirements.txt`.
+- **Recommended (Python tooling):** For full skill validation/discovery tooling and public skill index refresh (`tools/skill_validation_scan.py`, `tools/refresh_public_skill_index.py`), use Python `>= 3.10` with module `yaml` (`PyYAML>=6.0`). Install with your preferred package manager, or run `python3 -m pip install -r _localsetup/requirements.txt`.
 
 ---
 
@@ -122,8 +122,9 @@ _localsetup/
 │       └── system_config.yaml   # Default framework folder name, user data subdir
 ├── discovery/
 │   └── core/
-│       ├── os_detector.sh       # OS detection (Bash)
-│       └── os_detector.ps1      # OS detection (PowerShell)
+│       ├── os_detector.py       # OS detection (canonical)
+│       ├── os_detector.sh       # Launcher (Bash)
+│       └── os_detector.ps1      # Launcher (PowerShell)
 ├── docs/                        # Framework documentation (copied to _localsetup/docs/)
 │   ├── AGENTIC_DESIGN_INDEX.md
 │   ├── DECISION_TREE_WORKFLOW.md
@@ -182,6 +183,8 @@ All docs live under `docs/` and are copied to `_localsetup/docs/` on deploy so t
 | [SKILL_IMPORTING.md](docs/SKILL_IMPORTING.md) | Import from URL or path; discover, validate, screen, summarize; user selects which skills to import |
 | [SKILL_DISCOVERY.md](docs/SKILL_DISCOVERY.md) | Public skill registries (PUBLIC_SKILL_REGISTRY.urls, PUBLIC_SKILL_INDEX.yaml); recommend similar when creating/importing |
 | [TASK_SKILL_MATCHING.md](docs/TASK_SKILL_MATCHING.md) | Task-to-installed-skill matching flow: single vs batch, auto-pick/parcel, complementary public-skill suggestions |
+| [INPUT_HARDENING_STANDARD.md](docs/INPUT_HARDENING_STANDARD.md) | Hostile-input baseline: sanitization, validation, actionable error handling, and no-silent-failure policy |
+| [TOOLING_POLICY.md](docs/TOOLING_POLICY.md) | Python-first tooling scope, runtime target, and minimal dependency policy |
 
 ---
 
@@ -244,7 +247,7 @@ Run from **client repo root** (so that `_localsetup/` is present). Tools live un
 
 - **`lib/data_paths.sh`** / **`lib/data_paths.ps1`**  - Path resolution: engine dir, project root, user data dir, ensure user data dir. Use in scripts for repo-local paths. Respects `LOCALSETUP_PROJECT_ROOT`, `LOCALSETUP_FRAMEWORK_DIR`, `LOCALSETUP_PROJECT_DATA`.
 - **`lib/json_formatter.sh`**  - JSON formatting helpers for Bash scripts.
-- **`discovery/core/os_detector.sh`** / **`discovery/core/os_detector.ps1`**  - OS detection (Linux, macOS, Windows) for cross-platform behavior.
+- **`discovery/core/os_detector.py`**  - OS detection (canonical; Linux, macOS, Windows). **`os_detector.sh`** / **`os_detector.ps1`** are thin launchers.
 - **`config/defaults/system_config.yaml`**  - Defaults: `framework_folder: _localsetup`, `user_data_subdir: .localsetup-project`.
 
 ---

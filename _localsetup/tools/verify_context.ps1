@@ -1,20 +1,8 @@
-# Localsetup v2 - Context verification (PowerShell)
+# Localsetup v2 - Context verification. Thin wrapper; logic in verify_context.py.
 $ErrorActionPreference = 'Stop'
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $EngineDir = (Get-Item (Join-Path $ScriptDir '..')).FullName
-
-. (Join-Path $EngineDir 'lib\data_paths.ps1')
-$Root = Get-ProjectRoot
-
-Write-Host 'Localsetup v2 - Context Verification'
-Write-Host '====================================='
-
-$MDC = Join-Path $Root '.cursor\rules\localsetup-context.mdc'
-if (Test-Path -LiteralPath $MDC) {
-    $bytes = (Get-Item -LiteralPath $MDC).Length
-    Write-Host "[OK] .cursor/rules/localsetup-context.mdc exists ($bytes bytes)"
-} else {
-    Write-Host '[FAIL] No .cursor/rules/localsetup-context.mdc found. Run install then deploy for Cursor.'
-    exit 1
-}
-Write-Host '[OK] Context verification complete.'
+$py = Get-Command python3 -ErrorAction SilentlyContinue; if (-not $py) { $py = Get-Command python -ErrorAction SilentlyContinue }
+if (-not $py) { Write-Host '[FAIL] python3 or python not found'; exit 1 }
+& $py.Source (Join-Path $EngineDir 'tools\verify_context.py')
+exit $LASTEXITCODE

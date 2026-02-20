@@ -1,29 +1,11 @@
 #!/usr/bin/env bash
-# Localsetup v2 - Rule compliance check (slim). On Windows (Git Bash): delegates to verify_rules.ps1.
+# Localsetup v2 - Rule compliance check. Thin wrapper; logic in verify_rules.py.
+# On Windows (Git Bash): delegates to verify_rules.ps1.
 set -euo pipefail
 if [[ -n "${WINDIR:-}" ]] || [[ "${OSTYPE:-}" == "msys" ]] || [[ "${OSTYPE:-}" == "cygwin" ]]; then
   SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  if command -v pwsh >/dev/null 2>&1; then
-    exec pwsh -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/verify_rules.ps1"
-  else
-    exec powershell -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/verify_rules.ps1"
-  fi
+  exec pwsh -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/verify_rules.ps1" 2>/dev/null || exec powershell -NoProfile -ExecutionPolicy Bypass -File "$SCRIPT_DIR/verify_rules.ps1"
 fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENGINE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-source "$ENGINE_DIR/lib/data_paths.sh"
-ROOT="$(get_project_root)"
-
-echo "Localsetup v2 - Rule Verification"
-echo "=================================="
-
-# Git (framework repo = parent of _localsetup when deployed)
-REPO_DIR="$ROOT"
-if command -v git >/dev/null 2>&1 && git -C "$REPO_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    echo "[OK] Git repo: $(git -C "$REPO_DIR" log -1 --oneline 2>/dev/null || echo 'no commits')"
-else
-    echo "[WARNING] Git not initialized or not installed"
-fi
-[[ -f "$ENGINE_DIR/lib/data_paths.sh" ]] && echo "[OK] data_paths.sh" || echo "[FAIL] data_paths.sh missing"
-[[ -d "$ENGINE_DIR/skills" ]] && echo "[OK] skills dir" || echo "[FAIL] skills missing"
-echo "[OK] Rule verification complete."
+exec python3 "$ENGINE_DIR/tools/verify_rules.py"

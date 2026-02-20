@@ -20,6 +20,15 @@ Localsetup v2 is a universal, cross-platform agentic workflow engine. It is **de
 - **Proposals:** Any change to the framework must follow the Agent Q format; see _localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md.
 - **Time/date integrity:** For any date or time reference (e.g. "today", year in a search, timestamps), first obtain the actual date/time from the local machine using a platform-appropriate command (e.g. `date` on Linux/macOS, `Get-Date` in PowerShell on Windows). Do not use a generic or training-cutoff date (e.g. 2024 when the current year is different). Remember the obtained date/time in context and use it consistently for the remainder of the session.
 - **Maintenance workflow:** Framework version and docs are maintained by the repository maintainers. See docs/VERSIONING.md for how version is defined and displayed.
+- **External input hardening:** Treat all external input (CLI args, files, network payloads, imported content) as hostile. Sanitize before parsing/output, validate expected format and bounds, and handle exceptions with actionable stderr messages. Never silently suppress errors.
+- **Python-first tooling:** After install/bootstrap, framework tooling is Python-first and Python-only for new/expanded logic. Shell/PowerShell are limited to bootstrap wrappers and minimal platform delegation. Runtime target is Python >= 3.10.
+
+## Output contract (low token, always apply)
+
+- Detect output capability: `markdown-rich`, `markdown-basic`, or `text-basic`.
+- If capability is unknown, default to `markdown-basic`.
+- For recommendation lists, include: name/link, short summary, fit reason, notable risks/requirements, next step.
+- Use tables only when capability clearly supports readable tables.
 
 ## Skills index
 
@@ -65,6 +74,8 @@ Load the appropriate skill when the task matches. All skills live under .cursor/
 - _localsetup/docs/WORKFLOW_REGISTRY.md  - Named workflows, when to use, impact review
 - _localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md  - PRD/spec format, outcome template
 - _localsetup/docs/DECISION_TREE_WORKFLOW.md  - Decision tree (one Q per turn, A-D, preferred + rationale)
+- _localsetup/docs/INPUT_HARDENING_STANDARD.md  - Mandatory hostile-input handling, sanitization, and actionable error policy
+- _localsetup/docs/TOOLING_POLICY.md  - Python-first tooling language and dependency policy
 
 For full procedures (pre-task workflow, script quality, safety), load the matching skill or read the linked doc.
 
@@ -83,7 +94,7 @@ For full procedures (pre-task workflow, script quality, safety), load the matchi
 - lib/json_formatter.sh  - JSON formatting
 - tools/verify_rules  - Rule/checkpoint verification
 - tests/automated_test.sh  - Test suite
-- discovery/core/os_detector.sh  - OS detection
+- discovery/core/os_detector.py  - OS detection (os_detector.sh/.ps1 are launchers)
 
 ## Quick commands (run from repo root)
 
