@@ -65,6 +65,15 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Directory . -Tools curso
 - `--yes` / `-Yes`  - Non-interactive (required when using --tools)
 - `--help` / `-Help`  - Print usage and exit
 
+## Dependency preflight
+
+Before clone/deploy, installer preflight checks:
+
+- **Required:** `git >= 2.20.0` (install aborts if missing or too old)
+- **Recommended for full framework tooling:** `python >= 3.8` and Python module `yaml` (`PyYAML>=6.0`)
+
+If recommended Python tooling is missing, install continues and prints copy-paste command hints for your OS.
+
 ## What gets deployed
 
 - **All platforms:** Framework at `_localsetup/` (tools, lib, docs, skills, templates).

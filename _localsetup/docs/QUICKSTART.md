@@ -9,9 +9,13 @@ Get Localsetup v2 running in your repo in under a minute. This page covers inter
 
 ## 📦 Prerequisites
 
-- **Linux/macOS:** Bash, curl, and git installed.
-- **Windows:** PowerShell 5.1+ or PowerShell Core; git installed.
+- **Required:** `git >= 2.20.0`
+- **Recommended for full framework tooling:** `python >= 3.8` and Python module `yaml` (`PyYAML>=6.0`)
+- **Linux/macOS:** Bash and curl installed.
+- **Windows:** PowerShell 5.1+ or PowerShell Core.
 - **Any platform:** Network access to GitHub (or a local clone of this repo).
+
+The installer runs a dependency preflight and prints missing dependencies with install command hints before clone/deploy.
 
 ## 🎯 Interactive install (recommended)
 
@@ -108,6 +112,30 @@ If you already have the repo on disk:
 ## 🔄 Updating
 
 Re-run the same install command. The installer refreshes managed framework files in `_localsetup/` and redeploys context and skills. Existing repo content outside `_localsetup/` is preserved.
+
+## 🧰 If Python tooling is missing
+
+If preflight reports missing `python` or `yaml`, install with whichever package manager you prefer. Common examples:
+
+```bash
+# Debian/Ubuntu
+sudo apt-get update && sudo apt-get install -y python3 python3-yaml
+
+# Fedora/RHEL
+sudo dnf install -y python3 python3-pyyaml
+
+# Arch
+sudo pacman -S --needed python python-yaml
+
+# Generic Python env
+python3 -m pip install "PyYAML>=6.0"
+```
+
+```powershell
+# Windows
+winget install Python.Python.3.12
+py -m pip install "PyYAML>=6.0"
+```
 
 ## 📖 Next steps
 

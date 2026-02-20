@@ -47,6 +47,7 @@ $REPO_URL = if ($env:LOCALSETUP_2_REPO) { $env:LOCALSETUP_2_REPO } else { 'https
 $FRAMEWORK_DIRNAME = '_localsetup'
 $ValidTools = @('cursor', 'claude-code', 'codex', 'openclaw')
 $MinGitVersion = [Version]'2.20.0'
+$MinPythonVersion = [Version]'3.8.0'
 
 function Show-Usage {
     @'
@@ -104,9 +105,10 @@ function Get-GitVersion {
 
 function Run-PreflightChecks {
     $requiredFail = $false
+    $recommendFail = $false
     $gitStatus = 'MISSING'
-    $pythonStatus = 'MISSING (optional)'
-    $pipStatus = 'MISSING (optional)'
+    $pythonStatus = 'MISSING (recommended for skill validation/discovery tooling)'
+    $pyyamlStatus = "MISSING (python module 'yaml')"
 
     $gitCmd = Get-ToolVersion -ToolName 'git'
     if ($gitCmd) {
@@ -125,41 +127,58 @@ function Run-PreflightChecks {
         $requiredFail = $true
     }
 
-    $pythonCmd = Get-ToolVersion -ToolName 'python'
-    if (-not $pythonCmd) { $pythonCmd = Get-ToolVersion -ToolName 'python3' }
+    $pythonCmd = Get-ToolVersion -ToolName 'python3'
+    if (-not $pythonCmd) { $pythonCmd = Get-ToolVersion -ToolName 'python' }
     if ($pythonCmd) {
         try {
-            $pv = (& $pythonCmd.Source --version 2>&1)
-            $pythonStatus = "FOUND ($pv)"
+            $pvRaw = (& $pythonCmd.Source --version 2>&1)
+            $pvText = "$pvRaw"
+            $pvMatch = [regex]::Match($pvText, '(\d+\.\d+(\.\d+)?)')
+            if ($pvMatch.Success) {
+                $pv = [Version]$pvMatch.Groups[1].Value
+                if ($pv -ge $MinPythonVersion) {
+                    $pythonStatus = "OK ($pv)"
+                } else {
+                    $pythonStatus = "TOO OLD ($pv, recommend >= $MinPythonVersion)"
+                    $recommendFail = $true
+                }
+            } else {
+                $pythonStatus = "FOUND ($pvText)"
+            }
+
+            $null = & $pythonCmd.Source -c "import yaml" 2>$null
+            if ($LASTEXITCODE -eq 0) {
+                $pyyamlStatus = 'OK (import yaml)'
+            } else {
+                $pyyamlStatus = "MISSING (python module 'yaml')"
+                $recommendFail = $true
+            }
         } catch {
             $pythonStatus = 'FOUND (version unknown)'
-        }
-    }
-
-    $pipCmd = Get-ToolVersion -ToolName 'pip'
-    if (-not $pipCmd) { $pipCmd = Get-ToolVersion -ToolName 'pip3' }
-    if ($pipCmd) {
-        try {
-            $pp = (& $pipCmd.Source --version 2>$null)
-            if (-not $pp) { $pp = (& $pipCmd.Source --version 2>&1) }
-            $pipStatus = "FOUND ($pp)"
-        } catch {
-            $pipStatus = 'FOUND (version unknown)'
         }
     }
 
     Write-Host 'Dependency preflight:'
     Write-Host '  Required:'
     Write-Host "    - git: $gitStatus"
-    Write-Host '  Optional (advanced tooling only):'
+    Write-Host '  Recommended for full framework tooling:'
     Write-Host "    - python: $pythonStatus"
-    Write-Host "    - pip: $pipStatus"
+    Write-Host "    - pyyaml module: $pyyamlStatus"
 
     if ($requiredFail) {
         Write-Host ''
         Write-Host 'Cannot continue: required dependencies are missing or incompatible.' -ForegroundColor Red
         Write-Host 'Install/upgrade the required tools, then run install again.' -ForegroundColor Red
         exit 1
+    }
+
+    if ($recommendFail) {
+        Write-Host ''
+        Write-Host 'Notice: install can continue, but some skill tooling may fail until recommended dependencies are installed.' -ForegroundColor Yellow
+        Write-Host 'Try one of:' -ForegroundColor Yellow
+        Write-Host '  winget install Python.Python.3.12'
+        Write-Host '  py -m pip install "PyYAML>=6.0"'
+        Write-Host '  python -m pip install "PyYAML>=6.0"'
     }
 }
 
@@ -226,7 +245,9 @@ function Sync-EngineTree {
         }
     }
 
-    Copy-Item -LiteralPath (Join-Path $SourceDir '*') -Destination $TargetDir -Recurse -Force
+    Get-ChildItem -LiteralPath $SourceDir -Force | ForEach-Object {
+        Copy-Item -LiteralPath $_.FullName -Destination $TargetDir -Recurse -Force
+    }
 
     # Clean legacy source-repo leftovers from older layouts.
     foreach ($name in @('_localsetup','framework','.github','.git')) {

@@ -52,6 +52,16 @@ The installer asks which platform(s) to deploy: Cursor, Claude Code, Codex CLI, 
 
 For non-interactive one-liners (CI, automation, or when you already know the platform), see the collapsed **Full install reference** below or [_localsetup/docs/QUICKSTART.md](_localsetup/docs/QUICKSTART.md).
 
+### Minimum requirements
+
+- Required:
+  - `git >= 2.20.0`
+- Recommended for full framework tooling:
+  - `python >= 3.8`
+  - Python module `yaml` (`PyYAML>=6.0`)
+
+The installer runs a dependency preflight and prints missing items with copy-paste install suggestions before proceeding.
+
 ## ⚡ Top 10 features
 
 1. **Secure skill import with safety checks** - import any external skill or freeform text, run automatic prompt-injection detection, foreign-language screening, and heuristic security analysis before it touches your agent. Use the framework as a sandbox to build and adapt workflows however you see fit.
@@ -125,7 +135,7 @@ curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | b
 
 ### Update behavior
 
-Re-run install with the same tool selection. If `_localsetup/` is already a git clone, install performs `git pull --rebase` and deploys again.
+Re-run install with the same tool selection. Installer refreshes managed files in `_localsetup/` and deploys again.
 
 </details>
 

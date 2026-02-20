@@ -1,4 +1,5 @@
-# Optional Python deps for framework tools (e.g. public skill index refresh).
-# Install: pip install -r _localsetup/requirements.txt
+# Python deps for framework tools (e.g. skill validation and public skill index refresh).
+# Install with any Python package manager, for example:
+#   python3 -m pip install -r _localsetup/requirements.txt
 # Used by: tools/refresh_public_skill_index.py
 PyYAML>=6.0

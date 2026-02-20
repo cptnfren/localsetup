@@ -106,7 +106,7 @@ See [Multi-platform install](docs/MULTI_PLATFORM_INSTALL.md) for details.
 - **Linux/macOS:** Bash (for install, deploy, and framework scripts). **Windows:** PowerShell 5.1+ or PowerShell Core (for `install.ps1` and `*.ps1` tools).
 - **Git** (for install clone/update; optional for `verify_rules`).
 - One or more platforms from the [platform registry](docs/PLATFORM_REGISTRY.md) (e.g. cursor, claude-code, codex, openclaw), selected via `--tools` / `-Tools`.
-- **Optional (Python):** To run the public skill index refresh (`tools/refresh_public_skill_index.py`), install deps from `_localsetup/requirements.txt` (e.g. `pip install -r _localsetup/requirements.txt`). Only needed if you refresh `PUBLIC_SKILL_INDEX.yaml` locally.
+- **Recommended (Python tooling):** For full skill validation/discovery tooling and public skill index refresh (`tools/skill_validation_scan.py`, `tools/refresh_public_skill_index.py`), use Python `>= 3.8` with module `yaml` (`PyYAML>=6.0`). Install with your preferred package manager, or run `python3 -m pip install -r _localsetup/requirements.txt`.
 
 ---
 
