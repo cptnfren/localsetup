@@ -111,7 +111,20 @@ If you already have the repo on disk:
 
 ## 🔄 Updating
 
-Re-run the same install command. The installer refreshes managed framework files in `_localsetup/` and redeploys context and skills. Existing repo content outside `_localsetup/` is preserved.
+Re-run the same install command. Installer fetches latest framework source, performs an upgrade-aware sync in `_localsetup/`, and redeploys context and skills. Existing repo content outside `_localsetup/` is preserved.
+
+Optional policy:
+
+- `--upgrade-policy preserve` (default)
+- `--upgrade-policy force`
+- `--upgrade-policy fail-on-conflict`
+
+Examples:
+
+```bash
+./install --directory . --tools cursor --yes --upgrade-policy preserve
+./install --directory . --tools cursor --yes --upgrade-policy fail-on-conflict
+```
 
 ## 🧰 If Python tooling is missing
 

@@ -26,6 +26,8 @@
 param(
     [string]$Directory = '',
     [string]$Tools = '',
+    [ValidateSet('preserve', 'force', 'fail-on-conflict')]
+    [string]$UpgradePolicy = 'preserve',
     [switch]$Yes,
     [switch]$Help
 )
@@ -37,6 +39,7 @@ if ($args.Count -gt 0) {
             '--directory' { if ($i + 1 -lt $args.Count) { $Directory = $args[$i + 1]; $i++ } }
             '--tools'     { if ($i + 1 -lt $args.Count) { $Tools = $args[$i + 1]; $i++ } }
             '--yes'       { $Yes = $true }
+            '--upgrade-policy' { if ($i + 1 -lt $args.Count) { $UpgradePolicy = $args[$i + 1]; $i++ } }
             '--help' { $Help = $true }
             '-h'     { $Help = $true }
         }
@@ -62,6 +65,7 @@ Parameters:
   -Directory PATH   Client repo root (default: . or prompt)
   -Tools LIST       Comma-separated: cursor, claude-code, codex, openclaw (required with -Yes)
   -Yes              Non-interactive; no prompts
+  -UpgradePolicy    preserve | force | fail-on-conflict (default: preserve)
   -Help, -?, -h     Show this help and exit
 
 Tools (use with -Tools):
@@ -223,38 +227,192 @@ function Get-EngineSource {
     return $null
 }
 
-function Sync-EngineTree {
+function Get-FileSha256 {
+    param([string]$Path)
+    return (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLowerInvariant()
+}
+
+function Build-Manifest {
+    param([string]$Root)
+    $manifest = @{}
+    if (-not (Test-Path -LiteralPath $Root)) { return $manifest }
+    Get-ChildItem -LiteralPath $Root -Recurse -File | ForEach-Object {
+        $rel = $_.FullName.Substring($Root.Length).TrimStart('\','/')
+        $manifest[$rel] = Get-FileSha256 -Path $_.FullName
+    }
+    return $manifest
+}
+
+function Load-ManifestTsv {
+    param([string]$Path)
+    $manifest = @{}
+    if (-not (Test-Path -LiteralPath $Path)) { return $manifest }
+    Get-Content -LiteralPath $Path | ForEach-Object {
+        if (-not $_) { return }
+        $parts = $_ -split "`t", 2
+        if ($parts.Count -eq 2) {
+            $manifest[$parts[0]] = $parts[1]
+        }
+    }
+    return $manifest
+}
+
+function Save-ManifestTsv {
+    param(
+        [hashtable]$Manifest,
+        [string]$Path
+    )
+    $lines = $Manifest.Keys | Sort-Object | ForEach-Object { "$_`t$($Manifest[$_])" }
+    Set-Content -LiteralPath $Path -Value $lines
+}
+
+function Apply-Upgrade {
     param(
         [string]$SourceDir,
-        [string]$TargetDir
+        [string]$TargetDir,
+        [string]$Policy,
+        [string]$SourceRepo,
+        [string]$SourceCommit
     )
 
     New-Item -ItemType Directory -Force -Path $TargetDir | Out-Null
 
-    # Keep user-local files, but replace framework-managed tree.
-    foreach ($name in @('config','discovery','docs','lib','skills','templates','tests','tools')) {
-        $p = Join-Path $TargetDir $name
-        if (Test-Path -LiteralPath $p) {
-            Remove-Item -LiteralPath $p -Recurse -Force
+    $ts = (Get-Date).ToUniversalTime().ToString("yyyyMMddTHHmmssZ")
+    $metaDir = Join-Path $TargetDir '.localsetup-meta'
+    $backupDir = Join-Path $metaDir "backups/$ts"
+    $oldManifestPath = Join-Path $metaDir 'managed-manifest.tsv'
+    $newManifestPath = Join-Path $metaDir 'new-managed-manifest.tsv'
+    New-Item -ItemType Directory -Force -Path $metaDir | Out-Null
+
+    $oldManifest = Load-ManifestTsv -Path $oldManifestPath
+    $newManifest = Build-Manifest -Root $SourceDir
+    Save-ManifestTsv -Manifest $newManifest -Path $newManifestPath
+
+    $added = New-Object System.Collections.Generic.List[string]
+    $updated = New-Object System.Collections.Generic.List[string]
+    $removed = New-Object System.Collections.Generic.List[string]
+    $preserved = New-Object System.Collections.Generic.List[string]
+    $conflicts = New-Object System.Collections.Generic.List[string]
+
+    foreach ($rel in $newManifest.Keys) {
+        $targetPath = Join-Path $TargetDir $rel
+        $newSha = $newManifest[$rel]
+        $oldSha = $oldManifest[$rel]
+
+        if (-not (Test-Path -LiteralPath $targetPath -PathType Leaf)) {
+            $added.Add($rel) | Out-Null
+            continue
         }
-    }
-    foreach ($name in @('README.md','requirements.txt')) {
-        $p = Join-Path $TargetDir $name
-        if (Test-Path -LiteralPath $p) {
-            Remove-Item -LiteralPath $p -Force
+
+        $localSha = Get-FileSha256 -Path $targetPath
+        if ($oldSha) {
+            if ($localSha -eq $oldSha) {
+                if ($newSha -ne $oldSha) { $updated.Add($rel) | Out-Null }
+            } else {
+                if ($newSha -eq $oldSha) {
+                    if ($Policy -eq 'force') {
+                        $updated.Add($rel) | Out-Null
+                    } else {
+                        $preserved.Add($rel) | Out-Null
+                    }
+                } else {
+                    if ($Policy -eq 'force') {
+                        $updated.Add($rel) | Out-Null
+                    } else {
+                        $conflicts.Add($rel) | Out-Null
+                    }
+                }
+            }
+        } else {
+            if ($localSha -ne $newSha) {
+                if ($Policy -eq 'force') {
+                    $updated.Add($rel) | Out-Null
+                } else {
+                    $conflicts.Add($rel) | Out-Null
+                }
+            }
         }
     }
 
-    Get-ChildItem -LiteralPath $SourceDir -Force | ForEach-Object {
-        Copy-Item -LiteralPath $_.FullName -Destination $TargetDir -Recurse -Force
+    foreach ($rel in $oldManifest.Keys) {
+        if ($newManifest.ContainsKey($rel)) { continue }
+        $targetPath = Join-Path $TargetDir $rel
+        if (-not (Test-Path -LiteralPath $targetPath -PathType Leaf)) { continue }
+        $localSha = Get-FileSha256 -Path $targetPath
+        if ($localSha -eq $oldManifest[$rel] -or $Policy -eq 'force') {
+            $removed.Add($rel) | Out-Null
+        } else {
+            $conflicts.Add($rel) | Out-Null
+        }
     }
 
-    # Clean legacy source-repo leftovers from older layouts.
+    if ($conflicts.Count -gt 0 -and $Policy -eq 'fail-on-conflict') {
+        Write-Host "Upgrade conflicts detected ($($conflicts.Count)). No changes applied due to -UpgradePolicy fail-on-conflict." -ForegroundColor Yellow
+        $conflicts | Select-Object -First 50 | ForEach-Object { Write-Host "  $_" -ForegroundColor Yellow }
+        exit 2
+    }
+
+    New-Item -ItemType Directory -Force -Path $backupDir | Out-Null
+    foreach ($rel in $oldManifest.Keys) {
+        $targetPath = Join-Path $TargetDir $rel
+        if (-not (Test-Path -LiteralPath $targetPath -PathType Leaf)) { continue }
+        $backupPath = Join-Path $backupDir $rel
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $backupPath) | Out-Null
+        Copy-Item -LiteralPath $targetPath -Destination $backupPath -Force
+    }
+
+    foreach ($rel in ($added + $updated)) {
+        $sourcePath = Join-Path $SourceDir $rel
+        $targetPath = Join-Path $TargetDir $rel
+        New-Item -ItemType Directory -Force -Path (Split-Path -Parent $targetPath) | Out-Null
+        Copy-Item -LiteralPath $sourcePath -Destination $targetPath -Force
+    }
+    foreach ($rel in $removed) {
+        $targetPath = Join-Path $TargetDir $rel
+        if (Test-Path -LiteralPath $targetPath) { Remove-Item -LiteralPath $targetPath -Force }
+    }
+
     foreach ($name in @('_localsetup','framework','.github','.git')) {
         $p = Join-Path $TargetDir $name
         if (Test-Path -LiteralPath $p) {
             Remove-Item -LiteralPath $p -Recurse -Force
         }
+    }
+
+    Save-ManifestTsv -Manifest $newManifest -Path $oldManifestPath
+
+    $state = @{
+        installed_at    = $ts
+        source_repo     = $SourceRepo
+        source_commit   = $SourceCommit
+        upgrade_policy  = $Policy
+        manifest        = 'managed-manifest.tsv'
+    }
+    $state | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $metaDir 'install-state.json')
+
+    $report = @{
+        timestamp = $ts
+        policy = $Policy
+        source_repo = $SourceRepo
+        source_commit = $SourceCommit
+        target = $TargetDir
+        counts = @{
+            added = $added.Count
+            updated = $updated.Count
+            removed = $removed.Count
+            preserved = $preserved.Count
+            conflicts = $conflicts.Count
+        }
+        conflicts = $conflicts
+    }
+    $reportPath = Join-Path $metaDir "upgrade-report-$ts.json"
+    $report | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $reportPath
+    Copy-Item -LiteralPath $reportPath -Destination (Join-Path $metaDir 'upgrade-report-latest.json') -Force
+
+    Write-Host "Upgrade report: $reportPath"
+    Write-Host ("Upgrade summary: added {0}, updated {1}, removed {2}, preserved {3}, conflicts {4}." -f $added.Count, $updated.Count, $removed.Count, $preserved.Count, $conflicts.Count)
+    if ($conflicts.Count -gt 0) {
+        Write-Host 'Conflicts were preserved. Review upgrade report for paths.' -ForegroundColor Yellow
     }
 }
 
@@ -286,25 +444,24 @@ $ToolsNormalized = ($toolList -join ',').Trim()
 
 $sourceBase = $null
 $workDir = $null
+$sourceRepo = $REPO_URL
+$sourceCommit = 'unknown'
 try {
-    if (Test-Path (Join-Path $FrameworkDir '.git') -PathType Container) {
-        Write-Host 'Updating existing _localsetup source clone...'
-        Push-Location $FrameworkDir
-        try {
-            git pull --rebase 2>$null
-        } finally {
-            Pop-Location
-        }
-        $sourceBase = $FrameworkDir
-    } elseif (Get-EngineSource -BasePath $FrameworkDir) {
-        $sourceBase = $FrameworkDir
-    } else {
-        Write-Host 'Fetching Localsetup v2 source...'
-        New-Item -ItemType Directory -Force -Path $TargetDir -ErrorAction Stop | Out-Null
-        $workDir = Join-Path ([System.IO.Path]::GetTempPath()) ("localsetup-" + [Guid]::NewGuid().ToString('N'))
-        $sourceBase = Join-Path $workDir 'localsetup-source'
-        New-Item -ItemType Directory -Force -Path $workDir | Out-Null
+    Write-Host 'Fetching Localsetup v2 source...'
+    New-Item -ItemType Directory -Force -Path $TargetDir -ErrorAction Stop | Out-Null
+    $workDir = Join-Path ([System.IO.Path]::GetTempPath()) ("localsetup-" + [Guid]::NewGuid().ToString('N'))
+    $sourceBase = Join-Path $workDir 'localsetup-source'
+    New-Item -ItemType Directory -Force -Path $workDir | Out-Null
+    try {
         $null = git clone $REPO_URL $sourceBase 2>&1
+    } catch {
+        if (Get-EngineSource -BasePath $FrameworkDir) {
+            Write-Host 'Warning: Remote fetch failed; using existing local framework copy as source.' -ForegroundColor Yellow
+            $sourceBase = $FrameworkDir
+            $sourceRepo = 'local-existing'
+        } else {
+            throw
+        }
     }
 
     $engineSource = Get-EngineSource -BasePath $sourceBase
@@ -314,10 +471,12 @@ try {
         exit 1
     }
 
-    if ((Resolve-Path -LiteralPath $engineSource).Path -ne (Resolve-Path -LiteralPath $FrameworkDir -ErrorAction SilentlyContinue).Path) {
-        Write-Host "Preparing single-level framework at $FrameworkDir..."
-        Sync-EngineTree -SourceDir $engineSource -TargetDir $FrameworkDir
+    if (Test-Path -LiteralPath (Join-Path $sourceBase '.git')) {
+        try { $sourceCommit = (git -C $sourceBase rev-parse --short HEAD 2>$null) } catch {}
     }
+
+    Write-Host "Preparing single-level framework at $FrameworkDir..."
+    Apply-Upgrade -SourceDir $engineSource -TargetDir $FrameworkDir -Policy $UpgradePolicy -SourceRepo $sourceRepo -SourceCommit $sourceCommit
 
     # Run deploy step from flattened install path
     $DeployScript = Join-Path $FrameworkDir 'tools\deploy.ps1'

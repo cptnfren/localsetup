@@ -74,6 +74,19 @@ Before clone/deploy, installer preflight checks:
 
 If recommended Python tooling is missing, install continues and prints copy-paste command hints for your OS.
 
+## Upgrade-aware install behavior
+
+On re-run, installer upgrades `_localsetup/` using managed-file metadata and conflict-aware rules, then redeploys platform files.
+
+- `preserve` (default): keep local customizations when possible
+- `force`: overwrite managed files with upstream
+- `fail-on-conflict`: stop if local+upstream modified the same managed file
+
+Use with:
+
+- Bash: `--upgrade-policy preserve|force|fail-on-conflict`
+- PowerShell: `-UpgradePolicy preserve|force|fail-on-conflict`
+
 ## What gets deployed
 
 - **All platforms:** Framework at `_localsetup/` (tools, lib, docs, skills, templates).

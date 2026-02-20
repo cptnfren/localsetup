@@ -12,6 +12,7 @@
 #   --directory PATH   Client repo root (default: . or prompt). Must exist.
 #   --tools LIST       Comma-separated tools (required with --yes). See below.
 #   --yes              Non-interactive; no prompts. Requires --tools.
+#   --upgrade-policy   preserve | force | fail-on-conflict (default: preserve)
 #   --help, -h         Print this help and exit.
 #
 # Tools (valid values for --tools):
@@ -23,6 +24,7 @@
 # Examples:
 #   install --directory . --tools cursor --yes
 #   install --tools cursor,claude-code --yes
+#   install --tools cursor --yes --upgrade-policy fail-on-conflict
 #   install
 #
 # On Windows: run install.ps1; or from Git Bash this script delegates to install.ps1.
@@ -46,6 +48,7 @@ TOOLS_CSV=""
 NONINTERACTIVE=false
 MIN_GIT_VERSION="2.20.0"
 MIN_PYTHON_VERSION="3.8.0"
+UPGRADE_POLICY="preserve"
 
 # Help text inline so it works when script is piped (curl | bash); $0 is not the script then.
 usage() {
@@ -63,6 +66,7 @@ Options:
   --directory PATH   Client repo root (default: . or prompt). Must exist.
   --tools LIST       Comma-separated tools (required with --yes). See below.
   --yes              Non-interactive; no prompts. Requires --tools.
+  --upgrade-policy   preserve | force | fail-on-conflict (default: preserve)
   --help, -h         Print this help and exit.
 
 Tools (valid values for --tools):
@@ -74,6 +78,7 @@ Tools (valid values for --tools):
 Examples:
   install --directory . --tools cursor --yes
   install --tools cursor,claude-code --yes
+  install --tools cursor --yes --upgrade-policy fail-on-conflict
   install
 
 On Windows: run install.ps1; or from Git Bash this script delegates to install.ps1.
@@ -215,6 +220,13 @@ while [[ $# -gt 0 ]]; do
       NONINTERACTIVE=true
       shift
       ;;
+    --upgrade-policy)
+      if [[ $# -lt 2 ]]; then
+        show_usage_and_exit "Missing value for --upgrade-policy"
+      fi
+      UPGRADE_POLICY="$2"
+      shift 2
+      ;;
     --help|-h)
       show_help_and_exit
       ;;
@@ -223,6 +235,13 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+case "$UPGRADE_POLICY" in
+  preserve|force|fail-on-conflict) ;;
+  *)
+    show_usage_and_exit "Invalid --upgrade-policy: '$UPGRADE_POLICY'. Valid values: preserve, force, fail-on-conflict"
+    ;;
+esac
 
 # Resolve target directory (client repo root)
 if [[ -z "$TARGET_DIR" ]]; then
@@ -266,19 +285,254 @@ detect_engine_dir() {
   return 1
 }
 
-sync_engine_tree() {
+hash_file() {
+  local f="$1"
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$f" | awk '{print $1}'
+  elif command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$f" | awk '{print $1}'
+  else
+    openssl dgst -sha256 "$f" | awk '{print $2}'
+  fi
+}
+
+build_manifest() {
+  local root="$1"
+  local out="$2"
+  : > "$out"
+  (
+    cd "$root"
+    rg --files -g "*" . | sed 's#^\./##' | while IFS= read -r rel; do
+      [[ -f "$root/$rel" ]] || continue
+      printf "%s\t%s\n" "$rel" "$(hash_file "$root/$rel")"
+    done | sort -u
+  ) > "$out"
+}
+
+manifest_get_sha() {
+  local manifest="$1"
+  local rel="$2"
+  awk -F '\t' -v p="$rel" '$1==p {print $2; exit}' "$manifest"
+}
+
+manifest_has_path() {
+  local manifest="$1"
+  local rel="$2"
+  awk -F '\t' -v p="$rel" '$1==p {found=1; exit} END {exit !found}' "$manifest"
+}
+
+copy_with_parents() {
   local src="$1"
   local dst="$2"
-  mkdir -p "$dst"
+  mkdir -p "$(dirname "$dst")"
+  cp -f "$src" "$dst"
+}
 
-  # Keep user-local files, but replace framework-managed tree.
-  rm -rf "$dst/config" "$dst/discovery" "$dst/docs" "$dst/lib" "$dst/skills" "$dst/templates" "$dst/tests" "$dst/tools"
-  rm -f "$dst/README.md" "$dst/requirements.txt"
+json_escape() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  s="${s//$'\n'/\\n}"
+  s="${s//$'\r'/}"
+  printf '%s' "$s"
+}
 
-  cp -a "$src"/. "$dst"/
+write_upgrade_report() {
+  local meta_dir="$1"
+  local ts="$2"
+  local report_json="$meta_dir/upgrade-report-$ts.json"
+  local report_txt="$meta_dir/upgrade-report-$ts.txt"
+  local policy="$3"
+  local source_commit="$4"
+  local source_url="$5"
+  local target_dir="$6"
 
-  # Clean legacy source-repo leftovers from older layouts.
+  {
+    echo "upgrade_timestamp=$ts"
+    echo "upgrade_policy=$policy"
+    echo "source_repo=$source_url"
+    echo "source_commit=$source_commit"
+    echo "target=$target_dir"
+    echo "added=$(wc -l < "$ACTIONS_ADDED" | tr -d ' ')"
+    echo "updated=$(wc -l < "$ACTIONS_UPDATED" | tr -d ' ')"
+    echo "removed=$(wc -l < "$ACTIONS_REMOVED" | tr -d ' ')"
+    echo "preserved=$(wc -l < "$ACTIONS_PRESERVED" | tr -d ' ')"
+    echo "conflicts=$(wc -l < "$ACTIONS_CONFLICTS" | tr -d ' ')"
+  } > "$report_txt"
+
+  {
+    echo "{"
+    echo "  \"timestamp\": \"$(json_escape "$ts")\","
+    echo "  \"policy\": \"$(json_escape "$policy")\","
+    echo "  \"source_repo\": \"$(json_escape "$source_url")\","
+    echo "  \"source_commit\": \"$(json_escape "$source_commit")\","
+    echo "  \"target\": \"$(json_escape "$target_dir")\","
+    echo "  \"counts\": {"
+    echo "    \"added\": $(wc -l < "$ACTIONS_ADDED" | tr -d ' '),"
+    echo "    \"updated\": $(wc -l < "$ACTIONS_UPDATED" | tr -d ' '),"
+    echo "    \"removed\": $(wc -l < "$ACTIONS_REMOVED" | tr -d ' '),"
+    echo "    \"preserved\": $(wc -l < "$ACTIONS_PRESERVED" | tr -d ' '),"
+    echo "    \"conflicts\": $(wc -l < "$ACTIONS_CONFLICTS" | tr -d ' ')"
+    echo "  }"
+    echo "}"
+  } > "$report_json"
+
+  cp -f "$report_json" "$meta_dir/upgrade-report-latest.json"
+  cp -f "$report_txt" "$meta_dir/upgrade-report-latest.txt"
+  echo "$report_json"
+}
+
+apply_upgrade() {
+  local src="$1"
+  local dst="$2"
+  local policy="$3"
+  local source_repo_url="$4"
+  local source_commit="$5"
+  local ts="$6"
+
+  local meta_dir="$dst/.localsetup-meta"
+  local backup_dir="$meta_dir/backups/$ts"
+  local old_manifest="$meta_dir/managed-manifest.tsv"
+  local new_manifest="$meta_dir/new-managed-manifest.tsv"
+  local state_file="$meta_dir/install-state.json"
+
+  mkdir -p "$meta_dir"
+  [[ -f "$old_manifest" ]] || : > "$old_manifest"
+  build_manifest "$src" "$new_manifest"
+
+  local has_old_manifest=false
+  [[ -s "$old_manifest" ]] && has_old_manifest=true
+
+  ACTIONS_ADDED="$meta_dir/actions-added.tmp"
+  ACTIONS_UPDATED="$meta_dir/actions-updated.tmp"
+  ACTIONS_REMOVED="$meta_dir/actions-removed.tmp"
+  ACTIONS_PRESERVED="$meta_dir/actions-preserved.tmp"
+  ACTIONS_CONFLICTS="$meta_dir/actions-conflicts.tmp"
+  : > "$ACTIONS_ADDED"; : > "$ACTIONS_UPDATED"; : > "$ACTIONS_REMOVED"; : > "$ACTIONS_PRESERVED"; : > "$ACTIONS_CONFLICTS"
+
+  while IFS=$'\t' read -r rel new_sha; do
+    [[ -n "$rel" ]] || continue
+    local target_path="$dst/$rel"
+    local source_path="$src/$rel"
+    local old_sha
+    old_sha="$(manifest_get_sha "$old_manifest" "$rel")"
+
+    if [[ ! -e "$target_path" ]]; then
+      echo "$rel" >> "$ACTIONS_ADDED"
+      continue
+    fi
+
+    local local_sha
+    local_sha="$(hash_file "$target_path")"
+
+    if [[ -n "$old_sha" ]]; then
+      if [[ "$local_sha" == "$old_sha" ]]; then
+        if [[ "$new_sha" != "$old_sha" ]]; then
+          echo "$rel" >> "$ACTIONS_UPDATED"
+        fi
+      else
+        if [[ "$new_sha" == "$old_sha" ]]; then
+          if [[ "$policy" == "force" ]]; then
+            echo "$rel" >> "$ACTIONS_UPDATED"
+          else
+            echo "$rel" >> "$ACTIONS_PRESERVED"
+          fi
+        else
+          if [[ "$policy" == "force" ]]; then
+            echo "$rel" >> "$ACTIONS_UPDATED"
+          else
+            echo "$rel" >> "$ACTIONS_CONFLICTS"
+          fi
+        fi
+      fi
+    else
+      # First upgrade after legacy install: preserve unknown local changes by default.
+      if [[ "$local_sha" != "$new_sha" ]]; then
+        if [[ "$policy" == "force" ]]; then
+          echo "$rel" >> "$ACTIONS_UPDATED"
+        else
+          echo "$rel" >> "$ACTIONS_CONFLICTS"
+        fi
+      fi
+    fi
+  done < "$new_manifest"
+
+  if $has_old_manifest; then
+    while IFS=$'\t' read -r rel old_sha; do
+      [[ -n "$rel" ]] || continue
+      manifest_has_path "$new_manifest" "$rel" && continue
+      local target_path="$dst/$rel"
+      [[ -f "$target_path" ]] || continue
+      local local_sha
+      local_sha="$(hash_file "$target_path")"
+      if [[ "$local_sha" == "$old_sha" ]]; then
+        echo "$rel" >> "$ACTIONS_REMOVED"
+      else
+        if [[ "$policy" == "force" ]]; then
+          echo "$rel" >> "$ACTIONS_REMOVED"
+        else
+          echo "$rel" >> "$ACTIONS_CONFLICTS"
+        fi
+      fi
+    done < "$old_manifest"
+  fi
+
+  local conflict_count
+  conflict_count="$(wc -l < "$ACTIONS_CONFLICTS" | tr -d ' ')"
+  if [[ "$conflict_count" -gt 0 ]] && [[ "$policy" == "fail-on-conflict" ]]; then
+    echo "Upgrade conflicts detected ($conflict_count). No changes applied due to --upgrade-policy fail-on-conflict."
+    echo "Re-run with --upgrade-policy preserve to keep local changes, or --upgrade-policy force to overwrite."
+    echo "Conflicted paths:"
+    sed -n '1,50p' "$ACTIONS_CONFLICTS"
+    exit 2
+  fi
+
+  mkdir -p "$backup_dir"
+  if $has_old_manifest; then
+    while IFS=$'\t' read -r rel old_sha; do
+      [[ -f "$dst/$rel" ]] || continue
+      mkdir -p "$backup_dir/$(dirname "$rel")"
+      cp -a "$dst/$rel" "$backup_dir/$rel"
+    done < "$old_manifest"
+  fi
+
+  while IFS= read -r rel; do
+    [[ -n "$rel" ]] || continue
+    copy_with_parents "$src/$rel" "$dst/$rel"
+  done < "$ACTIONS_ADDED"
+
+  while IFS= read -r rel; do
+    [[ -n "$rel" ]] || continue
+    copy_with_parents "$src/$rel" "$dst/$rel"
+  done < "$ACTIONS_UPDATED"
+
+  while IFS= read -r rel; do
+    [[ -n "$rel" ]] || continue
+    rm -f "$dst/$rel"
+  done < "$ACTIONS_REMOVED"
+
+  # Clean legacy source-repo leftovers from old layouts.
   rm -rf "$dst/_localsetup" "$dst/framework" "$dst/.github" "$dst/.git"
+
+  cp -f "$new_manifest" "$old_manifest"
+
+  cat > "$state_file" <<EOF
+{
+  "installed_at": "$ts",
+  "source_repo": "$(json_escape "$source_repo_url")",
+  "source_commit": "$(json_escape "$source_commit")",
+  "upgrade_policy": "$(json_escape "$policy")",
+  "manifest": "managed-manifest.tsv"
+}
+EOF
+
+  local report_path
+  report_path="$(write_upgrade_report "$meta_dir" "$ts" "$policy" "$source_commit" "$source_repo_url" "$dst")"
+  echo "Upgrade report: $report_path"
+  echo "Upgrade summary: added $(wc -l < "$ACTIONS_ADDED" | tr -d ' '), updated $(wc -l < "$ACTIONS_UPDATED" | tr -d ' '), removed $(wc -l < "$ACTIONS_REMOVED" | tr -d ' '), preserved $(wc -l < "$ACTIONS_PRESERVED" | tr -d ' '), conflicts $(wc -l < "$ACTIONS_CONFLICTS" | tr -d ' ')."
+  if [[ "$conflict_count" -gt 0 ]]; then
+    echo "Conflicts were preserved. Review: $meta_dir/actions-conflicts.tmp"
+  fi
 }
 
 # Resolve tools
@@ -313,7 +567,7 @@ for t in ${TOOLS_CSV//,/ }; do
 done
 [[ -z "$TOOLS_CSV" ]] && show_usage_and_exit "At least one tool must be specified (e.g. --tools cursor)"
 
-# Prepare framework source and enforce a single-level _localsetup install.
+# Prepare framework source and perform upgrade-aware sync to single-level _localsetup.
 WORK_DIR=""
 cleanup() {
   if [[ -n "$WORK_DIR" ]] && [[ -d "$WORK_DIR" ]]; then
@@ -323,18 +577,18 @@ cleanup() {
 trap cleanup EXIT
 
 SOURCE_BASE=""
-if [[ -d "$FRAMEWORK_DIR/.git" ]]; then
-  echo "Updating existing _localsetup source clone..."
-  (cd "$FRAMEWORK_DIR" && git pull --rebase 2>/dev/null) || true
-  SOURCE_BASE="$FRAMEWORK_DIR"
-elif detect_engine_dir "$FRAMEWORK_DIR" >/dev/null 2>&1; then
-  SOURCE_BASE="$FRAMEWORK_DIR"
-else
-  echo "Fetching Localsetup v2 source..."
-  mkdir -p "$TARGET_DIR" || { echo "Error: Cannot create directory $TARGET_DIR" >&2; exit 1; }
-  WORK_DIR="$(mktemp -d)"
-  SOURCE_BASE="$WORK_DIR/localsetup-source"
-  if ! git clone "$REPO_URL" "$SOURCE_BASE" 2>/dev/null; then
+SOURCE_REPO_URL="$REPO_URL"
+SOURCE_COMMIT="unknown"
+echo "Fetching Localsetup v2 source..."
+mkdir -p "$TARGET_DIR" || { echo "Error: Cannot create directory $TARGET_DIR" >&2; exit 1; }
+WORK_DIR="$(mktemp -d)"
+SOURCE_BASE="$WORK_DIR/localsetup-source"
+if ! git clone "$REPO_URL" "$SOURCE_BASE" 2>/dev/null; then
+  if detect_engine_dir "$FRAMEWORK_DIR" >/dev/null 2>&1; then
+    echo "Warning: Remote fetch failed; using existing local framework copy as source."
+    SOURCE_BASE="$FRAMEWORK_DIR"
+    SOURCE_REPO_URL="local-existing"
+  else
     echo "Error: Clone failed. Check network and repo URL (set LOCALSETUP_2_REPO to override)." >&2
     exit 1
   fi
@@ -347,10 +601,13 @@ if [[ -z "$ENGINE_SRC" ]]; then
   exit 1
 fi
 
-if [[ "$ENGINE_SRC" != "$FRAMEWORK_DIR" ]]; then
-  echo "Preparing single-level framework at $FRAMEWORK_DIR..."
-  sync_engine_tree "$ENGINE_SRC" "$FRAMEWORK_DIR"
+if [[ -d "$SOURCE_BASE/.git" ]]; then
+  SOURCE_COMMIT="$(git -C "$SOURCE_BASE" rev-parse --short HEAD 2>/dev/null || echo unknown)"
 fi
+
+echo "Preparing single-level framework at $FRAMEWORK_DIR..."
+TIMESTAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+apply_upgrade "$ENGINE_SRC" "$FRAMEWORK_DIR" "$UPGRADE_POLICY" "$SOURCE_REPO_URL" "$SOURCE_COMMIT" "$TIMESTAMP"
 
 # Run deploy step from flattened install path.
 DEPLOY_SCRIPT="$FRAMEWORK_DIR/tools/deploy"

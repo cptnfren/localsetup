@@ -135,7 +135,19 @@ curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | b
 
 ### Update behavior
 
-Re-run install with the same tool selection. Installer refreshes managed files in `_localsetup/` and deploys again.
+Re-run install with the same tool selection. Installer fetches latest framework source, performs an upgrade-aware sync in `_localsetup/`, writes an upgrade report under `_localsetup/.localsetup-meta/`, then deploys platform files again.
+
+Upgrade policy (optional):
+
+- `--upgrade-policy preserve` (default): keep local customizations when possible.
+- `--upgrade-policy force`: overwrite managed files with upstream.
+- `--upgrade-policy fail-on-conflict`: abort upgrade if both local and upstream changed the same managed file.
+
+Example:
+
+```bash
+./install --directory . --tools cursor --yes --upgrade-policy fail-on-conflict
+```
 
 </details>
 
