@@ -44,6 +44,7 @@ FRAMEWORK_DIRNAME="_localsetup"
 TARGET_DIR=""
 TOOLS_CSV=""
 NONINTERACTIVE=false
+MIN_GIT_VERSION="2.20.0"
 
 # Help text inline so it works when script is piped (curl | bash); $0 is not the script then.
 usage() {
@@ -87,6 +88,68 @@ show_usage_and_exit() {
   echo "Error: $1" >&2
   usage >&2
   exit 1
+}
+
+version_ge() {
+  # Returns 0 when $1 >= $2 for semantic-ish x.y.z versions.
+  local a b i
+  IFS='.' read -r -a a <<< "${1:-0.0.0}"
+  IFS='.' read -r -a b <<< "${2:-0.0.0}"
+  for i in 0 1 2; do
+    local av="${a[$i]:-0}"
+    local bv="${b[$i]:-0}"
+    ((10#$av > 10#$bv)) && return 0
+    ((10#$av < 10#$bv)) && return 1
+  done
+  return 0
+}
+
+preflight_checks() {
+  local required_fail=0
+  local git_status="MISSING"
+  local python_status="MISSING (optional)"
+  local pip_status="MISSING (optional)"
+  local git_version=""
+
+  if command -v git >/dev/null 2>&1; then
+    git_version="$(git --version 2>/dev/null | sed -E 's/^git version ([0-9]+(\.[0-9]+){0,2}).*/\1/')"
+    if [[ -z "$git_version" ]]; then
+      git_status="FOUND (version unknown)"
+    elif version_ge "$git_version" "$MIN_GIT_VERSION"; then
+      git_status="OK ($git_version)"
+    else
+      git_status="TOO OLD ($git_version, need >= $MIN_GIT_VERSION)"
+      required_fail=1
+    fi
+  else
+    required_fail=1
+  fi
+
+  if command -v python3 >/dev/null 2>&1; then
+    python_status="FOUND ($(python3 --version 2>/dev/null | awk '{print $2}'))"
+  elif command -v python >/dev/null 2>&1; then
+    python_status="FOUND ($(python --version 2>&1 | awk '{print $2}'))"
+  fi
+
+  if command -v pip3 >/dev/null 2>&1; then
+    pip_status="FOUND ($(pip3 --version 2>/dev/null | awk '{print $2}'))"
+  elif command -v pip >/dev/null 2>&1; then
+    pip_status="FOUND ($(pip --version 2>/dev/null | awk '{print $2}'))"
+  fi
+
+  echo "Dependency preflight:"
+  echo "  Required:"
+  echo "    - git: $git_status"
+  echo "  Optional (advanced tooling only):"
+  echo "    - python: $python_status"
+  echo "    - pip: $pip_status"
+
+  if [[ "$required_fail" -ne 0 ]]; then
+    echo
+    echo "Cannot continue: required dependencies are missing or incompatible."
+    echo "Install/upgrade the required tools, then run install again."
+    exit 1
+  fi
 }
 
 while [[ $# -gt 0 ]]; do
@@ -140,6 +203,8 @@ if [[ "$TARGET_DIR" != /* ]]; then
   TARGET_DIR="$(cd "$TARGET_DIR" && pwd)"
 fi
 FRAMEWORK_DIR="$TARGET_DIR/$FRAMEWORK_DIRNAME"
+
+preflight_checks
 
 detect_engine_dir() {
   local base="$1"

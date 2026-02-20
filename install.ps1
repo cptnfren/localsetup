@@ -46,6 +46,7 @@ if ($args.Count -gt 0) {
 $REPO_URL = if ($env:LOCALSETUP_2_REPO) { $env:LOCALSETUP_2_REPO } else { 'https://github.com/cptnfren/localsetup.git' }
 $FRAMEWORK_DIRNAME = '_localsetup'
 $ValidTools = @('cursor', 'claude-code', 'codex', 'openclaw')
+$MinGitVersion = [Version]'2.20.0'
 
 function Show-Usage {
     @'
@@ -81,6 +82,87 @@ function Show-UsageAndExit {
     exit 1
 }
 
+function Get-ToolVersion {
+    param([string]$ToolName)
+    try {
+        $cmd = Get-Command $ToolName -ErrorAction Stop
+        return $cmd
+    } catch {
+        return $null
+    }
+}
+
+function Get-GitVersion {
+    try {
+        $raw = (& git --version 2>$null)
+        if ($raw -match '(\d+\.\d+(\.\d+)?)') {
+            return [Version]$Matches[1]
+        }
+    } catch {}
+    return $null
+}
+
+function Run-PreflightChecks {
+    $requiredFail = $false
+    $gitStatus = 'MISSING'
+    $pythonStatus = 'MISSING (optional)'
+    $pipStatus = 'MISSING (optional)'
+
+    $gitCmd = Get-ToolVersion -ToolName 'git'
+    if ($gitCmd) {
+        $gitVer = Get-GitVersion
+        if ($gitVer) {
+            if ($gitVer -ge $MinGitVersion) {
+                $gitStatus = "OK ($gitVer)"
+            } else {
+                $gitStatus = "TOO OLD ($gitVer, need >= $MinGitVersion)"
+                $requiredFail = $true
+            }
+        } else {
+            $gitStatus = 'FOUND (version unknown)'
+        }
+    } else {
+        $requiredFail = $true
+    }
+
+    $pythonCmd = Get-ToolVersion -ToolName 'python'
+    if (-not $pythonCmd) { $pythonCmd = Get-ToolVersion -ToolName 'python3' }
+    if ($pythonCmd) {
+        try {
+            $pv = (& $pythonCmd.Source --version 2>&1)
+            $pythonStatus = "FOUND ($pv)"
+        } catch {
+            $pythonStatus = 'FOUND (version unknown)'
+        }
+    }
+
+    $pipCmd = Get-ToolVersion -ToolName 'pip'
+    if (-not $pipCmd) { $pipCmd = Get-ToolVersion -ToolName 'pip3' }
+    if ($pipCmd) {
+        try {
+            $pp = (& $pipCmd.Source --version 2>$null)
+            if (-not $pp) { $pp = (& $pipCmd.Source --version 2>&1) }
+            $pipStatus = "FOUND ($pp)"
+        } catch {
+            $pipStatus = 'FOUND (version unknown)'
+        }
+    }
+
+    Write-Host 'Dependency preflight:'
+    Write-Host '  Required:'
+    Write-Host "    - git: $gitStatus"
+    Write-Host '  Optional (advanced tooling only):'
+    Write-Host "    - python: $pythonStatus"
+    Write-Host "    - pip: $pipStatus"
+
+    if ($requiredFail) {
+        Write-Host ''
+        Write-Host 'Cannot continue: required dependencies are missing or incompatible.' -ForegroundColor Red
+        Write-Host 'Install/upgrade the required tools, then run install again.' -ForegroundColor Red
+        exit 1
+    }
+}
+
 if ($Help) {
     Show-Usage
     exit 0
@@ -103,6 +185,8 @@ try {
     Show-UsageAndExit "Directory does not exist: $TargetDir"
 }
 $FrameworkDir = Join-Path $TargetDir $FRAMEWORK_DIRNAME
+
+Run-PreflightChecks
 
 function Get-EngineSource {
     param([string]$BasePath)
