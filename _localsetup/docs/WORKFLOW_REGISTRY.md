@@ -23,6 +23,7 @@ version: 2.3
 | Umbrella workflow | Multi-phase single kickoff; named workflows | User invokes by name (e.g. "execute umbrella workflow X") | Yes for big/destructive |
 | Manual execution (lazy admin) | Human-in-the-loop; three-block format; info-gather before destructive | Sudo, confirmation, manual steps | No (protocol is guardrail) |
 | Tmux shared session | All server ops in tmux; human can attach; sudo via one gate per validity window | Server commands, deployments, tmux, human-in-the-loop | No (skill defines gate) |
+| Framework audit | Run doc/link/skill matrix/version checks; output user-specified path; optional `--deep` (Deep Analysis: derive invocations from SKILL.md and script `--help`, run in sandbox, summary JSON + sidecar tarball; requires output path) | User says "run audit", "run framework audit", or before release | No |
 
 Maintainer workflows (publish, bump) live in the maintainer repo; not documented here.
 

@@ -44,6 +44,7 @@ Copyright (c) 2026 Crux Experts LLC. MIT License  - see repository root [LICENSE
 - **Import skills from URL or path:** Load localsetup-skill-importer; run `_localsetup/tools/skill_importer_scan <path>`; see SKILL_IMPORTING.md.
 - **Discover similar public skills:** Load localsetup-skill-discovery when creating or importing; uses PUBLIC_SKILL_REGISTRY.urls and PUBLIC_SKILL_INDEX.yaml; see SKILL_DISCOVERY.md.
 - **Tmux shared session and sudo:** Load localsetup-tmux-shared-session-workflow; skill defines sudo discovery (valid? timeout? required?), one-prompt gate (user joins session, runs trigger, agent waits then batches sudo until timeout), and output capture; see WORKFLOW_REGISTRY.md.
+- **Run framework audit:** Load localsetup-framework-audit; run from repo root with `--output /path/to/report.md` (or set `LOCALSETUP_AUDIT_OUTPUT`). Optional `--deep` runs Deep Analysis (derive invocations from SKILL.md and script `--help`, run in sandbox, summary JSON + sidecar tarball; requires output path). See [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md).
 
 ---
 

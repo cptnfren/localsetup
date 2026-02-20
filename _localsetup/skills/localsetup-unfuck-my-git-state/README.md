@@ -42,10 +42,10 @@ A recovery skill for broken Git state:
 
 ## Quick Start
 
-From the target repo:
+From the target repo. Example commands use the framework layout (replace with your skills path if different):
 
 ```bash
-bash /home/delorenj/.agents/skills/unfuck-my-git-state/scripts/snapshot_git_state.sh .
+python _localsetup/skills/localsetup-unfuck-my-git-state/scripts/snapshot_git_state.py .
 ```
 
 Then:
@@ -56,13 +56,13 @@ Then:
 Quick plan generator:
 
 ```bash
-bash /home/delorenj/.agents/skills/unfuck-my-git-state/scripts/guided_repair_plan.sh --repo .
+python _localsetup/skills/localsetup-unfuck-my-git-state/scripts/guided_repair_plan.py --repo .
 ```
 
 Regression harness:
 
 ```bash
-bash /home/delorenj/.agents/skills/unfuck-my-git-state/scripts/regression_harness.sh
+python _localsetup/skills/localsetup-unfuck-my-git-state/scripts/regression_harness.py
 ```
 
 ## Vibe Check

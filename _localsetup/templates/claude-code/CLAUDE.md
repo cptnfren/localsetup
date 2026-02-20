@@ -2,7 +2,7 @@
 
 ## Overview
 
-Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and context are repo-local (mobile, backup-able with the repo). Engine = _localsetup/; user/context data = repo-local. Use Git hashes when referencing PRDs/specs/outcomes (see _localsetup/docs/GIT_TRACEABILITY.md).
+Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and context are repo-local (mobile, backup-able with the repo). Engine = _localsetup/; user/context data = repo-local. Use Git hashes when referencing PRDs/specs/outcomes (see [_localsetup/docs/GIT_TRACEABILITY.md](../_localsetup/docs/GIT_TRACEABILITY.md)).
 
 ## Invariants
 
@@ -55,6 +55,7 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and co
 - **localsetup-skill-normalizer**  - Normalize skills for spec compliance and platform-neutral wording; one skill or all
 - **localsetup-skill-sandbox-tester**  - Test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until approved
 - **localsetup-agentlens**  - Codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs
+- **localsetup-framework-audit**  - Run doc/link/skill matrix/version checks; optional --deep (Deep Analysis); output user path only; before release
 
 ## Key docs
 

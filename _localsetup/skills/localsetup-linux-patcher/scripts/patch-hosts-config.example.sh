@@ -16,6 +16,7 @@
 # ssh_user     - SSH username (leave empty to use current user)
 # docker_path  - Path to docker-compose.yml (leave empty for auto-detect)
 #
+# All paths below are examples only; replace with your own.
 # Examples:
 #   "webserver.example.com,ubuntu,/opt/docker"
 #   "db.example.com,root,/home/admin/compose"

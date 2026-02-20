@@ -132,7 +132,7 @@ If the original section mentioned a specific product's secret integration (e.g. 
 
 ## Tooling normalization
 
-**Order:** Run after SKILL.md (and any other markdown in the skill) has been normalized. Do not hardcode a specific language; use the **framework's current tooling standard** as defined in the framework's permanent rules and docs (see _localsetup/docs/TOOLING_POLICY.md and _localsetup/docs/INPUT_HARDENING_STANDARD.md). If the framework later changes its standard (e.g. to another language), normalization follows whatever is specified there.
+**Order:** Run after SKILL.md (and any other markdown in the skill) has been normalized. Do not hardcode a specific language; use the **framework's current tooling standard** as defined in the framework's permanent rules and docs ([TOOLING_POLICY.md](TOOLING_POLICY.md) and [INPUT_HARDENING_STANDARD.md](INPUT_HARDENING_STANDARD.md)). If the framework later changes its standard (e.g. to another language), normalization follows whatever is specified there.
 
 ### Default: rewrite to framework standard
 

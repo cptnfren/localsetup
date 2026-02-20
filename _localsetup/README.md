@@ -227,6 +227,7 @@ Skills are task-based instructions (SKILL.md with `name` and `description` front
 | `localsetup-skill-normalizer` | Normalize skills: Phase 1 (documents, platform choice when platform-specific); Phase 2 (tooling rewrite to framework standard). One skill or all. |
 | `localsetup-skill-sandbox-tester` | Test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until user approves |
 | `localsetup-agentlens` | Codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs |
+| `localsetup-framework-audit` | Run doc/link/skill matrix/version checks; optional `--deep` (Deep Analysis); output to user path only; before release |
 
 Skills follow the [Agent Skills](https://agentskills.io/specification) specification and are interchangeable with other spec-compliant hosts (import from URLs or local path; export framework skills for use elsewhere). See [SKILLS_AND_RULES.md](docs/SKILLS_AND_RULES.md), [PLATFORM_REGISTRY.md](docs/PLATFORM_REGISTRY.md), [SKILL_INTEROPERABILITY.md](docs/SKILL_INTEROPERABILITY.md), and [SKILL_IMPORTING.md](docs/SKILL_IMPORTING.md) for platform paths, loading behavior, and import/export.
 

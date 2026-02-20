@@ -31,6 +31,41 @@ Purpose: define project-wide tooling language and dependency rules.
   - recent release activity
 - Pin lower bounds in `requirements.txt` and document why each dependency exists.
 
+## Lint and quality
+
+- Python tooling must be lint-clean before merge. Single source of truth for commands and expectations:
+  - **Linter:** Run `ruff check` (or project-configured equivalent) from repo root or script directory. Fix all reported issues or document an explicit exception.
+  - **Format:** Run `ruff format` for style; no trailing whitespace, consistent quotes.
+  - **Types:** Use type hints for public functions and module boundaries. Use `pyright` or `mypy` in strict or standard mode if the project enables it; resolve type errors or add targeted ignores with a short comment.
+  - **Best practice:** Prefer explicit error handling and small functions; avoid broad `except` and untyped `**kwargs` in public APIs. See `INPUT_HARDENING_STANDARD.md` for input handling; this section covers static checks and style only.
+- Audit and CI scripts may read this section to determine which commands to run for tooling/lint.
+
+## Markdown output (reports and tool output)
+
+All framework tooling that produces reports or structured output intended for human or agent consumption **must** emit markdown that is **GitHub Flavored Markdown (GFM) compatible**. This ensures output renders correctly in GitHub, in editor previews, and in any GFM-capable viewer. Apply these rules globally to every script or tool that writes a report, log summary, or formatted output to a file or stdout.
+
+**Required:**
+
+- **Sectioning:** Use heading levels to separate parts of the report. Use `#` for the document title, `##` for major sections, `###` for subsections, `####` for sub-subsections. Do not skip levels (e.g. do not go from `##` to `####`).
+- **Code blocks:** Use fenced code blocks for any program or terminal output, log snippets, or code. Prefer `~~~text` / `~~~` (or ` ```text ` / ` ``` `) so that output containing backticks does not break the fence. Add a language hint when useful (e.g. `~~~text` for terminal output, `~~~python` for code). Do not rely on indented-only code blocks; use explicit fences.
+- **Emphasis:** Use **bold** for labels and important terms (e.g. **stdout**, **Errors**, **Summary**). Use *italic* for secondary emphasis or "(no output)"-style notes where appropriate.
+- **Lists:** Use `-` or `*` for unordered lists and `1.` for ordered lists so they render as proper list structure.
+- **Tables:** Use GFM table syntax (`| col | col |` with a header separator row) when presenting tabular data so it renders in a readable table.
+
+**Recommended:**
+
+- Use horizontal rules (`---`) sparingly to separate major report sections if it improves scanability.
+- Use inline `code` for file paths, command names, and literal values so they stand out.
+- Keep line length and paragraph length reasonable so that diff and preview UIs remain readable.
+
+**Avoid:**
+
+- Raw triple backticks inside content that is inside a fenced block (use a different fence, e.g. `~~~`, for the outer block so inner backticks do not close it).
+- Non-GFM or non–CommonMark markdown that GitHub does not render (e.g. custom HTML for layout; prefer standard markdown).
+- Unstructured walls of text; break content into sections and use the formatting above so importance and hierarchy are visually clear.
+
+Scripts and skills that generate reports (e.g. [framework audit](WORKFLOW_REGISTRY.md) including optional Deep Analysis, PR review, validation summaries) must follow this section. New tooling must adopt it by default.
+
 ## External input rule
 
 - All Python tooling that consumes external input must follow:
@@ -39,7 +74,7 @@ Purpose: define project-wide tooling language and dependency rules.
   - schema and bounds validation
   - actionable STDERR error output
   - no silent failure
-- See `INPUT_HARDENING_STANDARD.md` for mandatory controls.
+- See [INPUT_HARDENING_STANDARD.md](INPUT_HARDENING_STANDARD.md) for mandatory controls.
 
 ## Migration direction
 

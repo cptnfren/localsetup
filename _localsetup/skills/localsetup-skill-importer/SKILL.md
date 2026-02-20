@@ -37,7 +37,7 @@ metadata:
 
 - Tool does **not** execute any skill code. It only scans file contents.
 - **Security:** Flags patterns in scripts/assets (e.g. `eval(`, `curl | sh`, `Invoke-Expression`). Output is "Security: Review …" for the user; do not block import automatically.
-- **Content safety:** Scans SKILL.md body and scripts/assets using the pattern file (see _localsetup/docs/SKILL_VALIDATION_PATTERNS.md). Also flags non-English body content. For pattern hits, only **references** are shown (file, line, column, pattern id, and description from the index); the actual content at those positions is not read or displayed so the user can open the file and review themselves. Present the three options (skip / proceed after review / ignore and continue); do not auto-block.
+- **Content safety:** Scans SKILL.md body and scripts/assets using the pattern file (see [SKILL_VALIDATION_PATTERNS.md](../../docs/SKILL_VALIDATION_PATTERNS.md)). Also flags non-English body content. For pattern hits, only **references** are shown (file, line, column, pattern id, and description from the index); the actual content at those positions is not read or displayed so the user can open the file and review themselves. Present the three options (skip / proceed after review / ignore and continue); do not auto-block.
 
 ## Sources
 
@@ -48,7 +48,7 @@ metadata:
 
 ## Compatibility
 
-- Only directories that contain a valid SKILL.md (Agent Skills spec: `name`, `description`) are considered skills. Imported skills remain spec-compliant and interchangeable (see _localsetup/docs/SKILL_INTEROPERABILITY.md).
+- Only directories that contain a valid SKILL.md (Agent Skills spec: `name`, `description`) are considered skills. Imported skills remain spec-compliant and interchangeable (see [SKILL_INTEROPERABILITY.md](../../docs/SKILL_INTEROPERABILITY.md)).
 
 ## Duplicate and overlap (user options)
 

@@ -53,6 +53,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | **Script and docs quality** | Markdown encoding standards, script generation quality rules, file creation discipline, and documentation discipline enforced by the `localsetup-script-and-docs-quality` skill. |
 | **Human-in-the-loop ops** | The tmux shared-session workflow lets a human attach, observe, and provide sudo. Agent captures output via log files. Use for privileged or risky operations. |
 | **Arbiter workflow** | Push decisions to Arbiter Zebu for async human review when you need approval before proceeding. |
+| **Framework audit** | Single entrypoint runs doc checks, link checks, skill matrix (discovery + sandbox smoke), version/facts, and optional Deep Analysis (`--deep`): derives invocations from SKILL.md and script `--help`, runs in sandbox, writes summary JSON and sidecar tarball. Output only to user-specified path; no in-repo default. See [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md) and skill `localsetup-framework-audit`. |
 
 ---
 
@@ -60,12 +61,12 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 
 | Capability | Description |
 |---|---|
-| **Conventional commit bumping** | Version bump is inferred from commit messages (feat: → minor, fix:/docs: → patch). Framework version and docs are maintained by repo maintainers; see docs/VERSIONING.md. |
+| **Conventional commit bumping** | Version bump is inferred from commit messages (feat: → minor, fix:/docs: → patch). Framework version and docs are maintained by repo maintainers; see [docs/VERSIONING.md](../../docs/VERSIONING.md). |
 | **README and docs sync** | Version values are synchronized to `README.md`, `_localsetup/README.md`, and YAML frontmatter in `_localsetup/docs/*.md` and `docs/*.md`. |
 | **Attribution guardrails** | The commit hook strips `Co-authored-by` trailers for AI agents and bots. Only humans appear in commit history. |
-| **Git traceability model** | PRDs, specs, and outcomes can reference git commit hashes for audit. See `GIT_TRACEABILITY.md`. |
-| **Maintenance workflow** | Framework version and docs are maintained by the repository maintainers. See docs/VERSIONING.md for how version is defined and displayed. |
-| **Skill metadata patching** | Skill `metadata.version` in SKILL.md is updated by maintainers when skills change; see _localsetup/docs/AGENT_SKILLS_COMPLIANCE.md. |
+| **Git traceability model** | PRDs, specs, and outcomes can reference git commit hashes for audit. See [GIT_TRACEABILITY.md](GIT_TRACEABILITY.md). |
+| **Maintenance workflow** | Framework version and docs are maintained by the repository maintainers. See [docs/VERSIONING.md](../../docs/VERSIONING.md) for how version is defined and displayed. |
+| **Skill metadata patching** | Skill `metadata.version` in SKILL.md is updated by maintainers when skills change; see [AGENT_SKILLS_COMPLIANCE.md](AGENT_SKILLS_COMPLIANCE.md). |
 
 ---
 
@@ -103,6 +104,7 @@ These skills ship with the framework and are ready to use immediately.
 | `localsetup-arbiter` | Push decisions to Arbiter Zebu for async human review. |
 | `localsetup-backlog-and-reminders` | Record deferred ideas, to-dos, reminders; show due/overdue on session start. |
 | `localsetup-task-skill-matcher` | Match tasks to installed skills; recommend top matches; single or batch flow. |
+| `localsetup-framework-audit` | Run doc/link/skill matrix/version checks before release; optional `--deep` (Deep Analysis: derive invocations, run in sandbox, summary JSON + tarball); output to user path only. |
 
 ---
 

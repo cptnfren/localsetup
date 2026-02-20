@@ -64,6 +64,9 @@ def _run_capture(repo: Path, out_dir: Path, name: str, *git_args: str) -> None:
 
 
 def main() -> int:
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print(__doc__.strip())
+        return 0
     repo_raw = sys.argv[1] if len(sys.argv) > 1 else "."
     try:
         repo = _sanitize_path(repo_raw)

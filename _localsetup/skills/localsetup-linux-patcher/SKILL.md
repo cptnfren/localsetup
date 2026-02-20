@@ -128,7 +128,7 @@ cp scripts/patch-hosts-config.example.sh my-servers.conf
 nano my-servers.conf
 ```
 
-Example config:
+Example config (paths are examples only; replace with your own hostnames and paths):
 ```bash
 # Host definitions: hostname,ssh_user,docker_path
 HOSTS=(
@@ -371,7 +371,7 @@ scripts/patch-auto.sh --skip-docker
 scripts/patch-host-only.sh admin@webserver.example.com
 ```
 
-### Example 5: Manual single host, full update with custom Docker path
+### Example 5: Manual single host, full update with custom Docker path (example path)
 ```bash
 scripts/patch-host-full.sh docker@app.example.com /home/docker/production
 ```
@@ -423,7 +423,7 @@ Run the scripts via your platform's command or terminal; use automatic mode (`sc
 #### Docker Compose not found
 - Specify full path: `scripts/patch-host-full.sh user@host /full/path`
 - Or install Docker Compose on target host
-- Auto-detection searches: `/home/user/Docker`, `/opt/docker`, `/srv/docker`
+- Auto-detection searches common example locations: `$HOME/Docker`, `/opt/docker`, `/srv/docker` (actual paths depend on target host)
 
 #### Containers fail to start after update
 - Check logs: `ssh user@host "docker logs container-name"`

@@ -1752,12 +1752,12 @@ skills:
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: github
 - name: quantum-lab
-  description: Run the /home/bram/work/quantum_lab Python scripts and demos inside
+  description: Run the quantum_lab Python scripts and demos (path configurable by user)
   url: https://github.com/openclaw/skills/tree/main/skills/bramdo/quantum-lab/SKILL.md
   source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
   category: Table of Contents
-  summary_short: Run the /home/bram/work/quantum_lab Python scripts and demos inside
-  summary_long: 'Run the /home/bram/work/quantum_lab Python scripts and demos inside Likely requirements: python. May require network access.'
+  summary_short: Run the quantum_lab Python scripts and demos (path configurable by user)
+  summary_long: 'Run the quantum_lab Python scripts and demos (path configurable by user). Likely requirements: python. May require network access.'
   capabilities: []
   requirements:
   - python
@@ -1771,12 +1771,12 @@ skills:
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: github
 - name: quantumlab
-  description: Run the /home/bram/work/quantum_lab Python scripts and demos inside
+  description: Run the quantum_lab Python scripts and demos (path configurable by user)
   url: https://github.com/openclaw/skills/tree/main/skills/bramdo/quantumlab/SKILL.md
   source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
   category: Table of Contents
-  summary_short: Run the /home/bram/work/quantum_lab Python scripts and demos inside
-  summary_long: 'Run the /home/bram/work/quantum_lab Python scripts and demos inside Likely requirements: python. May require network access.'
+  summary_short: Run the quantum_lab Python scripts and demos (path configurable by user)
+  summary_long: 'Run the quantum_lab Python scripts and demos (path configurable by user). Likely requirements: python. May require network access.'
   capabilities: []
   requirements:
   - python

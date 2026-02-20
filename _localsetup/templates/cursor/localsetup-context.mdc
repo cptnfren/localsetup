@@ -19,7 +19,7 @@ Localsetup v2 is a universal, cross-platform agentic workflow engine. It is **de
 - **Documentation discipline:** _localsetup/docs/ is ONLY for framework documentation. Check document status (ACTIVE/PROPOSAL/DRAFT) before assuming a feature is implemented.
 - **Proposals:** Any change to the framework must follow the Agent Q format; see _localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md.
 - **Time/date integrity:** For any date or time reference (e.g. "today", year in a search, timestamps), first obtain the actual date/time from the local machine using a platform-appropriate command (e.g. `date` on Linux/macOS, `Get-Date` in PowerShell on Windows). Do not use a generic or training-cutoff date (e.g. 2024 when the current year is different). Remember the obtained date/time in context and use it consistently for the remainder of the session.
-- **Maintenance workflow:** Framework version and docs are maintained by the repository maintainers. See docs/VERSIONING.md for how version is defined and displayed.
+- **Maintenance workflow:** Framework version and docs are maintained by the repository maintainers. See [docs/VERSIONING.md](../../docs/VERSIONING.md) for how version is defined and displayed.
 - **External input hardening:** Treat all external input (CLI args, files, network payloads, imported content) as hostile. Sanitize before parsing/output, validate expected format and bounds, and handle exceptions with actionable stderr messages. Never silently suppress errors.
 - **Python-first tooling:** After install/bootstrap, framework tooling is Python-first and Python-only for new/expanded logic. Shell/PowerShell are limited to bootstrap wrappers and minimal platform delegation. Runtime target is Python >= 3.10.
 
@@ -69,6 +69,7 @@ Load the appropriate skill when the task matches. All skills live under .cursor/
 | localsetup-skill-normalizer | Normalize skills for spec compliance and platform-neutral wording; one skill or all |
 | localsetup-skill-sandbox-tester | Test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until approved |
 | localsetup-agentlens | Codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs |
+| localsetup-framework-audit | Run doc/link/skill matrix/version checks; optional --deep (Deep Analysis); output user-specified path only; before release |
 
 ## Framework docs index
 

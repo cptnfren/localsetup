@@ -30,4 +30,4 @@ metadata:
 
 ## 5a. Firewall management (for services)
 
-- **When adding new services:** Configure firewall rules. Use `source lib/firewall_manager.sh && configure_firewall_rule "ServiceName" "PORT" "tcp" "lan"`. Default scope "lan". Validate with `validate_firewall_rule`. See _localsetup/docs/FIREWALL_MANAGEMENT.md.
+- **When adding new services:** Configure firewall rules. Use `source lib/firewall_manager.sh && configure_firewall_rule "ServiceName" "PORT" "tcp" "lan"`. Default scope "lan". Validate with `validate_firewall_rule`. See [FIREWALL_MANAGEMENT.md](../../docs/FIREWALL_MANAGEMENT.md).

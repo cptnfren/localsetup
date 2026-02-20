@@ -20,7 +20,7 @@ metadata:
 
 - **Our output is spec-compliant.** Every skill we create or adapt conforms to the [Agent Skills](https://agentskills.io/specification) spec (required `name`, `description`; optional `metadata.version`, `scripts/`, `references/`, `assets/`). No framework-only required fields -so the skill can be copied into any Agent Skills host.
 - **External skills can be used here.** A skill from [anthropics/skills](https://github.com/anthropics/skills) or any spec-compliant source can be dropped into `_localsetup/skills/`, optionally renamed to `localsetup-*`, given `metadata.version` if missing, and registered; no body or structure changes needed for compliance.
-- **Design guidance:** For structure, progressive disclosure, and what to include (scripts, references, assets), follow the [Agent Skills spec](https://agentskills.io/specification) and [Anthropic’s skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator). This skill adds framework placement and registration; the resulting skill remains portable. See _localsetup/docs/SKILL_INTEROPERABILITY.md.
+- **Design guidance:** For structure, progressive disclosure, and what to include (scripts, references, assets), follow the [Agent Skills spec](https://agentskills.io/specification) and [Anthropic’s skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator). This skill adds framework placement and registration; the resulting skill remains portable. See [SKILL_INTEROPERABILITY.md](../../docs/SKILL_INTEROPERABILITY.md).
 
 ## Inputs you can accept
 
@@ -79,7 +79,7 @@ Use the same "When to use" phrasing across all files so indexes stay consistent.
 
 ## Using our skills in another host (export)
 
-- Copy the skill directory from `_localsetup/skills/<name>/` (or from the deployed path for your platform, e.g. `.cursor/skills/<name>/`). It is a valid Agent Skills skill; use it in any spec-compliant host without changes. Optionally rename directory and `name` to match the host’s conventions. See _localsetup/docs/SKILL_INTEROPERABILITY.md.
+- Copy the skill directory from `_localsetup/skills/<name>/` (or from the deployed path for your platform, e.g. `.cursor/skills/<name>/`). It is a valid Agent Skills skill; use it in any spec-compliant host without changes. Optionally rename directory and `name` to match the host’s conventions. See [SKILL_INTEROPERABILITY.md](../../docs/SKILL_INTEROPERABILITY.md).
 
 ## Reference
 

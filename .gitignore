@@ -8,6 +8,12 @@
 _internal_docs/
 _localsetup/.localsetup-meta/
 
+# Repo-local data (PR review state, audit output, etc.; never publish)
+data/
+
+# Git state snapshots (unfuck-my-git-state diagnostic output; never publish)
+.git-state-snapshots/
+
 # Python
 __pycache__/
 *.pyc

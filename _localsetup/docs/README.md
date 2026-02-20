@@ -26,7 +26,7 @@ New to Localsetup? Read these first.
 |---|---|
 | [Quickstart](QUICKSTART.md) | Installation, platform selection, verification, one-liners for CI |
 | [Features](FEATURES.md) | Full capability catalog with tables for every feature category |
-| [Shipped skills catalog](SKILLS.md) | All 32 built-in skills with IDs, descriptions, and versions |
+| [Shipped skills catalog](SKILLS.md) | All 34 built-in skills with IDs, descriptions, and versions |
 | [Platform registry](PLATFORM_REGISTRY.md) | Canonical table of platform IDs, context paths, and skills paths |
 | [Multi-platform install](MULTI_PLATFORM_INSTALL.md) | Detailed cross-platform deployment instructions |
 

@@ -153,7 +153,7 @@ py -m pip install "PyYAML>=6.0"
 ## 📖 Next steps
 
 - [Features](FEATURES.md) - full capability list
-- [Shipped skills catalog](SKILLS.md) - all 32 built-in skills
+- [Shipped skills catalog](SKILLS.md) - all 34 built-in skills
 - [Platform registry](PLATFORM_REGISTRY.md) - canonical platform definitions
 - [Multi-platform install](MULTI_PLATFORM_INSTALL.md) - detailed cross-platform docs
 

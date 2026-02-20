@@ -491,10 +491,10 @@ def cmd_list_unreviewed(repo: str, state_path: Path) -> int:
 
 
 def main() -> int:
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 2 or sys.argv[1].strip().lower() in ("--help", "-h"):
         print("Usage: pr_review.py {check|review <PR#>|post <PR#>|status|list-unreviewed}", file=sys.stderr)
         print("Environment: PR_REVIEW_REPO, PR_REVIEW_DIR, PR_REVIEW_STATE, PR_REVIEW_OUTDIR", file=sys.stderr)
-        return 1
+        return 0 if (len(sys.argv) >= 2 and sys.argv[1].strip().lower() in ("--help", "-h")) else 1
     sub = sys.argv[1].strip().lower()
     try:
         repo, local_dir, state_path, outdir = get_repo_and_dirs()

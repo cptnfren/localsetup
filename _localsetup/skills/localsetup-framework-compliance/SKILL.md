@@ -23,7 +23,7 @@ Before executing ANY task:
 ## 1. Context load and repo role
 
 - **VERIFY:** Context is loaded. If unsure, ask user to run `./_localsetup/tools/verify_context`.
-- **Repo role:** Framework lives in client repo at _localsetup/. Only modify local context (e.g. your platform's local rules, such as .cursor/rules/local-*.mdc on Cursor) or propose changes via PRD. See _localsetup/docs/REPO_AND_DATA_SEPARATION.md.
+- **Repo role:** Framework lives in client repo at _localsetup/. Only modify local context (e.g. your platform's local rules, such as .cursor/rules/local-*.mdc on Cursor) or propose changes via PRD. See [REPO_AND_DATA_SEPARATION.md](../../docs/REPO_AND_DATA_SEPARATION.md).
 
 ## 6. Document status and testing
 

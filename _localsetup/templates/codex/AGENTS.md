@@ -1,7 +1,7 @@
 # Localsetup v2  - Agent context (Codex)
 
 ## Overview
-Localsetup v2 is deployed into this repo at `_localsetup/`. Framework and context are repo-local (mobile, backup-able). Engine = _localsetup/; user data = repo-local. Attach git hash when referencing PRDs/specs (see _localsetup/docs/GIT_TRACEABILITY.md).
+Localsetup v2 is deployed into this repo at `_localsetup/`. Framework and context are repo-local (mobile, backup-able). Engine = _localsetup/; user data = repo-local. Attach git hash when referencing PRDs/specs (see [_localsetup/docs/GIT_TRACEABILITY.md](../_localsetup/docs/GIT_TRACEABILITY.md)).
 
 ## Invariants
 - Engine/repo separation: no secrets/PII in commits. Paths via _localsetup/lib/data_paths.sh. Framework at _localsetup/.
@@ -51,6 +51,7 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. Framework and contex
 - localsetup-skill-normalizer: normalize skills for spec compliance and platform-neutral wording; one skill or all
 - localsetup-skill-sandbox-tester: test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until approved
 - localsetup-agentlens: codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs
+- localsetup-framework-audit: run doc/link/skill matrix/version checks; optional --deep (Deep Analysis); output user path only; before release
 
 ## Docs
 _localsetup/docs/AGENTIC_DESIGN_INDEX.md, WORKFLOW_REGISTRY.md, PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md, DECISION_TREE_WORKFLOW.md, INPUT_HARDENING_STANDARD.md, TOOLING_POLICY.md
