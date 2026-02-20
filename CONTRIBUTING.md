@@ -18,7 +18,7 @@ Thank you for your interest in contributing. Here’s how to get started.
 
 - **Root**  - Install scripts (`install`, `install.ps1`), README, LICENSE, versioning scripts, and docs.
 - **`framework/`**  - The engine: `tools/`, `lib/`, `skills/`, `templates/`, `docs/`. Changes here affect what gets deployed into a client’s `_localsetup/`.
-- **`.githooks/`**  - Git hooks (e.g. commit-msg for version bump). Run `./scripts/install-githooks` once per clone to use them.
+- **Version and doc sync:** Run `./scripts/publish` (or `./scripts/publish --push`) after you commit; it bumps VERSION from the last commit message, regenerates doc artifacts, and commits the sync. See [docs/VERSIONING.md](docs/VERSIONING.md).
 
 For detailed structure and conventions, see [framework/README.md](framework/README.md) and the docs under `framework/docs/`.
 
@@ -34,7 +34,7 @@ Optional: `./scripts/maintain "fix: short description"`. See [docs/MAINTENANCE_W
 
 ## Attribution and contributors
 
-**Only humans are listed as contributors.** Do not add AI assistants, IDEs, or tools (e.g. Cursor, Copilot, Claude, ChatGPT) as co-authors in commit messages or in any contributor/credit list in the repo. We do not credit every tool in the chain (hardware, ISP, electricity, etc.); authorship and contributor attribution are human-only. The commit-msg hook strips `Co-authored-by` trailers that match known AI/bot patterns so they never reach the repo history; agents and tools must not add them in the first place.
+**Only humans are listed as contributors.** Do not add AI assistants, IDEs, or tools (e.g. Cursor, Copilot, Claude, ChatGPT) as co-authors in commit messages or in any contributor/credit list in the repo. We do not credit every tool in the chain; authorship and contributor attribution are human-only.
 
 ## Code and docs standards
 

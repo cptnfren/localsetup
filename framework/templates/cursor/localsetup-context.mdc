@@ -19,7 +19,7 @@ Localsetup v2 is a universal, cross-platform agentic workflow engine. It is **de
 - **Documentation discipline:** _localsetup/docs/ is ONLY for framework documentation. Check document status (ACTIVE/PROPOSAL/DRAFT) before assuming a feature is implemented.
 - **Proposals:** Any change to the framework must follow the Agent Q format; see _localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md.
 - **Time/date integrity:** For any date or time reference (e.g. "today", year in a search, timestamps), first obtain the actual date/time from the local machine using a platform-appropriate command (e.g. `date` on Linux/macOS, `Get-Date` in PowerShell on Windows). Do not use a generic or training-cutoff date (e.g. 2024 when the current year is different). Remember the obtained date/time in context and use it consistently for the remainder of the session.
-- **Maintenance workflow:** After any modification to the framework (docs, scripts, skills, config), run from repo root: `./scripts/maintain` (bumps version, commits, pushes to origin main). Keeps main current; not a formal release. See docs/MAINTENANCE_WORKFLOW.md. Every modification should end with this step.
+- **Maintenance workflow:** After any modification to the framework (docs, scripts, skills, config), run from repo root: `./scripts/publish --push` (bumps version from last commit, regenerates docs, commits sync, pushes). Or load skill **localsetup-publish-workflow** when the user says "publish" or "run publish workflow". See docs/MAINTENANCE_WORKFLOW.md.
 
 ## Skills index
 
@@ -36,6 +36,7 @@ Load the appropriate skill when the task matches. All skills live under .cursor/
 | localsetup-script-and-docs-quality | Generating scripts, markdown/docs |
 | localsetup-communication-and-tools | Communication style, tool choice, MCP/context updates |
 | localsetup-tmux-shared-session-workflow | Server/system commands, deployments, tmux, shared session, human-in-the-loop ops |
+| localsetup-publish-workflow | User says "publish", "run publish workflow", "bump and push"; run ./scripts/publish (--push) from repo root |
 | localsetup-automatic-versioning | Version bumps, release workflow, conventional commits, versioning docs |
 | localsetup-github-publishing-workflow | Publishing to GitHub, public release prep, publishing checklist, repo readiness |
 | localsetup-skill-creator | Create new skill from workflow or existing doc/markdown/GitHub; capture workflow as framework skill |

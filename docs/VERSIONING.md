@@ -3,43 +3,28 @@ status: ACTIVE
 version: 2.1
 ---
 
-# Versioning and Git hooks (Localsetup v2)
+# Versioning (Localsetup v2)
 
-**Purpose:** How version is bumped automatically on commit and how to enable/override it.
+**Purpose:** How version is bumped and how to publish (bump + doc sync + commit).
 
 ## Source of truth
 
 - **VERSION** at repo root: single line, semantic version `MAJOR.MINOR.PATCH` (e.g. `2.0.0`).
-- **README.md** and **framework/README.md** display `**Version:** X.Y.Z`; the bump script and commit-msg hook keep them in sync when you bump.
-- **Framework docs** (`framework/docs/*.md` and `docs/*.md`) use YAML front matter `version: X.Y` (major.minor); the bump script updates these as well so the displayed version is correct before publishing to GitHub.
-- **Skill documents** (framework/skills/*/SKILL.md): Each skill has its own `metadata.version` (e.g. `"1.0"`) per the [Agent Skills](https://agentskills.io/specification) spec. When you commit changes to a skill file, the commit-msg hook runs `scripts/bump-skill-versions` and increments that skill’s version in the same commit. See framework/docs/AGENT_SKILLS_COMPLIANCE.md.
+- **README.md** and **framework/README.md** display `**Version:** X.Y.Z`; the bump script updates them when you run the publish workflow.
+- **Framework docs** (`framework/docs/*.md` and `docs/*.md`) use YAML front matter `version: X.Y` (major.minor); the bump script updates these as well.
+- **Skill documents** (framework/skills/*/SKILL.md): Each skill has its own `metadata.version` (e.g. `"1.0"`) per the [Agent Skills](https://agentskills.io/specification) spec. Bump skill versions manually with `scripts/bump-skill-versions` when you change a skill. See framework/docs/AGENT_SKILLS_COMPLIANCE.md.
 
-## Automatic bump on commit
+## Publish workflow (recommended)
 
-When Git hooks are installed (see below), every **commit** triggers:
-
-1. **commit-msg** hook runs with the commit message file.
-2. **scripts/bump-version** reads the message and applies [Conventional Commits](https://www.conventionalcommits.org/) rules:
-   - **MAJOR** (e.g. 2.0.0 → 3.0.0): `BREAKING CHANGE:` in the body, or type followed by `!` (e.g. `feat!: new API`).
-   - **MINOR** (e.g. 2.0.0 → 2.1.0): `feat:` (new feature).
-   - **PATCH** (e.g. 2.0.0 → 2.0.1): `fix:`, `docs:`, `chore:`, `style:`, `refactor:`, `perf:`, `test:`, `ci:`, `build:`.
-   - Any other message: **PATCH** by default.
-3. Merge commits (message starting with `Merge `) are **skipped** (no bump).
-4. The hook updates **VERSION** and the README **Version:** lines, stages them, and **amends** the commit so the version change is part of the same commit.
-
-So each commit gets exactly one version bump (or none for merge commits).
-
-## Enable hooks (one-time per clone)
-
-From repo root:
+Version bump and doc sync are not done on every commit. After you have committed your changes and updated any docs that need manual edits, run from repo root:
 
 ```bash
-./scripts/install-githooks
+./scripts/publish
 ```
 
-This runs `git config core.hooksPath .githooks`, so Git uses the version-controlled hooks in **.githooks/** instead of **.git/hooks/**.
+This: (1) bumps VERSION using the last commit message and [Conventional Commits](https://www.conventionalcommits.org/) (feat: → minor, fix:/docs: → patch, feat!: or BREAKING CHANGE → major), or pass `--major`, `--minor`, or `--patch` to force a bump type; (2) regenerates doc artifacts (SKILLS.md, facts.json, managed blocks); (3) commits the version and doc changes with message `chore: bump to X.Y.Z and sync docs`. To push in the same step: `./scripts/publish --push`.
 
-## Manual bump
+## Manual bump only (no commit)
 
 To bump without committing, or to force a bump type:
 
@@ -65,23 +50,19 @@ PowerShell (Windows):
 
 ## Maintenance workflow (after modifications)
 
-**Standard workflow:** After any modification to the framework, bump the version, commit, and push to **main** so the framework stays current. Use one command from repo root:
+After any modification to the framework, run the publish workflow so version and docs stay in sync, then push to **main**:
 
 ```bash
-./scripts/maintain
+./scripts/publish --push
 ```
 
-Optional: pass a custom commit message: `./scripts/maintain "fix: install tty fallback"`
+Alternatively: `./scripts/publish` (commit only), then `git push origin main` when ready.
 
-See [MAINTENANCE_WORKFLOW.md](MAINTENANCE_WORKFLOW.md) for full steps and policy. **Every modification should end with this maintenance workflow (keeps main current; not a formal release).**
+See [MAINTENANCE_WORKFLOW.md](MAINTENANCE_WORKFLOW.md) for full steps and policy.
 
-## Skipping the hook
+## Commit message examples (used when you run publish)
 
-- **Merge and rebase:** The hook does not amend during a merge or an active rebase.
-- **Bypass for one commit:** `git commit --no-verify -m "message"` (skips all commit-msg hooks).
-- **Disable hooks:** `git config --unset core.hooksPath` (use default .git/hooks again).
-
-## Commit message examples
+Publish infers bump type from the **last** commit message. Examples:
 
 ```text
 feat: add PowerShell install script

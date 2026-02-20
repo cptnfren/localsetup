@@ -13,11 +13,11 @@
 **Version:** 2.1.2  
 **Last updated:** 2026-02-19
 
-Localsetup v2 is a portable, repo-local workflow engine for AI agents. Everything the agent needs, context files, skills, versioning hooks, and docs, lives under a single folder in your project. Clone or move the repo and the entire setup moves with it; no home-directory state, no cloud dependency, no hidden drift. The framework installs with one command and works identically across Cursor, Claude Code, OpenAI Codex CLI, and OpenClaw. Add more platforms later by editing one registry file.
+Localsetup v2 is a portable, repo-local workflow engine for AI agents. Everything the agent needs, context files, skills, and docs, lives under a single folder in your project. Clone or move the repo and the entire setup moves with it; no home-directory state, no cloud dependency, no hidden drift. The framework installs with one command and works identically across Cursor, Claude Code, OpenAI Codex CLI, and OpenClaw. Add more platforms later by editing one registry file.
 
 Agent behavior tends to drift because context lives outside the repo and nobody can audit what changed. Localsetup fixes that by treating context as code. Every spec, outcome, and workflow decision can reference a git commit, so you get full traceability without extra tooling. Built-in skills cover structured PRD processing, decision-tree prompting, compliance checklists, and human-in-the-loop gates for anything that requires sudo or manual confirmation.
 
-Out of the box you get 32 curated skills: debugging helpers, TDD scaffolding, PR review, git recovery, Linux patching, Ansible orchestration, and more. Skills follow the Agent Skills specification, which means you can import skills from other ecosystems (including Anthropic's public skills repo) and export your own. The version bump happens automatically on commit: conventional-commit parsing, skill metadata patching, and README sync are all wired into the git hooks so docs never fall behind code.
+Out of the box you get 32 curated skills: debugging helpers, TDD scaffolding, PR review, git recovery, Linux patching, Ansible orchestration, and more. Skills follow the Agent Skills specification, which means you can import skills from other ecosystems (including Anthropic's public skills repo) and export your own. Run `./scripts/publish` after you commit to bump version (from the last commit message), regenerate doc artifacts, and commit the sync so docs stay in step with code.
 
 In practice, you run a single install command, verify with one script, and start invoking workflows immediately. No lengthy onboarding, no manual config sync, just a working agent setup that stays accurate over time.
 
@@ -60,7 +60,7 @@ For non-interactive one-liners (CI, automation, or when you already know the pla
 4. **Agent Skills spec compatible** - skills follow the open Agent Skills specification, so you can import from Anthropic's public repo, awesome lists, or your own library and export yours for others.
 5. **32 shipped skills** - debugging, TDD, PR review, git recovery, Linux patching, Ansible orchestration, tmux handoff, PRD batching, decision trees, and more, ready to use out of the box.
 6. **Human-in-the-loop gates** - tmux shared sessions, sudo discovery, and approval flow before destructive ops. The agent pauses and waits for you when it matters.
-7. **Automatic versioning** - conventional-commit parsing bumps `VERSION`, doc frontmatter, and README headers on every commit. Docs never fall behind code.
+7. **Publish workflow** - run `./scripts/publish` after you commit; version is bumped from the last commit message (Conventional Commits), doc artifacts are regenerated, and the sync is committed so docs stay in step.
 8. **Skill metadata patching** - staged `SKILL.md` files get their `metadata.version` incremented automatically so skill docs stay accurate.
 9. **Platform registry** - a single Markdown table defines every supported host, context path, and skills path. Extend support by editing one file.
 10. **Git-coupled traceability** - PRDs, specs, and outcomes can reference commit hashes for audit. Context is code; changes are reviewable.

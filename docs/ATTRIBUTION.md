@@ -11,20 +11,18 @@ version: 2.1
 
 GitHub counts both **author** and **committer** as contributors. The agent can appear in two ways:
 
-1. **Co-authored-by** in the commit message. The commit-msg hook strips these.
-2. **Committer identity.** When Cursor (or another IDE) runs `git commit`, it can set `GIT_COMMITTER_NAME` / `GIT_COMMITTER_EMAIL` to "Cursor Agent" or "cursoragent". The commit-msg hook only edits the message; it does not change who Git records as committer. One such commit is enough for GitHub to show that account as a contributor.
+1. **Co-authored-by** in the commit message.
+2. **Committer identity.** When Cursor (or another IDE) runs `git commit`, it can set `GIT_COMMITTER_NAME` / `GIT_COMMITTER_EMAIL` to "Cursor Agent" or "cursoragent". One such commit is enough for GitHub to show that account as a contributor.
 
 ## How we enforce it
 
-- **Commit-msg hook** (`.githooks/commit-msg`): Strips any `Co-authored-by` trailer that matches common AI/bot patterns (Cursor, Copilot, Claude, ChatGPT, Bot, OpenAI, Anthropic, GitHub Actions) before the commit is finalized.
-- **Post-commit hook** (`.githooks/post-commit`): If the committer differs from the author, amends the commit so committer is set to the author. That way an IDE cannot leave itself as committer.
-- Run `./scripts/install-githooks` once per clone so both hooks are active.
-- **CONTRIBUTING.md:** States the policy so humans and agents do not add such trailers or list tools in contributor/credit sections.
+- **CONTRIBUTING.md:** States the policy so humans and agents do not add `Co-authored-by` trailers or list tools in contributor/credit sections.
 - **Framework context:** The Cursor (and deployed) context includes an invariant: do not add `Co-authored-by` or list any AI agent as contributor or author.
+- Git hooks in `.githooks/` are disabled (no-op); version bump and doc sync are done via `./scripts/publish` after you commit.
 
 ## For maintainers
 
-If your IDE or agent keeps adding itself as co-author, ensure githooks are installed and the hook runs on every commit. Do not add AI tools to README Author, CONTRIBUTING contributor lists, or any credit section.
+Do not add AI tools to README Author, CONTRIBUTING contributor lists, or any credit section. Avoid adding Co-authored-by trailers for agents or bots when committing.
 
 ## If Cursor/cursoragent still shows as contributor (cleanup)
 

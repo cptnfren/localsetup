@@ -60,7 +60,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 
 | Capability | Description |
 |---|---|
-| **Conventional commit bumping** | The `commit-msg` hook parses your commit message (feat, fix, docs, BREAKING CHANGE) and bumps `VERSION` accordingly. |
+| **Conventional commit bumping** | Run `./scripts/publish` after you commit; bump type is inferred from the last commit message (feat: → minor, fix:/docs: → patch). |
 | **README and docs sync** | Version values are synchronized to `README.md`, `framework/README.md`, and YAML frontmatter in `framework/docs/*.md` and `docs/*.md`. |
 | **Attribution guardrails** | The commit hook strips `Co-authored-by` trailers for AI agents and bots. Only humans appear in commit history. |
 | **Git traceability model** | PRDs, specs, and outcomes can reference git commit hashes for audit. See `GIT_TRACEABILITY.md`. |
@@ -96,7 +96,7 @@ These skills ship with the framework and are ready to use immediately.
 | `localsetup-agentic-prd-batch` | Process PRDs from queue; implement per spec; update status; write outcome. |
 | `localsetup-agentic-umbrella-queue` | Named workflows with impact summary and user confirmation before big/destructive runs. |
 | `localsetup-framework-compliance` | Pre-task workflow, certainty assessment, context load, document status, testing, git checkpoints. |
-| `localsetup-automatic-versioning` | Manage VERSION, commit-msg hook, conventional commits, sync to READMEs and docs. |
+| `localsetup-automatic-versioning` | Manage VERSION, `./scripts/publish` workflow, conventional commits, sync to READMEs and docs. |
 | `localsetup-github-publishing-workflow` | Publishing checklist: doc structure, licensing, PII/secrets scrub, repo readiness. |
 | `localsetup-tmux-shared-session-workflow` | Human-in-the-loop ops via shared tmux session with sudo discovery and batch gates. |
 | `localsetup-arbiter` | Push decisions to Arbiter Zebu for async human review. |

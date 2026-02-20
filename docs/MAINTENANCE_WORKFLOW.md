@@ -14,44 +14,34 @@ version: 2.1
 
 ## One command (recommended)
 
-From repo root:
+From repo root, after you have committed your changes and updated any relevant docs:
 
 ```bash
-./scripts/maintain
+./scripts/publish --push
 ```
 
-This will:
+This will: (1) bump **VERSION** from the last commit message (Conventional Commits: feat: → minor, fix:/docs: → patch) or use `--major`/`--minor`/`--patch` to force; (2) regenerate doc artifacts (SKILLS.md, facts, managed blocks); (3) commit with message `chore: bump to X.Y.Z and sync docs`; (4) push to `origin main`.
 
-1. Run **bump-version --patch** (updates `VERSION`, READMEs, and doc front matter).
-2. **Stage** all changes (`git add -A`).
-3. **Commit** with message `chore: maintain (bump to X.Y.Z)` (or your message if you pass one).
-4. **Push** to `origin main`.
+Commit only (no push): `./scripts/publish`. Then `git push origin main` when ready.
 
-With a custom commit message:
-
-```bash
-./scripts/maintain "fix: install tty fallback and README one-liners"
-```
+Alternative (always patch bump, stage everything): `./scripts/maintain` (see script for behavior).
 
 ## Manual steps (if you prefer)
 
-1. `./scripts/bump-version --patch`
-2. `git add -A && git status`
-3. `git commit -m "your message (bump to $(cat VERSION))"`
+1. `./scripts/publish` (bumps from last commit message, regenerates docs, commits), then `git push origin main`.
+2. Or: `./scripts/bump-version --patch`, `./scripts/generate-doc-artifacts`, then stage and commit.
 4. `git push origin main`
 
 ## Windows
 
-From repo root in PowerShell:
+From repo root in PowerShell (or Git Bash): run the publish workflow so version and docs are bumped and committed, then push:
 
 ```powershell
-.\scripts\bump-version.ps1 -Patch
-git add -A
-git commit -m "chore: maintain (bump to $(Get-Content VERSION))"
-git push origin main
+# From Git Bash or WSL
+./scripts/publish --push
 ```
 
-Or run the Bash script from Git Bash: `./scripts/maintain`
+Or run `./scripts/publish` (commit only), then `git push origin main`.
 
 ## Policy
 
@@ -60,7 +50,7 @@ Or run the Bash script from Git Bash: `./scripts/maintain`
 - **main** stays current with all changes (no separate release branch).
 - Version and docs stay in sync.
 - The public repo (GitHub) and live server get updates after each change.
-- **Attribution:** Only humans are contributors; the commit-msg hook strips AI/bot `Co-authored-by` trailers. See [ATTRIBUTION.md](ATTRIBUTION.md).
+- **Attribution:** Only humans are contributors. See [ATTRIBUTION.md](ATTRIBUTION.md).
 
 See [VERSIONING.md](VERSIONING.md) for how version numbers and bump types work.
 

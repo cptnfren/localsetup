@@ -200,6 +200,7 @@ Skills are task-based instructions (SKILL.md with `name` and `description` front
 | `localsetup-script-and-docs-quality` | Generating scripts, markdown/docs |
 | `localsetup-communication-and-tools` | Communication style, tool choice, MCP/context updates |
 | `localsetup-tmux-shared-session-workflow` | Server/system commands, deployments, tmux, shared session; sudo discovery and single-prompt gate (join session, trigger, batch until timeout); human-in-the-loop ops |
+| `localsetup-publish-workflow` | User says "publish", "run publish workflow", "bump and push"; run ./scripts/publish (--push) from repo root |
 | `localsetup-automatic-versioning` | Version bumps, release workflow, conventional commits, versioning docs |
 | `localsetup-github-publishing-workflow` | Publishing to GitHub, public release prep, publishing checklist, repo readiness |
 | `localsetup-skill-creator` | Create new skill from workflow or existing doc/markdown/GitHub; capture workflow as framework skill |

@@ -80,8 +80,8 @@ How automatic versioning and maintenance workflows operate.
 
 | Page | What it covers |
 |---|---|
-| [Automatic versioning](../VERSIONING.md) | Conventional commits, commit-msg hook, VERSION file as source of truth |
-| [Maintenance workflow](MAINTENANCE_WORKFLOW.md) | Single command to bump, commit, and push framework updates |
+| [Versioning](../../docs/VERSIONING.md) | Conventional commits, `./scripts/publish` workflow, VERSION file as source of truth |
+| [Maintenance workflow](../../docs/MAINTENANCE_WORKFLOW.md) | Publish workflow to bump, sync docs, commit, and optionally push |
 
 ---
 

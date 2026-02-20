@@ -1,6 +1,6 @@
 ---
 name: localsetup-automatic-versioning
-description: Use and maintain automatic versioning from conventional commits; VERSION as source of truth; commit-msg hook; sync to READMEs and docs. Use when working on version bumps, release workflow, or when the user asks about versioning or conventional commits.
+description: Use and maintain automatic versioning from conventional commits; VERSION as source of truth; ./scripts/publish workflow; sync to READMEs and docs. Use when working on version bumps, release workflow, or when the user asks about versioning or conventional commits.
 metadata:
   version: "1.1"
 ---
@@ -21,22 +21,16 @@ metadata:
 - **PATCH:** `fix:`, `docs:`, `chore:`, `style:`, `refactor:`, `perf:`, `test:`, `ci:`, `build:`; any other message defaults to PATCH.
 - **No bump:** Merge commits (message starts with `Merge `). Skip during rebase/merge in hook logic.
 
-## Enabling automatic bump on commit
+## Publish workflow (bump + doc sync + commit)
 
-- **One-time per clone:** Run `./scripts/install-githooks` from repo root. This sets `git config core.hooksPath .githooks`.
-- **commit-msg hook:** Reads the commit message file, runs the bump script to determine new version, updates VERSION and synced files (READMEs, docs front matter), stages them, and amends the commit so the version change is in the same commit.
-- **Skip conditions:** Hook must not amend during merge or active rebase. Document this in the hook.
+- **After you commit:** Run `./scripts/publish` from repo root. It (1) bumps VERSION using the last commit message (Conventional Commits: feat: → minor, fix:/docs: → patch, etc.), or pass `--major`/`--minor`/`--patch` to force; (2) regenerates doc artifacts (SKILLS.md, facts, managed blocks); (3) commits with message `chore: bump to X.Y.Z and sync docs`. Add `--push` to push to origin main in the same step.
+- **No hooks:** Git hooks in .githooks/ are disabled (no-op). Version bump and doc sync are done only when you run `./scripts/publish`.
 
 ## Manual bump (no commit)
 
 - **Bash:** `./scripts/bump-version --major|--minor|--patch` or `./scripts/bump-version <path-to-commit-msg-file>` for conventional-commit parsing. `--no-bump` prints current version only.
 - **PowerShell:** `.\scripts\bump-version.ps1 -Major|-Minor|-Patch` or `-MessageFile path`. `-NoBump` prints current version.
-- Use when: preparing a release tag, CI, or bypassing the hook for a one-off version set.
-
-## Bypassing the hook
-
-- **One commit:** `git commit --no-verify -m "message"` (skips commit-msg hook).
-- **Disable hooks:** `git config --unset core.hooksPath` to use default .git/hooks again.
+- Use when: preparing a release tag, CI, or one-off version set without running the full publish workflow.
 
 ## Framework requirements (when adding or changing versioning)
 

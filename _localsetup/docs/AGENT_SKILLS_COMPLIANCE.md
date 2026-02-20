@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.0
 ---
 
 # Agent Skills compliance (Localsetup v2)
@@ -27,7 +27,7 @@ version: 2.1
 ## Skill document versioning
 
 - Each framework skill includes **metadata.version** (e.g. `"1.0"`) in SKILL.md frontmatter per the spec’s optional `metadata` field.
-- **Skill version bump:** When you change `framework/skills/*/SKILL.md`, run `scripts/bump-skill-versions --staged` (or pass the files) and commit the updated metadata.version with your change. Patch is incremented (e.g. 1.0 → 1.1).
+- **Automatic bump:** When a commit includes changes to `framework/skills/*/SKILL.md`, the commit-msg hook runs `scripts/bump-skill-versions` for those files and amends the commit so the version increment is in the same commit. Patch is incremented (e.g. 1.0 → 1.1, 1.0.0 → 1.0.1).
 - **Manual bump:** Run `./scripts/bump-skill-versions path/to/framework/skills/name/SKILL.md` to increment that skill’s version without committing.
 - After bumping a skill under `framework/skills/`, the same version is synced to `framework/.cursor/skills/<name>/SKILL.md` if present so Cursor-deployed copies stay in sync.
 
@@ -48,10 +48,3 @@ version: 2.1
 - [SKILLS_AND_RULES.md](SKILLS_AND_RULES.md)  - How skills are loaded and platform paths.
 - [PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md)  - Supported platforms and registration file list.
 - Repo VERSION and conventional commits: docs/VERSIONING.md (repo root). Skill versioning is per-skill (metadata.version), not the repo VERSION.
-
----
-
-<p align="center">
-<strong>Author:</strong> <a href="https://github.com/cptnfren">Slavic Kozyuk</a><br>
-<strong>Copyright</strong> © 2026 <a href="https://www.cruxexperts.com/">Crux Experts LLC</a> – Innovate, Automate, Dominate.
-</p>
