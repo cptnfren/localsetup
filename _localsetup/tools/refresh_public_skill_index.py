@@ -94,7 +94,7 @@ def fetch_anthropics_skills(source_registry: str) -> list[dict]:
 
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[2]
-    docs = repo_root / "framework" / "docs"
+    docs = repo_root / "_localsetup" / "docs"
     if not docs.is_dir():
         docs = repo_root / "docs"
     index_path = docs / "PUBLIC_SKILL_INDEX.yaml"

@@ -4,7 +4,7 @@
 sources:
 - https://github.com/VoltAgent/awesome-openclaw-skills
 - https://github.com/anthropics/skills/tree/main/skills
-updated: '2026-02-19T20:59:50Z'
+updated: '2026-02-20T07:48:14Z'
 skills:
 - name: achurch
   description: A 24/7 digital sanctuary for AI agents and humans — attend
@@ -1363,7 +1363,7 @@ skills:
   category: Table of Contents
 - name: consciousness-framework
   description: Infrastructure for developing
-  url: https://github.com/openclaw/skills/tree/main/skills/theyounganimation-rgb/consciousness-_localsetup/SKILL.md
+  url: https://github.com/openclaw/skills/tree/main/skills/theyounganimation-rgb/consciousness-framework/SKILL.md
   source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
   category: Table of Contents
 - name: core-refinery
@@ -6678,7 +6678,7 @@ skills:
   category: Table of Contents
 - name: ops-framework
   description: 'A 0-token jobs + monitoring framework for OpenClaw: run'
-  url: https://github.com/openclaw/skills/tree/main/skills/zjianru/ops-_localsetup/SKILL.md
+  url: https://github.com/openclaw/skills/tree/main/skills/zjianru/ops-framework/SKILL.md
   source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
   category: Table of Contents
 - name: ouracli
@@ -8868,7 +8868,7 @@ skills:
   category: Table of Contents
 - name: deep-framework
   description: Implementation of the Dynamic Ethical Entity Personality
-  url: https://github.com/openclaw/skills/tree/main/skills/dacptn/deep-_localsetup/SKILL.md
+  url: https://github.com/openclaw/skills/tree/main/skills/dacptn/deep-framework/SKILL.md
   source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
   category: Table of Contents
 - name: deepread-ocr
@@ -9088,7 +9088,7 @@ skills:
   category: Table of Contents
 - name: inner-light-framework
   description: Quaker-grounded spiritual framework for AI
-  url: https://github.com/openclaw/skills/tree/main/skills/unity-hallie/inner-light-_localsetup/SKILL.md
+  url: https://github.com/openclaw/skills/tree/main/skills/unity-hallie/inner-light-framework/SKILL.md
   source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
   category: Table of Contents
 - name: instaclaw
@@ -10653,7 +10653,7 @@ skills:
   category: Table of Contents
 - name: continuity-framework
   description: Asynchronous reflection and memory integration
-  url: https://github.com/openclaw/skills/tree/main/skills/riley-coyote/continuity-_localsetup/SKILL.md
+  url: https://github.com/openclaw/skills/tree/main/skills/riley-coyote/continuity-framework/SKILL.md
   source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
   category: Table of Contents
 - name: craft

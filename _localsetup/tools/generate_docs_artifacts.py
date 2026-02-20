@@ -232,8 +232,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--repo-root", default=None, help="Repository root path.")
     parser.add_argument(
         "--internal-output",
-        default="_internal_docs/docs_snapshot.md",
-        help="Path for local-only internal snapshot report.",
+        default="",
+        help="Optional path for local-only internal snapshot report. Disabled by default.",
     )
     return parser.parse_args()
 
@@ -267,12 +267,14 @@ def main() -> int:
 
     write_skills_md(docs_dir / "SKILLS.md", major_minor, skills)
     write_facts_json(docs_dir / "_generated" / "facts.json", facts)
-    write_internal_snapshot(repo_root / args.internal_output, facts)
+    if args.internal_output:
+        write_internal_snapshot(repo_root / args.internal_output, facts)
     update_facts_blocks(repo_root, facts)
 
     print("Generated: _localsetup/docs/SKILLS.md")
     print("Generated: _localsetup/docs/_generated/facts.json")
-    print(f"Generated: {args.internal_output}")
+    if args.internal_output:
+        print(f"Generated: {args.internal_output}")
     return 0
 
 
