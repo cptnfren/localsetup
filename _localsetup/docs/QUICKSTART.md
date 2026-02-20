@@ -49,7 +49,7 @@ When prompted (or when using `--tools` / `-Tools`), use one or more of these IDs
 | `cursor` | Cursor IDE | `.cursor/rules/` | `.cursor/skills/localsetup-*/` |
 | `claude-code` | Claude Code | `.claude/CLAUDE.md` | `.claude/skills/localsetup-*/` |
 | `codex` | OpenAI Codex CLI | `AGENTS.md` (repo root) | `.agents/skills/localsetup-*/` |
-| `openclaw` | OpenClaw | [_localsetup/docs/OPENCLAW_CONTEXT.md](OPENCLAW_CONTEXT.md) | `skills/localsetup-*/` |
+| `openclaw` | OpenClaw | [_localsetup/templates/openclaw/OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) | `skills/localsetup-*/` |
 
 You can deploy to multiple platforms at once by comma-separating: `cursor,claude-code`.
 

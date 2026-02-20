@@ -32,7 +32,7 @@ version: 2.5
 | Cursor | .cursor/rules/localsetup-context.mdc | .cursor/skills/localsetup-*/ |
 | Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ |
 | Codex | AGENTS.md (repo root) | .agents/skills/localsetup-*/ |
-| OpenClaw | Skill localsetup-context + _localsetup/docs/OPENCLAW_CONTEXT.md | skills/localsetup-*/ |
+| OpenClaw | Skill localsetup-context + _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md | skills/localsetup-*/ |
 
 ## Format
 

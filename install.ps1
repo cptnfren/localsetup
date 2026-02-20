@@ -72,7 +72,7 @@ Tools (use with -Tools):
   cursor       Cursor IDE (.cursor/rules, .cursor/skills)
   claude-code  Claude Code (.claude/CLAUDE.md, .claude/skills)
   codex        OpenAI Codex CLI (AGENTS.md, .agents/skills)
-  openclaw     OpenClaw (skills/, _localsetup/docs/OPENCLAW_CONTEXT.md)
+  openclaw     OpenClaw (skills/, _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md)
 
 Examples:
   .\install.ps1 -Directory C:\repos\myapp -Tools "cursor,claude-code" -Yes

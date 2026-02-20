@@ -1,6 +1,6 @@
 # Localsetup v2 Framework
 
-**Version:** 2.5.1  
+**Version:** 2.5.2  
 **Last updated:** 2026-02-19
 
 This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw). For first-time setup and overview, see the [root README](../../README.md). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.

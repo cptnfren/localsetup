@@ -16,7 +16,7 @@ version: 2.5
 | cursor | Cursor | .cursor/rules/localsetup-context.mdc (and .cursor/rules/localsetup-context-index.md) | .cursor/skills/localsetup-*/ |
 | claude-code | Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ |
 | codex | OpenAI Codex CLI | AGENTS.md (repo root) | .agents/skills/localsetup-*/ |
-| openclaw | OpenClaw | [OPENCLAW_CONTEXT.md](OPENCLAW_CONTEXT.md) (merge into workspace MEMORY.md if desired) | skills/localsetup-*/ (repo root) |
+| openclaw | OpenClaw | [OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) (merge into workspace MEMORY.md if desired) | skills/localsetup-*/ (repo root) |
 
 *More platforms may be added later. Update this table and the "Skill registration (new skills)" section when adding one.*
 
