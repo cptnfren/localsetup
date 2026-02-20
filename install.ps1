@@ -150,15 +150,19 @@ if (Test-Path (Join-Path $FrameworkDir '.git') -PathType Container) {
     }
     if (-not (Test-Path (Join-Path $FrameworkDir '.git') -PathType Container)) {
         Write-Host "Error: Clone failed. If repo is not yet published, copy the framework into $FrameworkDir and run:" -ForegroundColor Red
-        Write-Host "  & '$FrameworkDir\framework\tools\deploy.ps1' -Tools '$ToolsNormalized' -Root '$TargetDir'"
+        Write-Host "  & '$FrameworkDir\tools\deploy.ps1' -Tools '$ToolsNormalized' -Root '$TargetDir'"
+        Write-Host "  or & '$FrameworkDir\_localsetup\tools\deploy.ps1' -Tools '$ToolsNormalized' -Root '$TargetDir'"
         exit 1
     }
 }
 
 # Run deploy step
-$DeployScript = Join-Path $FrameworkDir 'framework\tools\deploy.ps1'
+$DeployScript = Join-Path $FrameworkDir 'tools\deploy.ps1'
 if (-not (Test-Path -LiteralPath $DeployScript)) {
-    $DeployScript = Join-Path $FrameworkDir 'tools\deploy.ps1'
+    $DeployScript = Join-Path $FrameworkDir '_localsetup\tools\deploy.ps1'
+}
+if (-not (Test-Path -LiteralPath $DeployScript)) {
+    $DeployScript = Join-Path $FrameworkDir 'framework\tools\deploy.ps1'
 }
 if (Test-Path -LiteralPath $DeployScript) {
     try {
@@ -169,8 +173,8 @@ if (Test-Path -LiteralPath $DeployScript) {
         exit 1
     }
 } else {
-    Write-Host "Error: Deploy script not found at $DeployScript" -ForegroundColor Red
-    Write-Host "Run manually: & '$DeployScript' -Tools '$ToolsNormalized' -Root '$TargetDir'"
+    Write-Host "Error: Deploy script not found at '$FrameworkDir\tools\deploy.ps1' or '$FrameworkDir\_localsetup\tools\deploy.ps1' or '$FrameworkDir\framework\tools\deploy.ps1'" -ForegroundColor Red
+    Write-Host "Run manually: & '$FrameworkDir\_localsetup\tools\deploy.ps1' -Tools '$ToolsNormalized' -Root '$TargetDir'"
     exit 1
 }
 

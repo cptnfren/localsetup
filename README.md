@@ -7,7 +7,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="https://agentskills.io/specification"><img src="https://img.shields.io/badge/Agent%20Skills-compatible-2ea44f" alt="Agent Skills compatible"></a>
-  <a href="framework/docs/PLATFORM_REGISTRY.md"><img src="https://img.shields.io/badge/platforms-cursor%20%7C%20claude--code%20%7C%20codex%20%7C%20openclaw-1f6feb" alt="Supported platforms"></a>
+  <a href="_localsetup/docs/PLATFORM_REGISTRY.md"><img src="https://img.shields.io/badge/platforms-cursor%20%7C%20claude--code%20%7C%20codex%20%7C%20openclaw-1f6feb" alt="Supported platforms"></a>
 </p>
 
 **Version:** 2.2.1  
@@ -29,7 +29,7 @@ In practice, you run a single install command, verify with one script, and start
 | Current version | `2.2.1` |
 | Supported platforms | `cursor, claude-code, codex, openclaw` |
 | Shipped skills | `32` |
-| Source | `framework/docs/_generated/facts.json` |
+| Source | `_localsetup/docs/_generated/facts.json` |
 <!-- facts-block:end -->
 
 ## 🚀 60-second quickstart
@@ -50,7 +50,7 @@ curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | b
 
 The installer asks which platform(s) to deploy: Cursor, Claude Code, Codex CLI, or OpenClaw. After install, run the verification script printed at the end to confirm context loaded correctly.
 
-For non-interactive one-liners (CI, automation, or when you already know the platform), see the collapsed **Full install reference** below or [framework/docs/QUICKSTART.md](framework/docs/QUICKSTART.md).
+For non-interactive one-liners (CI, automation, or when you already know the platform), see the collapsed **Full install reference** below or [_localsetup/docs/QUICKSTART.md](_localsetup/docs/QUICKSTART.md).
 
 ## ⚡ Top 10 features
 
@@ -65,7 +65,7 @@ For non-interactive one-liners (CI, automation, or when you already know the pla
 9. **Platform registry** - a single Markdown table defines every supported host, context path, and skills path. Extend support by editing one file.
 10. **Git-coupled traceability** - PRDs, specs, and outcomes can reference commit hashes for audit. Context is code; changes are reviewable.
 
-The full feature catalog contains additional capabilities. See [framework/docs/FEATURES.md](framework/docs/FEATURES.md) for details.
+The full feature catalog contains additional capabilities. See [_localsetup/docs/FEATURES.md](_localsetup/docs/FEATURES.md) for details.
 
 ## 🛠️ Top 10 shipped skills
 
@@ -80,16 +80,16 @@ The full feature catalog contains additional capabilities. See [framework/docs/F
 9. `localsetup-skill-importer` - import external skills from URL or local path with security screening.
 10. `localsetup-humanizer` - remove AI-writing patterns from text based on Wikipedia cleanup guide.
 
-The generated shipped skills catalog lists all 32 skills with descriptions and versions. See [framework/docs/SKILLS.md](framework/docs/SKILLS.md).
+The generated shipped skills catalog lists all 32 skills with descriptions and versions. See [_localsetup/docs/SKILLS.md](_localsetup/docs/SKILLS.md).
 
 ## 📚 Read more
 
-- [Framework docs index](framework/docs/README.md)
-- [Framework README](framework/README.md)
-- [Platform registry](framework/docs/PLATFORM_REGISTRY.md)
-- [Workflow registry](framework/docs/WORKFLOW_REGISTRY.md)
-- [Skill importing](framework/docs/SKILL_IMPORTING.md)
-- [Skill discovery](framework/docs/SKILL_DISCOVERY.md)
+- [Framework docs index](_localsetup/docs/README.md)
+- [Framework README](_localsetup/README.md)
+- [Platform registry](_localsetup/docs/PLATFORM_REGISTRY.md)
+- [Workflow registry](_localsetup/docs/WORKFLOW_REGISTRY.md)
+- [Skill importing](_localsetup/docs/SKILL_IMPORTING.md)
+- [Skill discovery](_localsetup/docs/SKILL_DISCOVERY.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security](SECURITY.md)
 

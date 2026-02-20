@@ -10,9 +10,9 @@ version: 2.2
 ## Source of truth
 
 - **VERSION** at repo root: single line, semantic version `MAJOR.MINOR.PATCH` (e.g. `2.0.0`).
-- **README.md** and **framework/README.md** display `**Version:** X.Y.Z`.
+- **README.md** and **_localsetup/README.md** display `**Version:** X.Y.Z`.
 - **Framework docs** use YAML front matter `version: X.Y` (major.minor) where applicable.
-- **Skill documents** (framework/skills/*/SKILL.md): Each skill has its own `metadata.version` per the [Agent Skills](https://agentskills.io/specification) spec.
+- **Skill documents** (_localsetup/skills/*/SKILL.md): Each skill has its own `metadata.version` per the [Agent Skills](https://agentskills.io/specification) spec.
 
 ## Conventional Commits (reference)
 

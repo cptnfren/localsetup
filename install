@@ -183,20 +183,25 @@ else
   if ! git clone "$REPO_URL" "$FRAMEWORK_DIR" 2>/dev/null; then
     echo "Error: Clone failed. Check network and repo URL (set LOCALSETUP_2_REPO to override)." >&2
     echo "If the repo is not yet published, copy the framework into $FRAMEWORK_DIR and run:" >&2
-    echo "  $FRAMEWORK_DIR/framework/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
+    echo "  $FRAMEWORK_DIR/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
+    echo "  or $FRAMEWORK_DIR/_localsetup/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
     exit 1
   fi
 fi
 
-# Run deploy step (deploy lives at framework/tools/deploy inside the clone)
-DEPLOY_SCRIPT="$FRAMEWORK_DIR/framework/tools/deploy"
+# Run deploy step (supports both flat and nested _localsetup repo layouts)
+DEPLOY_SCRIPT="$FRAMEWORK_DIR/tools/deploy"
+if [[ ! -x "$DEPLOY_SCRIPT" ]]; then
+  DEPLOY_SCRIPT="$FRAMEWORK_DIR/_localsetup/tools/deploy"
+fi
+if [[ ! -x "$DEPLOY_SCRIPT" ]]; then
+  DEPLOY_SCRIPT="$FRAMEWORK_DIR/framework/tools/deploy"
+fi
 if [[ -x "$DEPLOY_SCRIPT" ]]; then
   "$DEPLOY_SCRIPT" --tools "$TOOLS_CSV" --root "$TARGET_DIR" || { echo "Error: Deploy failed." >&2; exit 1; }
-elif [[ -x "$FRAMEWORK_DIR/tools/deploy" ]]; then
-  "$FRAMEWORK_DIR/tools/deploy" --tools "$TOOLS_CSV" --root "$TARGET_DIR" || { echo "Error: Deploy failed." >&2; exit 1; }
 else
-  echo "Error: Deploy script not found at $DEPLOY_SCRIPT" >&2
-  echo "Run manually: $FRAMEWORK_DIR/framework/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
+  echo "Error: Deploy script not found at $FRAMEWORK_DIR/tools/deploy or $FRAMEWORK_DIR/_localsetup/tools/deploy or $FRAMEWORK_DIR/framework/tools/deploy" >&2
+  echo "Run manually: $FRAMEWORK_DIR/_localsetup/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
   exit 1
 fi
 

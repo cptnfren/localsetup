@@ -17,10 +17,10 @@ Thank you for your interest in contributing. Here’s how to get started.
 ## Repository layout
 
 - **Root**  - Install scripts (`install`, `install.ps1`), README, LICENSE, and docs.
-- **`framework/`**  - The engine: `tools/`, `lib/`, `skills/`, `templates/`, `docs/`. Changes here affect what gets deployed into a client's `_localsetup/`.
+- **`_localsetup/`**  - The engine: `tools/`, `lib/`, `skills/`, `templates/`, `docs/`. Changes here affect what gets deployed into a client's `_localsetup/`.
 - **Version and docs:** Framework version is defined in VERSION and displayed in READMEs; see [docs/VERSIONING.md](docs/VERSIONING.md). Version and doc sync are performed by the repository maintainers.
 
-For detailed structure and conventions, see [framework/README.md](framework/README.md) and the docs under `framework/docs/`.
+For detailed structure and conventions, see [_localsetup/README.md](_localsetup/README.md) and the docs under `_localsetup/docs/`.
 
 ## Attribution and contributors
 
@@ -30,7 +30,7 @@ For detailed structure and conventions, see [framework/README.md](framework/READ
 
 - **Scripts:** Bash and PowerShell; keep cross-platform in mind where relevant.
 - **Skills:** Follow the [Agent Skills](https://agentskills.io/specification) spec (SKILL.md with `name` and `description` frontmatter).
-- **Docs:** Markdown; use clear headings and relative links. Framework docs live under `framework/docs/` and are copied to `_localsetup/docs/` on deploy.
+- **Docs:** Markdown; use clear headings and relative links. Framework docs live under `_localsetup/docs/` and are copied to `_localsetup/docs/` on deploy.
 
 If you have questions, open a Discussion and we’ll be happy to clarify.
 
