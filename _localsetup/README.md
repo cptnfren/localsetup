@@ -229,7 +229,7 @@ Skills follow the [Agent Skills](https://agentskills.io/specification) specifica
 
 ## Tools
 
-Run from **client repo root** (so that `_localsetup/` is present). When the repo is cloned into `_localsetup/`, tools live under `_localsetup/tools/`. On **Linux/macOS** use the Bash scripts; on **Windows** use the `.ps1` scripts (or run the Bash scripts from Git Bash -they detect Windows and delegate to the `.ps1` versions).
+Run from **client repo root** (so that `_localsetup/` is present). When the repo is cloned into `_localsetup/`, tools live under `_localsetup/_localsetup/tools/`. On **Linux/macOS** use the Bash scripts; on **Windows** use the `.ps1` scripts (or run the Bash scripts from Git Bash -they detect Windows and delegate to the `.ps1` versions).
 
 | Tool | Purpose |
 |------|---------|
@@ -269,9 +269,9 @@ From **client repo root** (when the repo is cloned into `_localsetup/`):
 
 **Bash (Linux/macOS):**
 ```bash
-./_localsetup/tools/verify_context
-./_localsetup/tools/verify_rules
-./_localsetup/tests/automated_test.sh
+./_localsetup/_localsetup/tools/verify_context
+./_localsetup/_localsetup/tools/verify_rules
+./_localsetup/_localsetup/tests/automated_test.sh
 ```
 
 **PowerShell (Windows):**

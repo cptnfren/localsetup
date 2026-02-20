@@ -56,8 +56,8 @@ After install, run the verification scripts to confirm everything deployed corre
 ### Linux and macOS
 
 ```bash
-./_localsetup/tools/verify_context
-./_localsetup/tools/verify_rules
+./_localsetup/_localsetup/tools/verify_context
+./_localsetup/_localsetup/tools/verify_rules
 ```
 
 ### Windows
