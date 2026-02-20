@@ -1,0 +1,9 @@
+# show_ref
+# command: git -C /mnt/data/devzone/localsetup-2 show-ref --head
+
+3e61ca0e93e638ccb71d6b32e4285f88d83bd281 HEAD
+3e61ca0e93e638ccb71d6b32e4285f88d83bd281 refs/heads/main
+f24fbec9d96eba64881252c4e31ec90288206819 refs/heads/pre-split-checkpoint
+3e61ca0e93e638ccb71d6b32e4285f88d83bd281 refs/remotes/origin/main
+20642c91c4ef10fc12393887ea019ea3997918cd refs/tags/pre-framework-to-_localsetup-20260220-001923
+b5d6edbf3f8307bab327b037f16bd2e7acbb69c5 refs/tags/pre-minimal-cleanup-20260219-233306

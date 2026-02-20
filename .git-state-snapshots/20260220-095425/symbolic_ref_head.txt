@@ -1,0 +1,4 @@
+# symbolic_ref_head
+# command: git -C /mnt/data/devzone/localsetup-2 symbolic-ref -q HEAD
+
+refs/heads/main

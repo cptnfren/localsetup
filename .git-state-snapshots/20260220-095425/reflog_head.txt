@@ -1,0 +1,53 @@
+# reflog_head
+# command: git -C /mnt/data/devzone/localsetup-2 reflog --date=iso -n 50 HEAD
+
+3e61ca0 HEAD@{2026-02-20 03:41:53 -0600}: commit: chore: bump to 2.3.4 and sync dogfood packaging
+14d9b7b HEAD@{2026-02-20 03:37:54 -0600}: commit: chore: bump to 2.3.3 and sync dogfood packaging
+6ec3c8a HEAD@{2026-02-20 03:03:52 -0600}: commit: chore: bump to 2.3.2 and sync dogfood packaging
+f373181 HEAD@{2026-02-20 02:52:32 -0600}: commit: refactor: Python-first framework tooling, thin shell/ps1 launchers
+867273d HEAD@{2026-02-20 01:49:25 -0600}: commit: fix: correct docs artifact generators for _localsetup layout
+08c5010 HEAD@{2026-02-20 01:21:07 -0600}: commit: chore: bump to 2.3.0 and sync docs
+64f1063 HEAD@{2026-02-20 01:16:58 -0600}: commit: feat: add upgrade-aware installer with conflict policies
+9a11eb2 HEAD@{2026-02-20 00:53:27 -0600}: commit: fix: validate python module requirements in installer preflight
+895921c HEAD@{2026-02-20 00:48:04 -0600}: commit: fix: add installer dependency preflight checks
+8fb7c16 HEAD@{2026-02-20 00:42:22 -0600}: commit: fix: flatten installer output to single _localsetup path
+4b77355 HEAD@{2026-02-20 00:28:35 -0600}: commit: docs: fix post-rename verification paths
+1f29b93 HEAD@{2026-02-20 00:24:17 -0600}: commit: refactor: rename canonical source tree to _localsetup
+20642c9 HEAD@{2026-02-20 00:17:40 -0600}: commit: docs: fix stale skill references after layout cleanup
+0c0d2aa HEAD@{2026-02-19 23:34:59 -0600}: commit: chore: remove stale migration ignore entries
+3f9e280 HEAD@{2026-02-19 23:33:25 -0600}: commit: chore: strip public repo to minimal product surface
+b5d6edb HEAD@{2026-02-19 23:11:59 -0600}: commit: chore: bump to 2.2.1 and sync docs
+0c99f51 HEAD@{2026-02-19 23:08:31 -0600}: commit: chore: remove leftover tmux state artifact
+4393f8c HEAD@{2026-02-19 22:09:19 -0600}: commit: chore: split public repo; remove maintainer-only content
+f24fbec HEAD@{2026-02-19 21:24:38 -0600}: commit: chore: pre-split checkpoint (full tree before migration)
+10bb6e6 HEAD@{2026-02-19 20:18:48 -0600}: commit (amend): docs: validation hardening, paste/URL workflow; bump to 2.0.18
+113e615 HEAD@{2026-02-19 19:34:50 -0600}: rebase (abort): returning to refs/heads/main
+caab7f2 HEAD@{2026-02-19 19:34:45 -0600}: pull --rebase origin main (start): checkout caab7f2309cae08b9e2b7f28eb234c3766324bc3
+113e615 HEAD@{2026-02-19 19:33:59 -0600}: commit (amend): docs: validation hardening, paste/URL workflow; bump to 2.0.18
+1ff80a8 HEAD@{2026-02-19 18:08:21 -0600}: commit (amend): docs: validation hardening, paste/URL workflow; bump to 2.0.18
+e91b97e HEAD@{2026-02-19 17:58:38 -0600}: commit (amend): docs: validation hardening, paste/URL workflow; bump to 2.0.18
+caab7f2 HEAD@{2026-02-19 17:15:53 -0600}: rebase (abort): returning to refs/heads/main
+70cc085 HEAD@{2026-02-19 17:15:47 -0600}: pull --rebase origin main (start): checkout 70cc0855290e89a27d248f23fbbeb5ea434bb6f7
+caab7f2 HEAD@{2026-02-19 17:14:51 -0600}: commit (amend): docs: validation hardening, paste/URL workflow; bump to 2.0.18
+e286a82 HEAD@{2026-02-19 17:03:39 -0600}: commit (amend): docs: validation hardening, paste/URL workflow; bump to 2.0.18
+0ac2e72 HEAD@{2026-02-19 16:07:50 -0600}: commit (amend): docs: validation hardening, paste/URL workflow; bump to 2.0.18
+cfbd3ff HEAD@{2026-02-19 16:07:27 -0600}: commit (amend): Initial commit: Localsetup v2 (2.0.15)
+d6eb912 HEAD@{2026-02-19 16:06:47 -0600}: commit (amend): Initial commit: Localsetup v2 (2.0.15)
+70cc085 HEAD@{2026-02-19 14:46:04 -0600}: Branch: renamed refs/heads/new-main to refs/heads/main
+70cc085 HEAD@{2026-02-19 14:45:58 -0600}: commit (initial): Initial commit: Localsetup v2 (2.0.15)
+da0ba52 HEAD@{2026-02-18 18:24:36 -0600}: commit (amend): chore: maintain (bump to 2.0.13)
+38ce99f HEAD@{2026-02-18 18:22:13 -0600}: filter-branch: rewrite
+cc7b42e HEAD@{2026-02-18 18:22:13 -0600}: rebase (finish): returning to refs/heads/main
+cc7b42e HEAD@{2026-02-18 18:22:13 -0600}: rebase (continue): chore: maintain (bump to 2.0.13)
+15e057b HEAD@{2026-02-18 18:21:51 -0600}: pull --rebase origin main (start): checkout 15e057bcaa16dd5e8b61c7f02da28359bc8102c0
+6193553 HEAD@{2026-02-18 18:21:10 -0600}: commit (amend): chore: maintain (bump to 2.0.13)
+15e057b HEAD@{2026-02-18 18:10:56 -0600}: commit: chore: maintain (bump to 2.0.13)
+d02dae6 HEAD@{2026-02-18 18:06:52 -0600}: commit: chore: maintain (bump to 2.0.12)
+5131039 HEAD@{2026-02-18 18:03:08 -0600}: commit: docs: README install section - Linux/macOS above Windows
+81caa81 HEAD@{2026-02-18 18:00:36 -0600}: commit: docs: rename release to maintain workflow; keep main current, not formal release
+fad9c72 HEAD@{2026-02-18 17:59:33 -0600}: commit: docs: add release workflow (scripts/release, RELEASE_WORKFLOW.md, invariant)
+5c4d1fa HEAD@{2026-02-18 17:54:58 -0600}: commit: fix: install fallback when no tty; README recommend one-liner; bump to 2.0.8
+451a8e5 HEAD@{2026-02-18 17:52:56 -0600}: commit: fix: install when run via curl | bash; bump to 2.0.7
+6227f6e HEAD@{2026-02-18 17:39:12 -0600}: Branch: renamed refs/heads/baseline to refs/heads/main
+6227f6e HEAD@{2026-02-18 17:39:03 -0600}: commit (initial): Baseline: Localsetup v2 (2.0.6)
+23d0986 HEAD@{2026-02-18 17:38:39 -0600}: pull --rebase origin main: Fast-forward

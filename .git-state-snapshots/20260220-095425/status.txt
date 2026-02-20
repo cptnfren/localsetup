@@ -1,0 +1,29 @@
+# status
+# command: git -C /mnt/data/devzone/localsetup-2 status --porcelain=v2 --branch
+
+# branch.oid 3e61ca0e93e638ccb71d6b32e4285f88d83bd281
+# branch.head main
+1 .M N... 100644 100644 100644 a39f552601483d9b3a044738b7771d7538241bee a39f552601483d9b3a044738b7771d7538241bee _localsetup/skills/localsetup-arbiter/SKILL.md
+1 .D N... 100644 100644 000000 6a3e252ae6434c6ef03a7449e47c669f4f2a291f 6a3e252ae6434c6ef03a7449e47c669f4f2a291f _localsetup/skills/localsetup-arbiter/scripts/get.sh
+1 .D N... 100644 100644 000000 0399eede336c4f0f5d215bcef691caba9df60d18 0399eede336c4f0f5d215bcef691caba9df60d18 _localsetup/skills/localsetup-arbiter/scripts/push.sh
+1 .D N... 100644 100644 000000 995c6ac02762971b08eb931451faec11681b0efa 995c6ac02762971b08eb931451faec11681b0efa _localsetup/skills/localsetup-arbiter/scripts/status.sh
+1 .M N... 100644 100644 100644 c1bbc6fde79a04cd471a0669b396cb09486fab9d c1bbc6fde79a04cd471a0669b396cb09486fab9d _localsetup/skills/localsetup-context/SKILL.md
+1 .M N... 100644 100644 100644 69dc017ab1ec2a3cb9c5ee438736313e5e20bf52 69dc017ab1ec2a3cb9c5ee438736313e5e20bf52 _localsetup/skills/localsetup-linux-patcher/SKILL.md
+1 .M N... 100644 100644 100644 dae289d45d17bcafa101f6b8df2174ae742a022d dae289d45d17bcafa101f6b8df2174ae742a022d _localsetup/skills/localsetup-mcp-builder/SKILL.md
+1 .M N... 100644 100644 100644 41778569c45a458e0eea839b8917692ad65be2d5 41778569c45a458e0eea839b8917692ad65be2d5 _localsetup/skills/localsetup-mcp-builder/scripts/evaluation.py
+1 .M N... 100644 100644 100644 5d7ee7bb18274ff385f0fe4d4dc8f160c2483cfd 5d7ee7bb18274ff385f0fe4d4dc8f160c2483cfd _localsetup/skills/localsetup-pr-reviewer/SKILL.md
+1 .D N... 100644 100644 000000 1f472b4ae8131087ace9c06af863c54287596803 1f472b4ae8131087ace9c06af863c54287596803 _localsetup/skills/localsetup-pr-reviewer/scripts/pr-review.sh
+1 .M N... 100644 100644 100644 a344808553958dedd158cca0fb5f064150d7fa21 a344808553958dedd158cca0fb5f064150d7fa21 _localsetup/skills/localsetup-skill-discovery/SKILL.md
+1 .M N... 100644 100644 100644 5ef1c14b9f7963c2efc0902a2ab88f1d1b63f9bf 5ef1c14b9f7963c2efc0902a2ab88f1d1b63f9bf _localsetup/skills/localsetup-task-skill-matcher/SKILL.md
+1 .M N... 100644 100644 100644 c59dd06904d87a493cc84ee564a911498661d4f7 c59dd06904d87a493cc84ee564a911498661d4f7 _localsetup/skills/localsetup-tdd-guide/SKILL.md
+1 .M N... 100644 100644 100644 60a7d47f87721e4ff4b9b52ccaa21ae4e0f5b7bc 60a7d47f87721e4ff4b9b52ccaa21ae4e0f5b7bc _localsetup/skills/localsetup-unfuck-my-git-state/SKILL.md
+1 .D N... 100644 100644 000000 6d345d3adcd3c78825379b6f8b28a03234d9329d 6d345d3adcd3c78825379b6f8b28a03234d9329d _localsetup/skills/localsetup-unfuck-my-git-state/scripts/guided_repair_plan.sh
+1 .D N... 100644 100644 000000 b07d3114f11f2cc6982d1e4e2ed6dafc9b228c30 b07d3114f11f2cc6982d1e4e2ed6dafc9b228c30 _localsetup/skills/localsetup-unfuck-my-git-state/scripts/regression_harness.sh
+1 .D N... 100644 100644 000000 127f2af18ba2446cf143619a425483cbe99a5cb0 127f2af18ba2446cf143619a425483cbe99a5cb0 _localsetup/skills/localsetup-unfuck-my-git-state/scripts/snapshot_git_state.sh
+? .git-state-snapshots/
+? _localsetup/skills/localsetup-arbiter/scripts/arbiter_cli.py
+? _localsetup/skills/localsetup-linux-patcher/scripts/patch_cli.py
+? _localsetup/skills/localsetup-pr-reviewer/scripts/pr_review.py
+? _localsetup/skills/localsetup-unfuck-my-git-state/scripts/guided_repair_plan.py
+? _localsetup/skills/localsetup-unfuck-my-git-state/scripts/regression_harness.py
+? _localsetup/skills/localsetup-unfuck-my-git-state/scripts/snapshot_git_state.py

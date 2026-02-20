@@ -1,0 +1,6 @@
+# branch_all_verbose
+# command: git -C /mnt/data/devzone/localsetup-2 branch -vv --all
+
+* main                 3e61ca0 chore: bump to 2.3.4 and sync dogfood packaging
+  pre-split-checkpoint f24fbec chore: pre-split checkpoint (full tree before migration)
+  remotes/origin/main  3e61ca0 chore: bump to 2.3.4 and sync dogfood packaging

@@ -1,0 +1,5 @@
+snapshot_time=20260220-095425
+target=/mnt/data/devzone/localsetup-2
+toplevel=/mnt/data/devzone/localsetup-2
+git_dir=/mnt/data/devzone/localsetup-2/.git
+git_version=git version 2.43.0

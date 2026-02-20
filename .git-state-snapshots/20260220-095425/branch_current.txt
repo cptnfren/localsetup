@@ -1,0 +1,4 @@
+# branch_current
+# command: git -C /mnt/data/devzone/localsetup-2 branch --show-current
+
+main

@@ -1,0 +1,5 @@
+# remote_verbose
+# command: git -C /mnt/data/devzone/localsetup-2 remote -v
+
+origin	https://github.com/cptnfren/localsetup.git (fetch)
+origin	https://github.com/cptnfren/localsetup.git (push)

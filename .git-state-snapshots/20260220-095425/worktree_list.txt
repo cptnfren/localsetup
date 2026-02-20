@@ -1,0 +1,7 @@
+# worktree_list
+# command: git -C /mnt/data/devzone/localsetup-2 worktree list --porcelain
+
+worktree /mnt/data/devzone/localsetup-2
+HEAD 3e61ca0e93e638ccb71d6b32e4285f88d83bd281
+branch refs/heads/main
+
