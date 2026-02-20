@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.2
 ---
 
 # Skill interoperability (Localsetup v2)
@@ -22,7 +22,7 @@ version: 2.1
 
 ## Using a framework skill elsewhere (export)
 
-- **Copy the skill directory**  - Use `framework/skills/<name>/` (or `framework/.cursor/skills/<name>/`); both contain the same SKILL.md and any bundled resources.
+- **Copy the skill directory**  - Use `framework/skills/<name>/`. After deploy, the skill is also at the platform's skills path (e.g. `.cursor/skills/<name>/` for Cursor).
 - **Use in any Agent Skills host**  - The directory is a valid Agent Skills skill. The host only needs to support the [Agent Skills](https://agentskills.io/specification) format (SKILL.md with `name` and `description`, optional dirs). No need to change the skill; `localsetup-*` is a naming choice and does not affect spec validity.
 - **Optional**  - If the target host expects a different name, rename the directory and the `name` field so they match (spec requirement). Paths inside the skill (e.g. `_localsetup/docs/...`) may be framework-specific; the host can ignore or map them as needed.
 

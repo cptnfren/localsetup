@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.2
 ---
 
 # Repo and data separation (Localsetup v2)

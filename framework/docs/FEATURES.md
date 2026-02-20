@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.2
 ---
 
 # ⚡ Features
@@ -10,7 +10,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.1.2`
+- Current version: `2.2.0`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `32`
 - Source: `framework/docs/_generated/facts.json`
@@ -60,12 +60,12 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 
 | Capability | Description |
 |---|---|
-| **Conventional commit bumping** | Run `./scripts/publish` after you commit; bump type is inferred from the last commit message (feat: → minor, fix:/docs: → patch). |
+| **Conventional commit bumping** | Version bump is inferred from commit messages (feat: → minor, fix:/docs: → patch). Framework version and docs are maintained by repo maintainers; see docs/VERSIONING.md. |
 | **README and docs sync** | Version values are synchronized to `README.md`, `framework/README.md`, and YAML frontmatter in `framework/docs/*.md` and `docs/*.md`. |
 | **Attribution guardrails** | The commit hook strips `Co-authored-by` trailers for AI agents and bots. Only humans appear in commit history. |
 | **Git traceability model** | PRDs, specs, and outcomes can reference git commit hashes for audit. See `GIT_TRACEABILITY.md`. |
-| **Maintenance workflow** | Run `./scripts/maintain` to bump version, stage changes, commit, and push to main in one command. Keeps framework current without ceremony. |
-| **Skill metadata patching** | `scripts/bump-skill-versions --staged` increments `metadata.version` in any staged `SKILL.md` file and syncs to Cursor copies. |
+| **Maintenance workflow** | Framework version and docs are maintained by the repository maintainers. See docs/VERSIONING.md for how version is defined and displayed. |
+| **Skill metadata patching** | Skill `metadata.version` in SKILL.md is updated by maintainers when skills change; see framework/docs/AGENT_SKILLS_COMPLIANCE.md. |
 
 ---
 
@@ -96,7 +96,7 @@ These skills ship with the framework and are ready to use immediately.
 | `localsetup-agentic-prd-batch` | Process PRDs from queue; implement per spec; update status; write outcome. |
 | `localsetup-agentic-umbrella-queue` | Named workflows with impact summary and user confirmation before big/destructive runs. |
 | `localsetup-framework-compliance` | Pre-task workflow, certainty assessment, context load, document status, testing, git checkpoints. |
-| `localsetup-automatic-versioning` | Manage VERSION, `./scripts/publish` workflow, conventional commits, sync to READMEs and docs. |
+| `localsetup-automatic-versioning` | Manage VERSION, conventional commits, sync to READMEs and docs; version maintained by repo maintainers. |
 | `localsetup-github-publishing-workflow` | Publishing checklist: doc structure, licensing, PII/secrets scrub, repo readiness. |
 | `localsetup-tmux-shared-session-workflow` | Human-in-the-loop ops via shared tmux session with sudo discovery and batch gates. |
 | `localsetup-arbiter` | Push decisions to Arbiter Zebu for async human review. |

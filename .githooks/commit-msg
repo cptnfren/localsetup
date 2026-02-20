@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-# Localsetup v2  - commit-msg hook (disabled).
-# Version bump and doc sync are done by scripts/publish after you commit.
-# This hook is a no-op so normal commits are not amended.
-
-exit 0

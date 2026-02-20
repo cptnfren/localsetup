@@ -12,8 +12,7 @@
 | localsetup-script-and-docs-quality | Markdown/encoding, script quality, file/docs discipline | Generating scripts, editing markdown/docs |
 | localsetup-communication-and-tools | Communication, tool selection, periodic updates | Communication style, tools, MCP |
 | localsetup-tmux-shared-session-workflow | Shared tmux session; sudo discovery and single-prompt gate (join session, trigger, batch until timeout); agent captures output; human can attach/sudo | Server commands, deployments, tmux, human-in-the-loop ops |
-| localsetup-publish-workflow | Run ./scripts/publish (--push) from repo root; bump version, regenerate docs, commit sync | User says "publish", "run publish workflow", "bump and push" |
-| localsetup-automatic-versioning | Automatic semantic versioning from conventional commits; VERSION, publish workflow, sync to READMEs/docs | Version bumps, release workflow, conventional commits, versioning docs |
+| localsetup-automatic-versioning | Automatic semantic versioning from conventional commits; VERSION, sync to READMEs/docs | Version bumps, release workflow, conventional commits, versioning docs |
 | localsetup-github-publishing-workflow | Publishing checklist, doc structure, licensing, scrub for PII/secrets | Publishing to GitHub, public release prep, publishing checklist, repo readiness |
 | localsetup-skill-creator | Create framework skill from workflow description or existing doc/markdown/GitHub | Create new skill, capture workflow as skill, adapt doc or skill into framework |
 | localsetup-skill-importer | Import skills from URL (e.g. GitHub) or local path; discover, validate, screen, summarize; user picks which to import | Import skills from URL/path, screen external skills, add skills from repo |

@@ -10,6 +10,10 @@ framework/_localsetup/
 # Local-only generated maintenance docs
 _internal_docs/
 
+# Migration staging (do not commit; contents pushed to localsetup-maintainer)
+_to_private/
+_split/
+
 # Python
 __pycache__/
 *.pyc

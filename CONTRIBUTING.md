@@ -16,21 +16,11 @@ Thank you for your interest in contributing. Here’s how to get started.
 
 ## Repository layout
 
-- **Root**  - Install scripts (`install`, `install.ps1`), README, LICENSE, versioning scripts, and docs.
-- **`framework/`**  - The engine: `tools/`, `lib/`, `skills/`, `templates/`, `docs/`. Changes here affect what gets deployed into a client’s `_localsetup/`.
-- **Version and doc sync:** Run `./scripts/publish` (or `./scripts/publish --push`) after you commit; it bumps VERSION from the last commit message, regenerates doc artifacts, and commits the sync. See [docs/VERSIONING.md](docs/VERSIONING.md).
+- **Root**  - Install scripts (`install`, `install.ps1`), README, LICENSE, and docs.
+- **`framework/`**  - The engine: `tools/`, `lib/`, `skills/`, `templates/`, `docs/`. Changes here affect what gets deployed into a client's `_localsetup/`.
+- **Version and docs:** Framework version is defined in VERSION and displayed in READMEs; see [docs/VERSIONING.md](docs/VERSIONING.md). Version and doc sync are performed by the repository maintainers.
 
 For detailed structure and conventions, see [framework/README.md](framework/README.md) and the docs under `framework/docs/`.
-
-## Maintenance workflow (maintainers and agents)
-
-After **any** modification to the framework (docs, scripts, skills, config), run the maintenance workflow so the version is bumped and changes are committed and pushed to **main**:
-
-```bash
-./scripts/maintain
-```
-
-Optional: `./scripts/maintain "fix: short description"`. See [docs/MAINTENANCE_WORKFLOW.md](docs/MAINTENANCE_WORKFLOW.md). This keeps the framework on main current; it is not a formal release. **Every modification should end with this step.**
 
 ## Attribution and contributors
 

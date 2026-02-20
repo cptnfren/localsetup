@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.2
 ---
 
 # Platform registry (Localsetup v2)
@@ -30,14 +30,11 @@ Add one row or bullet per new skill with a short "When to use" description. Use 
 |-----------------|----------------|
 | Cursor (templates) | framework/templates/cursor/localsetup-context-index.md |
 | Cursor (templates) | framework/templates/cursor/localsetup-context.mdc |
-| Cursor (deployed copy) | framework/.cursor/rules/localsetup-context-index.md |
-| Cursor (deployed copy) | framework/.cursor/rules/localsetup-context.mdc |
 | Claude Code | framework/templates/claude-code/CLAUDE.md |
 | Codex | framework/templates/codex/AGENTS.md |
 | OpenClaw | framework/templates/openclaw/OPENCLAW_CONTEXT.md |
 | Framework README | framework/README.md (Skills table) |
 | Context skill (source) | framework/skills/localsetup-context/SKILL.md |
-| Context skill (Cursor copy) | framework/.cursor/skills/localsetup-context/SKILL.md |
 
 **If you add a new platform:** extend the Supported platforms table above, add the platform’s context/skills paths, and add the corresponding registration file(s) to this table so the skill-creator and maintainers keep all platforms in sync.
 

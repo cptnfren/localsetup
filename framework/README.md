@@ -1,6 +1,6 @@
 # Localsetup v2 Framework
 
-**Version:** 2.1.2  
+**Version:** 2.2.0  
 **Last updated:** 2026-02-19
 
 This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.
@@ -31,7 +31,7 @@ The emphasis is on **transparency**, **security**, and **high-quality operations
 
 ## Overview
 
-**Summary of features:** One-line install (Bash/PowerShell); multi-platform deploy (cursor, claude-code, codex, openclaw); always-loaded context per platform; 14 built-in skills (decision tree, PRD batch, safety, tmux, versioning, publishing, skill-creator, skill-importer, skill-discovery, and more); duplicate/overlap/namespace checks when creating or importing; heuristic security screening on import; public skill registry and index with refresh and top-5 similar recommendations; versioning (VERSION, optional commit-msg hook, conventional commits, per-skill metadata.version); cross-platform tools (deploy, verify_context, verify_rules, skill_importer_scan, bump-version, install-githooks); docs under [docs/](docs/) and [AGENTIC_DESIGN_INDEX.md](docs/AGENTIC_DESIGN_INDEX.md).
+**Summary of features:** One-line install (Bash/PowerShell); multi-platform deploy (cursor, claude-code, codex, openclaw); always-loaded context per platform; 32 built-in skills (decision tree, PRD batch, safety, tmux, versioning, publishing, skill-creator, skill-importer, skill-discovery, and more); duplicate/overlap/namespace checks when creating or importing; heuristic security screening on import; public skill registry and index with refresh and top-5 similar recommendations; versioning (VERSION, conventional commits, per-skill metadata.version); cross-platform tools (deploy, verify_context, verify_rules, skill_importer_scan); docs under [docs/](docs/) and [AGENTIC_DESIGN_INDEX.md](docs/AGENTIC_DESIGN_INDEX.md).
 
 Localsetup v2 provides:
 
@@ -40,7 +40,7 @@ Localsetup v2 provides:
 - **Named workflows** (decision tree, Agent Q queue, umbrella workflow, manual/lazy admin) with impact review where required.
 - **Repo-local everything**: engine at `_localsetup/`, user/context data under the repo; [git traceability](docs/GIT_TRACEABILITY.md) for PRDs, specs, and outcomes so operations stay transparent and auditable.
 
-After installation, the client repo contains `_localsetup/` (this framework plus docs) and platform-specific paths at repo root (e.g. `.cursor/rules/`, `.cursor/skills/` for Cursor). Version displayed in READMEs and framework docs is kept in sync with the repo **VERSION** file when you bump (e.g. via the commit-msg hook or manual bump script).
+After installation, the client repo contains `_localsetup/` (this framework plus docs) and platform-specific paths at repo root (e.g. `.cursor/rules/`, `.cursor/skills/` for Cursor). Version displayed in READMEs and framework docs is kept in sync with the repo **VERSION** file by the repository maintainers.
 
 ---
 
@@ -177,7 +177,7 @@ All docs live under `docs/` and are copied to `_localsetup/docs/` on deploy so t
 | [SKILLS_AND_RULES.md](docs/SKILLS_AND_RULES.md) | How master rule and skills interact; when to load which skill |
 | [MULTI_PLATFORM_INSTALL.md](docs/MULTI_PLATFORM_INSTALL.md) | Install for supported platforms |
 | [PLATFORM_REGISTRY.md](docs/PLATFORM_REGISTRY.md) | **Canonical list of supported AI agent platforms**; paths; skill registration file list |
-| [AGENT_SKILLS_COMPLIANCE.md](docs/AGENT_SKILLS_COMPLIANCE.md) | Agent Skills spec compliance; skill document versioning (metadata.version); auto-bump on commit |
+| [AGENT_SKILLS_COMPLIANCE.md](docs/AGENT_SKILLS_COMPLIANCE.md) | Agent Skills spec compliance; skill document versioning (metadata.version); maintained by repo maintainers |
 | [SKILL_INTEROPERABILITY.md](docs/SKILL_INTEROPERABILITY.md) | Import external skills (e.g. Anthropic); export our skills; interchange with spec-compliant hosts |
 | [SKILL_IMPORTING.md](docs/SKILL_IMPORTING.md) | Import from URL or path; discover, validate, screen, summarize; user selects which skills to import |
 | [SKILL_DISCOVERY.md](docs/SKILL_DISCOVERY.md) | Public skill registries (PUBLIC_SKILL_REGISTRY.urls, PUBLIC_SKILL_INDEX.yaml); recommend similar when creating/importing |
@@ -200,7 +200,6 @@ Skills are task-based instructions (SKILL.md with `name` and `description` front
 | `localsetup-script-and-docs-quality` | Generating scripts, markdown/docs |
 | `localsetup-communication-and-tools` | Communication style, tool choice, MCP/context updates |
 | `localsetup-tmux-shared-session-workflow` | Server/system commands, deployments, tmux, shared session; sudo discovery and single-prompt gate (join session, trigger, batch until timeout); human-in-the-loop ops |
-| `localsetup-publish-workflow` | User says "publish", "run publish workflow", "bump and push"; run ./scripts/publish (--push) from repo root |
 | `localsetup-automatic-versioning` | Version bumps, release workflow, conventional commits, versioning docs |
 | `localsetup-github-publishing-workflow` | Publishing to GitHub, public release prep, publishing checklist, repo readiness |
 | `localsetup-skill-creator` | Create new skill from workflow or existing doc/markdown/GitHub; capture workflow as framework skill |

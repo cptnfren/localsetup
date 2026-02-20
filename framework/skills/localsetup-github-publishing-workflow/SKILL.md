@@ -61,5 +61,5 @@ Run a quick scrub command (e.g. grep for password, secret, api_key, token, /home
 
 ## Reference
 
-- Full checklist and scrub commands: _localsetup/docs/PUBLISHING_CHECKLIST.md (or repo root docs/PUBLISHING_CHECKLIST.md in source repo).
+- A full checklist may exist in the maintainer repo. The sections above serve as the baseline; follow them for your own publishing workflow.
 - Versioning: load localsetup-automatic-versioning when changing or explaining version behavior.

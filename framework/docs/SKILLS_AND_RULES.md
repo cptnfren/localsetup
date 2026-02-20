@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.2
 ---
 
 # Skills and rules (Localsetup v2)
@@ -37,7 +37,7 @@ version: 2.1
 ## Format
 
 - Skills follow the [Agent Skills](https://agentskills.io/specification) specification: SKILL.md with required `name` and `description` frontmatter; optional `metadata.version` for skill document versioning; body = instructions. Same files work on all platforms.
-- **Skill document versioning:** Each skill includes `metadata.version` (e.g. `"1.0"`). Run `scripts/bump-skill-versions` when you change a skill file so the version is incremented; commit the result with your change. See _localsetup/docs/AGENT_SKILLS_COMPLIANCE.md.
+- **Skill document versioning:** Each skill includes `metadata.version` (e.g. `"1.0"`). Skill version bumps are performed by the repository maintainers when skill files change; see _localsetup/docs/AGENT_SKILLS_COMPLIANCE.md. See _localsetup/docs/AGENT_SKILLS_COMPLIANCE.md.
 - When adding a platform or registering a new skill, use _localsetup/docs/PLATFORM_REGISTRY.md as the source of truth.
 - **Interoperability:** Skills are [Agent Skills](https://agentskills.io/specification)–compliant and interchangeable: our skills work in any spec-compliant host; external skills (e.g. [Anthropic’s](https://github.com/anthropics/skills)) can be used here with placement + registration. See _localsetup/docs/SKILL_INTEROPERABILITY.md.
 

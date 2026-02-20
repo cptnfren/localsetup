@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.2
 ---
 
 # Agent Skills compliance (Localsetup v2)
@@ -27,9 +27,7 @@ version: 2.1
 ## Skill document versioning
 
 - Each framework skill includes **metadata.version** (e.g. `"1.0"`) in SKILL.md frontmatter per the spec’s optional `metadata` field.
-- **Skill version bump:** When you change `framework/skills/*/SKILL.md`, run `scripts/bump-skill-versions --staged` (or pass the files) and commit the updated metadata.version with your change. Patch is incremented (e.g. 1.0 → 1.1).
-- **Manual bump:** Run `./scripts/bump-skill-versions path/to/framework/skills/name/SKILL.md` to increment that skill’s version without committing.
-- After bumping a skill under `framework/skills/`, the same version is synced to `framework/.cursor/skills/<name>/SKILL.md` if present so Cursor-deployed copies stay in sync.
+- Skill version bumps and sync to deployed copies are performed by the repository maintainers when skills change. Patch is incremented (e.g. 1.0 → 1.1) for non-breaking updates.
 
 ## Validation
 

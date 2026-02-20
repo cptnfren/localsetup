@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.2
 ---
 
 # Shipped skills catalog
@@ -15,7 +15,7 @@ Total shipped skills: 32
 | `localsetup-agentic-umbrella-queue` | `localsetup-agentic-umbrella-queue` | `1.1` | Umbrella/queue: only when queue or PRD in scope; named workflows; impact summary + user confirmation before big/destructive runs. Use when editing .agent/queue/**, .agent/**, PRD.md, *.prd.md or when user invokes a named umbrella workflow. |
 | `localsetup-ansible-skill` | `localsetup-ansible-skill` | `1.1` | Infrastructure automation with Ansible. Use for server provisioning, configuration management, application deployment, and multi-host orchestration. Includes example playbooks for VPS setup, security hardening, and common server configurations. Bundled examples may reference one platform; adapt paths and commands for your environment. |
 | `localsetup-arbiter` | `localsetup-arbiter` | `1.2` | Push decisions to Arbiter Zebu for async human review. Use when you need human input on plans, architectural choices, or approval before proceeding. |
-| `localsetup-automatic-versioning` | `localsetup-automatic-versioning` | `1.1` | Use and maintain automatic versioning from conventional commits; VERSION as source of truth; commit-msg hook; sync to READMEs and docs. Use when working on version bumps, release workflow, or when the user asks about versioning or conventional commits. |
+| `localsetup-automatic-versioning` | `localsetup-automatic-versioning` | `1.1` | Use and maintain automatic versioning from conventional commits; VERSION as source of truth; sync to READMEs and docs. Use when working on version bumps, release workflow, or when the user asks about versioning or conventional commits. |
 | `localsetup-backlog-and-reminders` | `localsetup-backlog-and-reminders` | `1.1` | Record deferred ideas, to-dos, and reminders (with optional due date or 'whenever'); show due/overdue when user starts a session or asks. Use when user says 'add to backlog', 'remind me', 'I'll do this later', 'what's due?', 'show my backlog', 'start my session', or wants to capture ideas for later. |
 | `localsetup-communication-and-tools` | `localsetup-communication-and-tools` | `1.2` | Communication and response guidelines, tool selection and enhancement, periodic context updates. Use for user communication style, choosing tools, MCP/context updates. |
 | `localsetup-context` | `localsetup-context` | `1.5` | Localsetup v2 framework context  - overview, invariants, and skills index. Load first when working in a repo that uses Localsetup v2. Use when starting work in this repo or when user asks about framework rules. |

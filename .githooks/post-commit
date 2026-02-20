@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-# Localsetup v2  - post-commit hook (disabled).
-# This hook is a no-op.
-
-exit 0

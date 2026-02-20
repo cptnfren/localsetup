@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.2
 ---
 
 # Workflow and module registry (Localsetup v2)
@@ -23,12 +23,13 @@ version: 2.1
 | Umbrella workflow | Multi-phase single kickoff; named workflows | User invokes by name (e.g. "execute umbrella workflow X") | Yes for big/destructive |
 | Manual execution (lazy admin) | Human-in-the-loop; three-block format; info-gather before destructive | Sudo, confirmation, manual steps | No (protocol is guardrail) |
 | Tmux shared session | All server ops in tmux; human can attach; sudo via one gate per validity window | Server commands, deployments, tmux, human-in-the-loop | No (skill defines gate) |
-| Publish workflow | Bump version from last commit, regenerate docs, commit sync, optional push | User says "publish", "run publish workflow", "bump and push" | No |
+
+Maintainer workflows (publish, bump) live in the maintainer repo; not documented here.
 
 ## Usage
 
 - **Agents:** For workflows marked impact review, present impact summary and get user confirmation before proceeding.
-- **Skills:** Load the matching skill (localsetup-publish-workflow, localsetup-decision-tree-workflow, localsetup-agentic-prd-batch, localsetup-agentic-umbrella-queue, localsetup-tmux-shared-session-workflow, etc.) when the task matches.
+- **Skills:** Load the matching skill (localsetup-decision-tree-workflow, localsetup-agentic-prd-batch, localsetup-agentic-umbrella-queue, localsetup-tmux-shared-session-workflow, etc.) when the task matches.
 - **Tmux/sudo:** See skill localsetup-tmux-shared-session-workflow: sudo discovery at start (valid? timeout? required?); one human gate (join session, run `sudo -v && echo SUDO_READY`, agent waits then batches all sudo commands until timeout); re-prompt only when sudo expires.
 
 ---

@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.1
+version: 2.2
 ---
 
 # 📚 Framework docs index
@@ -10,7 +10,7 @@ This is the public documentation index for Localsetup v2. Use it to navigate fra
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.1.2`
+- Current version: `2.2.0`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `32`
 - Source: `framework/docs/_generated/facts.json`
@@ -80,8 +80,7 @@ How automatic versioning and maintenance workflows operate.
 
 | Page | What it covers |
 |---|---|
-| [Versioning](../../docs/VERSIONING.md) | Conventional commits, `./scripts/publish` workflow, VERSION file as source of truth |
-| [Maintenance workflow](../../docs/MAINTENANCE_WORKFLOW.md) | Publish workflow to bump, sync docs, commit, and optionally push |
+| [Versioning](../../docs/VERSIONING.md) | VERSION as source of truth, conventional commits, how version is displayed; maintained by repo maintainers |
 
 ---
 
