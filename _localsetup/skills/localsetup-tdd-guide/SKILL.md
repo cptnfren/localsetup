@@ -3,6 +3,7 @@ name: localsetup-tdd-guide
 description: Test-driven development workflow with test generation, coverage analysis, and multi-framework support
 metadata:
   version: "1.1"
+compatibility: "Python 3.10+. Scripts in scripts/ follow framework tooling standard (input validation, actionable stderr). See _localsetup/docs/TOOLING_POLICY.md and INPUT_HARDENING_STANDARD.md."
 triggers:
   - generate tests
   - analyze coverage

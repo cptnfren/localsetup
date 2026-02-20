@@ -21,12 +21,12 @@ Recover a repo without making the blast radius worse.
 
 1. Capture diagnostics:
 ```bash
-bash scripts/snapshot_git_state.sh .
+python scripts/snapshot_git_state.py .
 ```
 2. Route by symptom using `references/symptom-map.md`.
 3. Generate non-destructive command plan:
 ```bash
-bash scripts/guided_repair_plan.sh --repo .
+python scripts/guided_repair_plan.py --repo .
 ```
 4. Apply the smallest matching playbook.
 5. Run `references/recovery-checklist.md` verification gate.
@@ -34,8 +34,8 @@ bash scripts/guided_repair_plan.sh --repo .
 
 For explicit routing:
 ```bash
-bash scripts/guided_repair_plan.sh --list
-bash scripts/guided_repair_plan.sh --symptom phantom-branch-lock
+python scripts/guided_repair_plan.py --list
+python scripts/guided_repair_plan.py --symptom phantom-branch-lock
 ```
 
 ## Regression Harness
@@ -43,13 +43,13 @@ bash scripts/guided_repair_plan.sh --symptom phantom-branch-lock
 Use disposable simulation tests before changing script logic:
 
 ```bash
-bash scripts/regression_harness.sh
+python scripts/regression_harness.py
 ```
 
 Run one scenario:
 
 ```bash
-bash scripts/regression_harness.sh --scenario orphaned-worktree
+python scripts/regression_harness.py --scenario orphaned-worktree
 ```
 
 ## Playbook A: Orphaned Worktree Metadata
@@ -155,6 +155,6 @@ When building worktree tooling (iMi, scripts, bots), enforce:
 
 - Symptom router: `references/symptom-map.md`
 - Verification checklist: `references/recovery-checklist.md`
-- Diagnostic snapshot script: `scripts/snapshot_git_state.sh`
-- Guided plan generator: `scripts/guided_repair_plan.sh`
-- Disposable regression harness: `scripts/regression_harness.sh`
+- Diagnostic snapshot script: `scripts/snapshot_git_state.py`
+- Guided plan generator: `scripts/guided_repair_plan.py`
+- Disposable regression harness: `scripts/regression_harness.py`

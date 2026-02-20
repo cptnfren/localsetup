@@ -3,27 +3,28 @@ name: localsetup-linux-patcher
 description: Automated Linux server patching and Docker container updates. Use when the user asks to update, patch, or upgrade Linux servers, apply security updates, update Docker containers, check for system updates, or manage server maintenance across multiple hosts. Supports Ubuntu, Debian, RHEL, AlmaLinux, Rocky Linux, CentOS, Amazon Linux, and SUSE. Includes PatchMon integration for automatic host detection and intelligent Docker handling.
 metadata:
   version: "1.1"
+compatibility: "Python 3.10+ for patch_cli.py; shell scripts (patch-auto.sh, patch-host-only.sh, etc.) for SSH and PatchMon. Use 'python scripts/patch_cli.py auto|host-only|host-full|multiple' for validated entrypoints."
 ---
 
 # Linux Patcher
 
 Automate Linux server patching and Docker container updates across multiple hosts via SSH.
 
-## ⚠️ Important Disclaimers
+## [WARNING] Important disclaimers
 
-### Distribution Support Status
+### Distribution support status
 
-**Fully Tested:**
-- ✅ **Ubuntu** - Tested end-to-end with real infrastructure
+**Fully tested:**
+- [OK] **Ubuntu** - Tested end-to-end with real infrastructure
 
-**Supported but Untested:**
-- ⚠️ **Debian GNU/Linux** - Commands based on official documentation
-- ⚠️ **Amazon Linux** - Supports both AL2 (yum) and AL2023 (dnf)
-- ⚠️ **RHEL (Red Hat Enterprise Linux)** - Supports RHEL 7 (yum) and 8+ (dnf)
-- ⚠️ **AlmaLinux** - RHEL-compatible, uses dnf
-- ⚠️ **Rocky Linux** - RHEL-compatible, uses dnf
-- ⚠️ **CentOS** - Supports CentOS 7 (yum) and 8+ (dnf)
-- ⚠️ **SUSE/OpenSUSE** - Uses zypper package manager
+**Supported but untested:**
+- [WARNING] **Debian GNU/Linux** - Commands based on official documentation
+- [WARNING] **Amazon Linux** - Supports both AL2 (yum) and AL2023 (dnf)
+- [WARNING] **RHEL (Red Hat Enterprise Linux)** - Supports RHEL 7 (yum) and 8+ (dnf)
+- [WARNING] **AlmaLinux** - RHEL-compatible, uses dnf
+- [WARNING] **Rocky Linux** - RHEL-compatible, uses dnf
+- [WARNING] **CentOS** - Supports CentOS 7 (yum) and 8+ (dnf)
+- [WARNING] **SUSE/OpenSUSE** - Uses zypper package manager
 
 **Testing Recommendation:**
 Always test untested distributions in a non-production environment first. The script will warn you when running on untested distributions.
@@ -43,34 +44,36 @@ This skill requires:
 
 **Patch all hosts from PatchMon** (automatic detection):
 ```bash
-scripts/patch-auto.sh
+python scripts/patch_cli.py auto
+# or: scripts/patch-auto.sh
 ```
 
 **Skip Docker updates** (packages only):
 ```bash
-scripts/patch-auto.sh --skip-docker
+python scripts/patch_cli.py auto --skip-docker
 ```
 
 **Preview changes** (dry-run):
 ```bash
-scripts/patch-auto.sh --dry-run
+python scripts/patch_cli.py auto --dry-run
 ```
 
 ### Manual (Alternative)
 
 **Single host - packages only**:
 ```bash
-scripts/patch-host-only.sh user@hostname
+python scripts/patch_cli.py host-only user@hostname
+# or: scripts/patch-host-only.sh user@hostname
 ```
 
 **Single host - full update**:
 ```bash
-scripts/patch-host-full.sh user@hostname /path/to/docker/compose
+python scripts/patch_cli.py host-full user@hostname /path/to/docker/compose
 ```
 
 **Multiple hosts from config**:
 ```bash
-scripts/patch-multiple.sh config-file.conf
+python scripts/patch_cli.py multiple config-file.conf
 ```
 
 ## Features
@@ -498,16 +501,16 @@ This skill includes comprehensive documentation:
 
 | Distribution | Package Manager | Tested | Status |
 |--------------|-----------------|--------|--------|
-| Ubuntu | apt | ✅ Yes | Fully supported |
-| Debian | apt | ⚠️ No | Supported (untested) |
-| Amazon Linux 2 | yum | ⚠️ No | Supported (untested) |
-| Amazon Linux 2023 | dnf | ⚠️ No | Supported (untested) |
-| RHEL 7 | yum | ⚠️ No | Supported (untested) |
-| RHEL 8+ | dnf | ⚠️ No | Supported (untested) |
-| AlmaLinux | dnf | ⚠️ No | Supported (untested) |
-| Rocky Linux | dnf | ⚠️ No | Supported (untested) |
-| CentOS 7 | yum | ⚠️ No | Supported (untested) |
-| CentOS 8+ | dnf | ⚠️ No | Supported (untested) |
-| SUSE/OpenSUSE | zypper | ⚠️ No | Supported (untested) |
+| Ubuntu | apt | [OK] Yes | Fully supported |
+| Debian | apt | [WARNING] No | Supported (untested) |
+| Amazon Linux 2 | yum | [WARNING] No | Supported (untested) |
+| Amazon Linux 2023 | dnf | [WARNING] No | Supported (untested) |
+| RHEL 7 | yum | [WARNING] No | Supported (untested) |
+| RHEL 8+ | dnf | [WARNING] No | Supported (untested) |
+| AlmaLinux | dnf | [WARNING] No | Supported (untested) |
+| Rocky Linux | dnf | [WARNING] No | Supported (untested) |
+| CentOS 7 | yum | [WARNING] No | Supported (untested) |
+| CentOS 8+ | dnf | [WARNING] No | Supported (untested) |
+| SUSE/OpenSUSE | zypper | [WARNING] No | Supported (untested) |
 
 The skill automatically detects the distribution and selects the appropriate package manager.

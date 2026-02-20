@@ -25,7 +25,7 @@ metadata:
 - Cursor: `.cursor/rules/localsetup-context-index.md` (or skills section of `.cursor/rules/localsetup-context.mdc`).
 - Claude Code: `.claude/CLAUDE.md`.
 - Codex: `AGENTS.md`.
-- OpenClaw: workspace context per platform registry.
+- Other platforms: workspace context per platform registry (see PLATFORM_REGISTRY.md).
 - Use public-skill suggestions from `_localsetup/docs/PUBLIC_SKILL_INDEX.yaml`.
 
 ## Mode detection

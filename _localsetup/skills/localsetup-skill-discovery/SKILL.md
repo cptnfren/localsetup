@@ -7,7 +7,7 @@ metadata:
 
 # Skill discovery (public registries)
 
-**Purpose:** Let users discover publicly available skills from external collections (e.g. [awesome-openclaw-skills](https://github.com/VoltAgent/awesome-openclaw-skills)) so they can reuse or adapt existing skills instead of building from scratch. Runs in conjunction with skill-creator and skill-importer: when the user is creating or importing a skill, recommend up to five similar public skills and offer clear next steps.
+**Purpose:** Let users discover publicly available skills from external collections (e.g. awesome lists, skill hubs, or public registries) so they can reuse or adapt existing skills instead of building from scratch. Runs in conjunction with skill-creator and skill-importer: when the user is creating or importing a skill, recommend up to five similar public skills and offer clear next steps.
 
 ## When to use this skill
 

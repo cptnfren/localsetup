@@ -260,7 +260,7 @@ async def run_evaluation(
             question=qa_pair["question"],
             expected_answer=qa_pair["answer"],
             actual_answer=result["actual"] or "N/A",
-            correct_indicator="✅" if result["score"] else "❌",
+            correct_indicator="[OK]" if result["score"] else "[FAIL]",
             total_duration=result["total_duration"],
             tool_calls=json.dumps(result["tool_calls"], indent=2),
             summary=result["summary"] or "N/A",
@@ -336,9 +336,14 @@ Examples:
 
     args = parser.parse_args()
 
-    if not args.eval_file.exists():
-        print(f"Error: Evaluation file not found: {args.eval_file}")
+    # Input hardening: path and length limits per INPUT_HARDENING_STANDARD
+    eval_path = args.eval_file.resolve()
+    if not eval_path.exists() or not eval_path.is_file():
+        print(f"Error: Evaluation file not found: {args.eval_file}", file=sys.stderr)
         sys.exit(1)
+    if args.url and len(args.url) > 2048:
+        print("Error: URL length exceeds 2048", file=sys.stderr)
+        sys.exit(2)
 
     headers = parse_headers(args.headers) if args.headers else None
     env_vars = parse_env_vars(args.env) if args.env else None
@@ -353,18 +358,18 @@ Examples:
             headers=headers,
         )
     except ValueError as e:
-        print(f"Error: {e}")
+        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"🔗 Connecting to MCP server via {args.transport}...")
+    print(f"Connecting to MCP server via {args.transport}...", file=sys.stderr)
 
     async with connection:
-        print("✅ Connected successfully")
+        print("Connected successfully", file=sys.stderr)
         report = await run_evaluation(args.eval_file, connection, args.model)
 
         if args.output:
-            args.output.write_text(report)
-            print(f"\n✅ Report saved to {args.output}")
+            args.output.write_text(report, encoding="utf-8", errors="replace")
+            print(f"\nReport saved to {args.output}", file=sys.stderr)
         else:
             print("\n" + report)
 

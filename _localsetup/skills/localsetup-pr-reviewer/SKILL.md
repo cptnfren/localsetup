@@ -19,19 +19,19 @@ Automated code review for GitHub pull requests. Analyzes diffs for security issu
 
 ```bash
 # Review all open PRs in current repo
-scripts/pr-review.sh check
+python scripts/pr_review.py check
 
 # Review a specific PR
-scripts/pr-review.sh review 42
+python scripts/pr_review.py review 42
 
 # Post review as GitHub comment
-scripts/pr-review.sh post 42
+python scripts/pr_review.py post 42
 
 # Check status of all open PRs
-scripts/pr-review.sh status
+python scripts/pr_review.py status
 
 # List unreviewed PRs (useful for heartbeat/cron integration)
-scripts/pr-review.sh list-unreviewed
+python scripts/pr_review.py list-unreviewed
 ```
 
 ## Configuration
@@ -45,14 +45,14 @@ Set these environment variables or the script auto-detects from the current git 
 
 ## What It Checks
 
-| Category | Icon | Examples |
-|----------|------|----------|
-| Security | 🔴 | Hardcoded credentials, AWS keys, secrets in code |
-| Error Handling | 🟡 | Discarded errors (Go `_ :=`), bare `except:` (Python), unchecked `Close()` |
-| Risk | 🟠 | `panic()` calls, `process.exit()` |
-| Style | 🔵 | `fmt.Print`/`print()`/`console.log` in prod, very long lines |
-| TODOs | 📝 | TODO, FIXME, HACK, XXX markers |
-| Test Coverage | 📊 | Source files changed without corresponding test changes |
+| Category | Marker | Examples |
+|----------|--------|----------|
+| Security | [FAIL] | Hardcoded credentials, AWS keys, secrets in code |
+| Error Handling | [WARNING] | Discarded errors (Go `_ :=`), bare `except:` (Python), unchecked `Close()` |
+| Risk | [WARNING] | `panic()` calls, `process.exit()` |
+| Style | [NOTE] | `fmt.Print`/`print()`/`console.log` in prod, very long lines |
+| TODOs | [NOTE] | TODO, FIXME, HACK, XXX markers |
+| Test Coverage | [NOTE] | Source files changed without corresponding test changes |
 
 ## Smart Re-Review
 
@@ -68,22 +68,22 @@ Reports are saved as markdown files in the output directory. Each report include
 - Automated diff findings with file, line, category, and context
 - Test coverage analysis
 - Local lint results (when repo is checked out locally)
-- Summary verdict: 🔴 SECURITY / 🟡 NEEDS ATTENTION / 🔵 MINOR NOTES / ✅ LOOKS GOOD
+- Summary verdict: [FAIL] SECURITY / [WARNING] NEEDS ATTENTION / [NOTE] MINOR NOTES / [OK] LOOKS GOOD
 
 ## Heartbeat/Cron Integration
 
 Add to a periodic check (heartbeat, cron job, or CI):
 
 ```bash
-UNREVIEWED=$(scripts/pr-review.sh list-unreviewed)
+UNREVIEWED=$(python scripts/pr_review.py list-unreviewed)
 if [ -n "$UNREVIEWED" ]; then
-  scripts/pr-review.sh check
+  python scripts/pr_review.py check
 fi
 ```
 
 ## Extending
 
-The analysis patterns in the script are organized by language. Add new patterns by appending to the relevant pattern list in the `analyze_diff()` function:
+The analysis patterns in `pr_review.py` are organized by language. Add new patterns by appending to the relevant pattern list in the `analyze_diff()` function:
 
 ```python
 # Add a new Go pattern

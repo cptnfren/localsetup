@@ -3,7 +3,7 @@ name: localsetup-arbiter
 description: "Push decisions to Arbiter Zebu for async human review. Use when you need human input on plans, architectural choices, or approval before proceeding."
 metadata:
   version: "1.2"
-compatibility: "Requires arbiter-push CLI (Arbiter Zebu). Install via your package manager or from https://github.com/5hanth/arbiter-skill."
+compatibility: "Requires arbiter-push CLI (Arbiter Zebu) for full functionality. Install via your package manager or from https://github.com/5hanth/arbiter-skill. The skill provides scripts/arbiter_cli.py (Python) for push/get/status subcommands when the full CLI is not available; current implementation is stub only."
 ---
 
 # Arbiter Skill
@@ -20,6 +20,8 @@ git clone https://github.com/5hanth/arbiter-skill.git
 cd arbiter-skill && npm install && npm run build
 # Add the CLI to your PATH or link into your agent's skills directory per your platform.
 ```
+
+**Skill-provided Python CLI (stub):** From the skill directory, run `python scripts/arbiter_cli.py push <tag> <title>`, `get <plan_id>`, or `status <plan_id>`. This follows the framework tooling standard; full behavior requires the Arbiter Zebu CLI.
 
 ### Prerequisites
 
