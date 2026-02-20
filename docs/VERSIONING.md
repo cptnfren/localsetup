@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.3
+version: 2.5
 ---
 
 # Versioning (Localsetup v2)

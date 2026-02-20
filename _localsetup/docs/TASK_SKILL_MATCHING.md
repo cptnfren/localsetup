@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.3
+version: 2.5
 ---
 
 # Task-to-skill matching (Localsetup v2)

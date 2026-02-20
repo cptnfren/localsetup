@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-02-20T11:02:23.016450+00:00",
-  "version": "2.4.0",
-  "major_minor": "2.4",
+  "generated_at": "2026-02-20T22:18:45.501773+00:00",
+  "version": "2.5.0",
+  "major_minor": "2.5",
   "platform_count": 4,
-  "skill_count": 34,
+  "skill_count": 35,
   "platforms": [
     {
       "id": "cursor",
@@ -96,6 +96,12 @@
       "name": "localsetup-decision-tree-workflow",
       "version": "1.1",
       "path": "_localsetup/skills/localsetup-decision-tree-workflow/SKILL.md"
+    },
+    {
+      "id": "localsetup-framework-audit",
+      "name": "localsetup-framework-audit",
+      "version": "1.0",
+      "path": "_localsetup/skills/localsetup-framework-audit/SKILL.md"
     },
     {
       "id": "localsetup-framework-compliance",
