@@ -75,10 +75,10 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Directory . -Tools curso
 | Tool | Linux/macOS | Windows |
 |------|-------------|---------|
 | Install | `./install` or `bash install` | `.\install.ps1` (or run `./install` from Git Bash to auto-detect) |
-| Deploy | `./_localsetup/_localsetup/tools/deploy` | `.\_localsetup\_localsetup\tools\deploy.ps1` |
-| Verify context | `./_localsetup/_localsetup/tools/verify_context` | `.\_localsetup\_localsetup\tools\verify_context.ps1` |
-| Verify rules | `./_localsetup/_localsetup/tools/verify_rules` | `.\_localsetup\_localsetup\tools\verify_rules.ps1` |
-| Tests | `./_localsetup/_localsetup/tests/automated_test.sh` | `.\_localsetup\_localsetup\tests\automated_test.ps1` |
+| Deploy | `./_localsetup/tools/deploy` | `.\_localsetup\tools\deploy.ps1` |
+| Verify context | `./_localsetup/tools/verify_context` | `.\_localsetup\tools\verify_context.ps1` |
+| Verify rules | `./_localsetup/tools/verify_rules` | `.\_localsetup\tools\verify_rules.ps1` |
+| Tests | `./_localsetup/tests/automated_test.sh` | `.\_localsetup\tests\automated_test.ps1` |
 
 Path resolution and OS detection exist in both: `lib/data_paths.sh` and `lib/data_paths.ps1`; `discovery/core/os_detector.sh` and `discovery/core/os_detector.ps1`.
 

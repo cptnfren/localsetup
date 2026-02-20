@@ -104,6 +104,55 @@ try {
 }
 $FrameworkDir = Join-Path $TargetDir $FRAMEWORK_DIRNAME
 
+function Get-EngineSource {
+    param([string]$BasePath)
+    $candidates = @(
+        (Join-Path $BasePath '_localsetup'),
+        $BasePath,
+        (Join-Path $BasePath 'framework')
+    )
+    foreach ($candidate in $candidates) {
+        $deploy = Join-Path $candidate 'tools\deploy.ps1'
+        if (Test-Path -LiteralPath $deploy) {
+            return $candidate
+        }
+    }
+    return $null
+}
+
+function Sync-EngineTree {
+    param(
+        [string]$SourceDir,
+        [string]$TargetDir
+    )
+
+    New-Item -ItemType Directory -Force -Path $TargetDir | Out-Null
+
+    # Keep user-local files, but replace framework-managed tree.
+    foreach ($name in @('config','discovery','docs','lib','skills','templates','tests','tools')) {
+        $p = Join-Path $TargetDir $name
+        if (Test-Path -LiteralPath $p) {
+            Remove-Item -LiteralPath $p -Recurse -Force
+        }
+    }
+    foreach ($name in @('README.md','requirements.txt')) {
+        $p = Join-Path $TargetDir $name
+        if (Test-Path -LiteralPath $p) {
+            Remove-Item -LiteralPath $p -Force
+        }
+    }
+
+    Copy-Item -LiteralPath (Join-Path $SourceDir '*') -Destination $TargetDir -Recurse -Force
+
+    # Clean legacy source-repo leftovers from older layouts.
+    foreach ($name in @('_localsetup','framework','.github','.git')) {
+        $p = Join-Path $TargetDir $name
+        if (Test-Path -LiteralPath $p) {
+            Remove-Item -LiteralPath $p -Recurse -Force
+        }
+    }
+}
+
 # Resolve tools
 if (-not $Tools) {
     if ($Yes) {
@@ -130,52 +179,57 @@ if (-not $toolList -or $toolList.Count -eq 0) {
 }
 $ToolsNormalized = ($toolList -join ',').Trim()
 
-# Clone or update framework
-if (Test-Path (Join-Path $FrameworkDir '.git') -PathType Container) {
-    Write-Host 'Updating existing _localsetup...'
-    Push-Location $FrameworkDir
-    try {
-        git pull --rebase 2>$null
-    } finally {
-        Pop-Location
-    }
-} else {
-    Write-Host "Cloning Localsetup v2 into $FrameworkDir..."
-    try {
+$sourceBase = $null
+$workDir = $null
+try {
+    if (Test-Path (Join-Path $FrameworkDir '.git') -PathType Container) {
+        Write-Host 'Updating existing _localsetup source clone...'
+        Push-Location $FrameworkDir
+        try {
+            git pull --rebase 2>$null
+        } finally {
+            Pop-Location
+        }
+        $sourceBase = $FrameworkDir
+    } elseif (Get-EngineSource -BasePath $FrameworkDir) {
+        $sourceBase = $FrameworkDir
+    } else {
+        Write-Host 'Fetching Localsetup v2 source...'
         New-Item -ItemType Directory -Force -Path $TargetDir -ErrorAction Stop | Out-Null
-        $null = git clone $REPO_URL $FrameworkDir 2>&1
-    } catch {
-        Write-Host "Error: $_" -ForegroundColor Red
-        Show-UsageAndExit "Clone failed. Check network and repo URL (set LOCALSETUP_2_REPO to override)."
+        $workDir = Join-Path ([System.IO.Path]::GetTempPath()) ("localsetup-" + [Guid]::NewGuid().ToString('N'))
+        $sourceBase = Join-Path $workDir 'localsetup-source'
+        New-Item -ItemType Directory -Force -Path $workDir | Out-Null
+        $null = git clone $REPO_URL $sourceBase 2>&1
     }
-    if (-not (Test-Path (Join-Path $FrameworkDir '.git') -PathType Container)) {
-        Write-Host "Error: Clone failed. If repo is not yet published, copy the framework into $FrameworkDir and run:" -ForegroundColor Red
-        Write-Host "  & '$FrameworkDir\tools\deploy.ps1' -Tools '$ToolsNormalized' -Root '$TargetDir'"
-        Write-Host "  or & '$FrameworkDir\_localsetup\tools\deploy.ps1' -Tools '$ToolsNormalized' -Root '$TargetDir'"
+
+    $engineSource = Get-EngineSource -BasePath $sourceBase
+    if (-not $engineSource) {
+        Write-Host "Error: Could not locate framework engine in source." -ForegroundColor Red
+        Write-Host "Checked for: tools\deploy.ps1, _localsetup\tools\deploy.ps1, framework\tools\deploy.ps1" -ForegroundColor Red
         exit 1
     }
-}
 
-# Run deploy step
-$DeployScript = Join-Path $FrameworkDir 'tools\deploy.ps1'
-if (-not (Test-Path -LiteralPath $DeployScript)) {
-    $DeployScript = Join-Path $FrameworkDir '_localsetup\tools\deploy.ps1'
-}
-if (-not (Test-Path -LiteralPath $DeployScript)) {
-    $DeployScript = Join-Path $FrameworkDir 'framework\tools\deploy.ps1'
-}
-if (Test-Path -LiteralPath $DeployScript) {
-    try {
+    if ((Resolve-Path -LiteralPath $engineSource).Path -ne (Resolve-Path -LiteralPath $FrameworkDir -ErrorAction SilentlyContinue).Path) {
+        Write-Host "Preparing single-level framework at $FrameworkDir..."
+        Sync-EngineTree -SourceDir $engineSource -TargetDir $FrameworkDir
+    }
+
+    # Run deploy step from flattened install path
+    $DeployScript = Join-Path $FrameworkDir 'tools\deploy.ps1'
+    if (Test-Path -LiteralPath $DeployScript) {
         & $DeployScript -Root $TargetDir -Tools $ToolsNormalized
         if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    } catch {
-        Write-Host "Error: Deploy failed. $_" -ForegroundColor Red
+    } else {
+        Write-Host "Error: Deploy script not found at '$FrameworkDir\tools\deploy.ps1'" -ForegroundColor Red
         exit 1
     }
-} else {
-    Write-Host "Error: Deploy script not found at '$FrameworkDir\tools\deploy.ps1' or '$FrameworkDir\_localsetup\tools\deploy.ps1' or '$FrameworkDir\framework\tools\deploy.ps1'" -ForegroundColor Red
-    Write-Host "Run manually: & '$FrameworkDir\_localsetup\tools\deploy.ps1' -Tools '$ToolsNormalized' -Root '$TargetDir'"
-    exit 1
+} catch {
+    Write-Host "Error: $_" -ForegroundColor Red
+    Show-UsageAndExit "Install failed. Check network and repo URL (set LOCALSETUP_2_REPO to override)."
+} finally {
+    if ($workDir -and (Test-Path -LiteralPath $workDir)) {
+        Remove-Item -LiteralPath $workDir -Recurse -Force -ErrorAction SilentlyContinue
+    }
 }
 
 Write-Host "Done. Framework at $FrameworkDir; platform files written to $TargetDir."

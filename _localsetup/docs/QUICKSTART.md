@@ -56,15 +56,15 @@ After install, run the verification scripts to confirm everything deployed corre
 ### Linux and macOS
 
 ```bash
-./_localsetup/_localsetup/tools/verify_context
-./_localsetup/_localsetup/tools/verify_rules
+./_localsetup/tools/verify_context
+./_localsetup/tools/verify_rules
 ```
 
 ### Windows
 
 ```powershell
-.\_localsetup\_localsetup\tools\verify_context.ps1
-.\_localsetup\_localsetup\tools\verify_rules.ps1
+.\_localsetup\tools\verify_context.ps1
+.\_localsetup\tools\verify_rules.ps1
 ```
 
 Expected output: confirmation that context file exists and skills directory is present.
@@ -107,7 +107,7 @@ If you already have the repo on disk:
 
 ## 🔄 Updating
 
-Re-run the same install command. If `_localsetup/` already exists as a git clone, the installer runs `git pull --rebase` inside it before redeploying context and skills. Your local edits outside `_localsetup/` are preserved.
+Re-run the same install command. The installer refreshes managed framework files in `_localsetup/` and redeploys context and skills. Existing repo content outside `_localsetup/` is preserved.
 
 ## 📖 Next steps
 

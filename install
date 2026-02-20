@@ -141,6 +141,38 @@ if [[ "$TARGET_DIR" != /* ]]; then
 fi
 FRAMEWORK_DIR="$TARGET_DIR/$FRAMEWORK_DIRNAME"
 
+detect_engine_dir() {
+  local base="$1"
+  if [[ -x "$base/_localsetup/tools/deploy" ]]; then
+    echo "$base/_localsetup"
+    return 0
+  fi
+  if [[ -x "$base/tools/deploy" ]]; then
+    echo "$base"
+    return 0
+  fi
+  if [[ -x "$base/framework/tools/deploy" ]]; then
+    echo "$base/framework"
+    return 0
+  fi
+  return 1
+}
+
+sync_engine_tree() {
+  local src="$1"
+  local dst="$2"
+  mkdir -p "$dst"
+
+  # Keep user-local files, but replace framework-managed tree.
+  rm -rf "$dst/config" "$dst/discovery" "$dst/docs" "$dst/lib" "$dst/skills" "$dst/templates" "$dst/tests" "$dst/tools"
+  rm -f "$dst/README.md" "$dst/requirements.txt"
+
+  cp -a "$src"/. "$dst"/
+
+  # Clean legacy source-repo leftovers from older layouts.
+  rm -rf "$dst/_localsetup" "$dst/framework" "$dst/.github" "$dst/.git"
+}
+
 # Resolve tools
 if [[ -z "$TOOLS_CSV" ]]; then
   if $NONINTERACTIVE; then
@@ -173,35 +205,51 @@ for t in ${TOOLS_CSV//,/ }; do
 done
 [[ -z "$TOOLS_CSV" ]] && show_usage_and_exit "At least one tool must be specified (e.g. --tools cursor)"
 
-# Clone or update framework
+# Prepare framework source and enforce a single-level _localsetup install.
+WORK_DIR=""
+cleanup() {
+  if [[ -n "$WORK_DIR" ]] && [[ -d "$WORK_DIR" ]]; then
+    rm -rf "$WORK_DIR"
+  fi
+}
+trap cleanup EXIT
+
+SOURCE_BASE=""
 if [[ -d "$FRAMEWORK_DIR/.git" ]]; then
-  echo "Updating existing _localsetup..."
+  echo "Updating existing _localsetup source clone..."
   (cd "$FRAMEWORK_DIR" && git pull --rebase 2>/dev/null) || true
+  SOURCE_BASE="$FRAMEWORK_DIR"
+elif detect_engine_dir "$FRAMEWORK_DIR" >/dev/null 2>&1; then
+  SOURCE_BASE="$FRAMEWORK_DIR"
 else
-  echo "Cloning Localsetup v2 into $FRAMEWORK_DIR..."
+  echo "Fetching Localsetup v2 source..."
   mkdir -p "$TARGET_DIR" || { echo "Error: Cannot create directory $TARGET_DIR" >&2; exit 1; }
-  if ! git clone "$REPO_URL" "$FRAMEWORK_DIR" 2>/dev/null; then
+  WORK_DIR="$(mktemp -d)"
+  SOURCE_BASE="$WORK_DIR/localsetup-source"
+  if ! git clone "$REPO_URL" "$SOURCE_BASE" 2>/dev/null; then
     echo "Error: Clone failed. Check network and repo URL (set LOCALSETUP_2_REPO to override)." >&2
-    echo "If the repo is not yet published, copy the framework into $FRAMEWORK_DIR and run:" >&2
-    echo "  $FRAMEWORK_DIR/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
-    echo "  or $FRAMEWORK_DIR/_localsetup/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
     exit 1
   fi
 fi
 
-# Run deploy step (supports both flat and nested _localsetup repo layouts)
+ENGINE_SRC="$(detect_engine_dir "$SOURCE_BASE" || true)"
+if [[ -z "$ENGINE_SRC" ]]; then
+  echo "Error: Could not locate framework engine in source." >&2
+  echo "Checked for: tools/deploy, _localsetup/tools/deploy, framework/tools/deploy" >&2
+  exit 1
+fi
+
+if [[ "$ENGINE_SRC" != "$FRAMEWORK_DIR" ]]; then
+  echo "Preparing single-level framework at $FRAMEWORK_DIR..."
+  sync_engine_tree "$ENGINE_SRC" "$FRAMEWORK_DIR"
+fi
+
+# Run deploy step from flattened install path.
 DEPLOY_SCRIPT="$FRAMEWORK_DIR/tools/deploy"
-if [[ ! -x "$DEPLOY_SCRIPT" ]]; then
-  DEPLOY_SCRIPT="$FRAMEWORK_DIR/_localsetup/tools/deploy"
-fi
-if [[ ! -x "$DEPLOY_SCRIPT" ]]; then
-  DEPLOY_SCRIPT="$FRAMEWORK_DIR/framework/tools/deploy"
-fi
 if [[ -x "$DEPLOY_SCRIPT" ]]; then
   "$DEPLOY_SCRIPT" --tools "$TOOLS_CSV" --root "$TARGET_DIR" || { echo "Error: Deploy failed." >&2; exit 1; }
 else
-  echo "Error: Deploy script not found at $FRAMEWORK_DIR/tools/deploy or $FRAMEWORK_DIR/_localsetup/tools/deploy or $FRAMEWORK_DIR/framework/tools/deploy" >&2
-  echo "Run manually: $FRAMEWORK_DIR/_localsetup/tools/deploy --tools \"$TOOLS_CSV\" --root \"$TARGET_DIR\"" >&2
+  echo "Error: Deploy script not found at $DEPLOY_SCRIPT" >&2
   exit 1
 fi
 
