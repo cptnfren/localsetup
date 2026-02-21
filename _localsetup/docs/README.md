@@ -10,7 +10,7 @@ This is the public documentation index for Localsetup v2. Use it to navigate fra
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.5.2`
+- Current version: `2.5.3`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `35`
 - Source: `_localsetup/docs/_generated/facts.json`

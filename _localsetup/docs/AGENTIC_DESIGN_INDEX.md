@@ -19,6 +19,7 @@ Copyright (c) 2026 Crux Experts LLC. MIT License  - see repository root [LICENSE
 | [AGENTIC_UMBRELLA_WORKFLOWS.md](AGENTIC_UMBRELLA_WORKFLOWS.md) | Umbrella workflows: single kickoff, PHC gates, single final webhook |
 | [AGENTIC_AGENT_Q_PATTERN.md](AGENTIC_AGENT_Q_PATTERN.md) | Agent Q (queue) pattern: locate, implement, status, outcome |
 | [DOCUMENT_LIFECYCLE_MANAGEMENT.md](DOCUMENT_LIFECYCLE_MANAGEMENT.md) | Doc status (ACTIVE/PROPOSAL/DRAFT); check before assuming implemented |
+| [OUTPUT_AND_DOC_GENERATION.md](OUTPUT_AND_DOC_GENERATION.md) | Platform default: rich output (code blocks, lists, typography, links, glyphs, humanized prose) for all generated content |
 | [REPO_AND_DATA_SEPARATION.md](REPO_AND_DATA_SEPARATION.md) | Engine at _localsetup/; local context vs framework; propose via PRD |
 | [GIT_TRACEABILITY.md](GIT_TRACEABILITY.md) | Attach git hash when referencing PRDs, specs, outcomes |
 | [SKILLS_AND_RULES.md](SKILLS_AND_RULES.md) | How master rule and skills interact; when to load which skill |

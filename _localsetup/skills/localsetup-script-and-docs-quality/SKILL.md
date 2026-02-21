@@ -36,3 +36,4 @@ metadata:
 ## 2. Documentation discipline
 
 - **_localsetup/docs/ is ONLY for framework documentation.** Not for IDE setup or external tool guides. All docs must have status (ACTIVE/PROPOSAL/DRAFT/DEPRECATED/ARCHIVED). Check status before assuming a feature is implemented. See [DOCUMENT_LIFECYCLE_MANAGEMENT.md](../../docs/DOCUMENT_LIFECYCLE_MANAGEMENT.md).
+- **Platform default for any generated docs/output:** Use rich markdown (code blocks, lists, typography, links for in-repo refs, glyphs where they help), humanized prose. See [OUTPUT_AND_DOC_GENERATION.md](../../docs/OUTPUT_AND_DOC_GENERATION.md).

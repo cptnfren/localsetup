@@ -15,7 +15,7 @@ Use this to confirm the refactor is complete and links behave as expected.
    rg 'See [A-Z][a-zA-Z_]+\.md' _localsetup/docs README.md docs --glob '*.md' || true
    rg 'in [A-Z][a-zA-Z_]+\.md' _localsetup/docs README.md docs --glob '*.md' || true
    ```
-   Fix or document any remaining matches. (Some may be inside code blocks or examples; only prose refs need links.)
+   Fix or document any remaining matches. (Some may be inside code blocks or examples; only prose refs need links.) Platform default for generated content: [_localsetup/docs/OUTPUT_AND_DOC_GENERATION.md](_localsetup/docs/OUTPUT_AND_DOC_GENERATION.md) (rich output, links, humanized).
 
 3. **QUICKSTART box counts**  
    In [_localsetup/docs/QUICKSTART.md](_localsetup/docs/QUICKSTART.md) confirm:
