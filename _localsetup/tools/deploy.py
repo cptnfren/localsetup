@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Purpose: Deploy platform-specific context loaders and skills. Called by install.
 # Created: 2026-02-20
-# Last updated: 2026-02-20
+# Last updated: 2026-02-23
 
 import argparse
 import shutil
@@ -14,6 +14,18 @@ if str(_ENGINE) not in sys.path:
 from lib.path_resolution import get_engine_dir, get_project_root
 
 
+def _safe_copy2(src: Path, dst: Path) -> None:
+    """Copy file and metadata; on PermissionError (e.g. copystat on dest), copy content only."""
+    try:
+        shutil.copy2(src, dst)
+    except PermissionError:
+        try:
+            shutil.copy(src, dst)
+        except OSError:
+            raise
+        print(f"Warning: copied {src.name} but could not set file metadata on {dst} (permission denied).", file=sys.stderr)
+
+
 def deploy_cursor(engine_dir: Path, root: Path) -> None:
     rules_dir = root / ".cursor" / "rules"
     skills_dir = root / ".cursor" / "skills"
@@ -21,8 +33,8 @@ def deploy_cursor(engine_dir: Path, root: Path) -> None:
     skills_dir.mkdir(parents=True, exist_ok=True)
     templates = engine_dir / "templates" / "cursor"
     if (templates / "localsetup-context.mdc").exists():
-        shutil.copy2(templates / "localsetup-context.mdc", rules_dir)
-        shutil.copy2(templates / "localsetup-context-index.md", rules_dir)
+        _safe_copy2(templates / "localsetup-context.mdc", rules_dir / "localsetup-context.mdc")
+        _safe_copy2(templates / "localsetup-context-index.md", rules_dir / "localsetup-context-index.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -32,7 +44,7 @@ def deploy_cursor(engine_dir: Path, root: Path) -> None:
                 if f.is_file():
                     rel = f.relative_to(skill_dir)
                     (dest / rel).parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(f, dest / rel)
+                    _safe_copy2(f, dest / rel)
 
 
 def deploy_claude_code(engine_dir: Path, root: Path) -> None:
@@ -42,7 +54,7 @@ def deploy_claude_code(engine_dir: Path, root: Path) -> None:
     skills_dir.mkdir(parents=True, exist_ok=True)
     templates = engine_dir / "templates" / "claude-code"
     if (templates / "CLAUDE.md").exists():
-        shutil.copy2(templates / "CLAUDE.md", claude_dir)
+        _safe_copy2(templates / "CLAUDE.md", claude_dir / "CLAUDE.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -52,7 +64,7 @@ def deploy_claude_code(engine_dir: Path, root: Path) -> None:
                 if f.is_file():
                     rel = f.relative_to(skill_dir)
                     (dest / rel).parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(f, dest / rel)
+                    _safe_copy2(f, dest / rel)
 
 
 def deploy_codex(engine_dir: Path, root: Path) -> None:
@@ -60,7 +72,7 @@ def deploy_codex(engine_dir: Path, root: Path) -> None:
     skills_dir.mkdir(parents=True, exist_ok=True)
     templates = engine_dir / "templates" / "codex"
     if (templates / "AGENTS.md").exists():
-        shutil.copy2(templates / "AGENTS.md", root / "AGENTS.md")
+        _safe_copy2(templates / "AGENTS.md", root / "AGENTS.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -70,7 +82,7 @@ def deploy_codex(engine_dir: Path, root: Path) -> None:
                 if f.is_file():
                     rel = f.relative_to(skill_dir)
                     (dest / rel).parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(f, dest / rel)
+                    _safe_copy2(f, dest / rel)
 
 
 def deploy_openclaw(engine_dir: Path, root: Path) -> None:
@@ -81,7 +93,7 @@ def deploy_openclaw(engine_dir: Path, root: Path) -> None:
     docs_dir.mkdir(parents=True, exist_ok=True)
     templates = engine_dir / "templates" / "openclaw"
     if (templates / "OPENCLAW_CONTEXT.md").exists():
-        shutil.copy2(templates / "OPENCLAW_CONTEXT.md", docs_dir)
+        _safe_copy2(templates / "OPENCLAW_CONTEXT.md", docs_dir / "OPENCLAW_CONTEXT.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -91,7 +103,7 @@ def deploy_openclaw(engine_dir: Path, root: Path) -> None:
                 if f.is_file():
                     rel = f.relative_to(skill_dir)
                     (dest / rel).parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(f, dest / rel)
+                    _safe_copy2(f, dest / rel)
 
 
 def main() -> int:
@@ -115,7 +127,12 @@ def main() -> int:
     }
     for t in tools_csv:
         if t in deployers:
-            deployers[t](engine_dir, root)
+            try:
+                deployers[t](engine_dir, root)
+            except (OSError, PermissionError) as e:
+                print(f"Deploy failed ({t}): {e}", file=sys.stderr)
+                print("Check permissions on the target directory and that no files are owned by another user or immutable.", file=sys.stderr)
+                return 1
         elif t:
             print(f"Unknown tool: {t}", file=sys.stderr)
 
@@ -125,11 +142,15 @@ def main() -> int:
         docs_dest = root / "_localsetup" / "docs"
         if docs_src.resolve() != docs_dest.resolve():
             docs_dest.mkdir(parents=True, exist_ok=True)
-            for f in docs_src.rglob("*"):
-                if f.is_file():
-                    rel = f.relative_to(docs_src)
-                    (docs_dest / rel).parent.mkdir(parents=True, exist_ok=True)
-                    shutil.copy2(f, docs_dest / rel)
+            try:
+                for f in docs_src.rglob("*"):
+                    if f.is_file():
+                        rel = f.relative_to(docs_src)
+                        (docs_dest / rel).parent.mkdir(parents=True, exist_ok=True)
+                        _safe_copy2(f, docs_dest / rel)
+            except (OSError, PermissionError) as e:
+                print(f"Deploy failed (docs sync): {e}", file=sys.stderr)
+                return 1
 
     return 0
 
