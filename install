@@ -114,7 +114,9 @@ preflight_checks() {
   local required_fail=0
   local recommend_fail=0
   local git_status="MISSING"
+  local rg_status="MISSING (required for install manifest build on Linux/macOS)"
   local python_status="MISSING (recommended for Python-first framework tooling)"
+  local pip_status="MISSING (recommended to install _localsetup/requirements.txt)"
   local pyyaml_status="MISSING (recommended for Python-first framework tooling)"
   local git_version=""
   local python_bin=""
@@ -130,6 +132,12 @@ preflight_checks() {
       git_status="TOO OLD ($git_version, need >= $MIN_GIT_VERSION)"
       required_fail=1
     fi
+  else
+    required_fail=1
+  fi
+
+  if command -v rg >/dev/null 2>&1; then
+    rg_status="OK (ripgrep)"
   else
     required_fail=1
   fi
@@ -160,41 +168,60 @@ PY
       pyyaml_status="MISSING (python module 'yaml')"
       recommend_fail=1
     fi
+
+    if command -v pip3 >/dev/null 2>&1 || command -v pip >/dev/null 2>&1; then
+      pip_status="OK"
+    else
+      recommend_fail=1
+    fi
   fi
 
   echo "Dependency preflight:"
   echo "  Required:"
   echo "    - git: $git_status"
+  echo "    - rg (ripgrep): $rg_status"
   echo "  Recommended for full Python framework tooling:"
   echo "    - python: $python_status"
+  echo "    - pip: $pip_status"
   echo "    - pyyaml module: $pyyaml_status"
 
   if [[ "$required_fail" -ne 0 ]]; then
     echo
     echo "Cannot continue: required dependencies are missing or incompatible."
     echo "Install/upgrade the required tools, then run install again."
+    case "$(uname -s 2>/dev/null || true)" in
+      Linux)
+        echo "Install ripgrep (rg):"
+        echo "  Debian/Ubuntu: sudo apt-get update && sudo apt-get install -y ripgrep"
+        echo "  Fedora/RHEL:   sudo dnf install -y ripgrep"
+        echo "  Arch:          sudo pacman -S --needed ripgrep"
+        ;;
+      Darwin)
+        echo "Install ripgrep: brew install ripgrep"
+        ;;
+      *)
+        echo "Install ripgrep (rg) from https://github.com/BurntSushi/ripgrep#installation"
+        ;;
+    esac
     exit 1
   fi
 
   if [[ "$recommend_fail" -ne 0 ]]; then
     echo
     echo "Notice: install can continue, but some skill tooling may fail until recommended dependencies are installed."
+    echo "Python packages: install with  python3 -m pip install -r _localsetup/requirements.txt  (after clone)."
     case "$(uname -s 2>/dev/null || true)" in
       Linux)
-        echo "Try one of:"
-        echo "  Debian/Ubuntu: sudo apt-get update && sudo apt-get install -y python3 python3-yaml"
-        echo "  Fedora/RHEL:   sudo dnf install -y python3 python3-pyyaml"
-        echo "  Arch:          sudo pacman -S --needed python python-yaml"
-        echo "  Generic Python env: python3 -m pip install \"PyYAML>=6.0\""
+        echo "System packages:"
+        echo "  Debian/Ubuntu: sudo apt-get update && sudo apt-get install -y python3 python3-pip python3-yaml"
+        echo "  Fedora/RHEL:   sudo dnf install -y python3 python3-pip python3-pyyaml"
+        echo "  Arch:          sudo pacman -S --needed python python-pip python-yaml"
         ;;
       Darwin)
-        echo "Try one of:"
-        echo "  Homebrew:      brew install python pyyaml"
-        echo "  Python env:    python3 -m pip install \"PyYAML>=6.0\""
+        echo "  Homebrew: brew install python pyyaml  (pip ships with python)"
         ;;
       *)
-        echo "Try one of:"
-        echo "  python3 -m pip install \"PyYAML>=6.0\""
+        echo "  python3 -m pip install -r _localsetup/requirements.txt"
         ;;
     esac
   fi

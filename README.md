@@ -10,7 +10,7 @@
   <a href="_localsetup/docs/PLATFORM_REGISTRY.md"><img src="https://img.shields.io/badge/platforms-cursor%20%7C%20claude--code%20%7C%20codex%20%7C%20openclaw-1f6feb" alt="Supported platforms"></a>
 </p>
 
-**Version:** 2.5.3  
+**Version:** 2.5.4  
 **Last updated:** 2026-02-19
 
 Agentic setups often share the same headaches: indeterministic outcomes, memory that compresses or decays, hallucinations, agents that drop context or ignore instructions, and difficulty scaling beyond a certain code size. Coordinating multiple agents so they follow patterns and run workflows reliably is harder still. Localsetup v2 targets these problems without adding much overhead.
@@ -24,7 +24,7 @@ Out of the box you get [all shipped skills](_localsetup/docs/SKILLS.md): debuggi
 <!-- facts-block:start -->
 | Fact | Value |
 |---|---|
-| Current version | `2.5.3` |
+| Current version | `2.5.4` |
 | Supported platforms | `cursor, claude-code, codex, openclaw` |
 | Shipped skills | `35` |
 | Source | `_localsetup/docs/_generated/facts.json` |
@@ -52,13 +52,10 @@ For non-interactive one-liners (CI, automation, or when you already know the pla
 
 ### Minimum requirements
 
-- Required:
-  - `git >= 2.20.0`
-- Recommended for full framework tooling:
-  - `python >= 3.10`
-  - Python module `yaml` (`PyYAML>=6.0`)
+- **Required:** `git >= 2.20.0`; on Linux/macOS, `rg` (ripgrep) is also required for the install script.
+- **Recommended:** `python >= 3.10`, `pip`, and the packages in `_localsetup/requirements.txt` (e.g. PyYAML). After install: `python3 -m pip install -r _localsetup/requirements.txt`.
 
-The installer runs a dependency preflight and prints missing items with copy-paste install suggestions before proceeding.
+The installer runs a dependency preflight and prints missing items with copy-paste install suggestions before proceeding. Full list: [_localsetup/docs/MULTI_PLATFORM_INSTALL.md](_localsetup/docs/MULTI_PLATFORM_INSTALL.md#dependency-preflight).
 
 ## ⚡ Top 10 features
 

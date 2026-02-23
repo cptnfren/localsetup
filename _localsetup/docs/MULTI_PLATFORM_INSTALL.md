@@ -67,12 +67,27 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Directory . -Tools curso
 
 ## Dependency preflight
 
-Before clone/deploy, installer preflight checks:
+Before clone/deploy, both install scripts run a dependency preflight. The list below is the canonical source of truth; when adding or changing runtime dependencies, update the preflight in both `install` (Bash) and `install.ps1` (PowerShell) and this section. See also the repo rule in `.cursor/rules/dependency-preflight.mdc`.
 
-- **Required:** `git >= 2.20.0` (install aborts if missing or too old)
-- **Recommended for full framework tooling:** `python >= 3.10` and Python module `yaml` (`PyYAML>=6.0`)
+### Canonical dependency list
 
-If recommended Python tooling is missing, install continues and prints copy-paste command hints for your OS.
+| Dependency | Required / Recommended | Used by |
+|------------|------------------------|---------|
+| `git` >= 2.20.0 | Required | Clone and upgrade logic |
+| `rg` (ripgrep) | Required on Linux/macOS (Bash install uses it for manifest build). Recommended on Windows. | Bash install manifest; framework/Grep tooling |
+| `python` >= 3.10 | Recommended | Framework tools (deploy, verify_context, verify_rules, tests); Python-first policy |
+| `pip` | Recommended | Install `_localsetup/requirements.txt` |
+| Python: `yaml` (PyYAML>=6.0) | Recommended | See `_localsetup/requirements.txt`; used by framework Python scripts |
+
+Python packages are listed in `_localsetup/requirements.txt`. After install, run:
+
+```bash
+python3 -m pip install -r _localsetup/requirements.txt
+```
+
+(PowerShell: `python -m pip install -r _localsetup\requirements.txt`.)
+
+If any **required** dependency is missing or too old, install aborts with install hints. If only **recommended** ones are missing, install continues and prints copy-paste command hints for your OS.
 
 ## Upgrade-aware install behavior
 

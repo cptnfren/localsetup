@@ -7,15 +7,15 @@ version: 2.5
 
 Get Localsetup v2 running in your repo in under a minute. This page covers interactive installation, platform selection, verification, and non-interactive one-liners for CI and automation.
 
-## 📦 Prerequisites
+## Prerequisites
 
-- **Required:** `git >= 2.20.0`
-- **Recommended for full framework tooling:** `python >= 3.10` and Python module `yaml` (`PyYAML>=6.0`)
-- **Linux/macOS:** Bash and curl installed.
+- **Required:** `git >= 2.20.0`; on Linux/macOS also `rg` (ripgrep), which the Bash install script uses to build the manifest.
+- **Recommended for full framework tooling:** `python >= 3.10`, `pip`, and the Python packages in `_localsetup/requirements.txt` (currently PyYAML>=6.0). After install, run `python3 -m pip install -r _localsetup/requirements.txt`.
+- **Linux/macOS:** Bash and curl.
 - **Windows:** PowerShell 5.1+ or PowerShell Core.
 - **Any platform:** Network access to GitHub (or a local clone of this repo).
 
-The installer runs a dependency preflight and prints missing dependencies with install command hints before clone/deploy.
+The installer runs a dependency preflight and prints missing dependencies with install command hints before clone/deploy. Full list: [Multi-platform install – Dependency preflight](MULTI_PLATFORM_INSTALL.md#dependency-preflight).
 
 ## 🎯 Interactive install (recommended)
 
@@ -239,28 +239,38 @@ Use this in CI or when you want the run to exit with an error if the framework a
 
 On Windows (PowerShell), use `.\install.ps1 -Directory . -Tools cursor -Yes -UpgradePolicy preserve` or `-UpgradePolicy FailOnConflict` for the same behavior.
 
-## 🧰 If Python tooling is missing
+## If dependencies are missing
 
-If preflight reports missing `python` or `yaml`, install with whichever package manager you prefer. Common examples:
+If preflight reports missing **ripgrep (rg)** on Linux/macOS, install it or install will abort:
 
 ```bash
 # Debian/Ubuntu
-sudo apt-get update && sudo apt-get install -y python3 python3-yaml
+sudo apt-get install -y ripgrep
+# Fedora/RHEL: sudo dnf install -y ripgrep
+# Arch: sudo pacman -S --needed ripgrep
+# macOS: brew install ripgrep
+```
+
+If preflight reports missing **Python/pip/yaml**, install and then install the framework requirements:
+
+```bash
+# Debian/Ubuntu
+sudo apt-get update && sudo apt-get install -y python3 python3-pip python3-yaml
 
 # Fedora/RHEL
-sudo dnf install -y python3 python3-pyyaml
+sudo dnf install -y python3 python3-pip python3-pyyaml
 
 # Arch
-sudo pacman -S --needed python python-yaml
+sudo pacman -S --needed python python-pip python-yaml
 
-# Generic Python env
-python3 -m pip install "PyYAML>=6.0"
+# Any: after install, from repo root
+python3 -m pip install -r _localsetup/requirements.txt
 ```
 
 ```powershell
 # Windows
 winget install Python.Python.3.12
-py -m pip install "PyYAML>=6.0"
+py -m pip install -r _localsetup\requirements.txt
 ```
 
 ## 📖 Next steps

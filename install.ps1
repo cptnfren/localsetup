@@ -111,7 +111,9 @@ function Run-PreflightChecks {
     $requiredFail = $false
     $recommendFail = $false
     $gitStatus = 'MISSING'
+    $rgStatus = 'MISSING (recommended; framework tools use ripgrep)'
     $pythonStatus = 'MISSING (recommended for Python-first framework tooling)'
+    $pipStatus = 'MISSING (recommended to install _localsetup\requirements.txt)'
     $pyyamlStatus = "MISSING (python module 'yaml')"
 
     $gitCmd = Get-ToolVersion -ToolName 'git'
@@ -129,6 +131,11 @@ function Run-PreflightChecks {
         }
     } else {
         $requiredFail = $true
+    }
+
+    $rgCmd = Get-ToolVersion -ToolName 'rg'
+    if ($rgCmd) {
+        $rgStatus = 'OK (ripgrep)'
     }
 
     $pythonCmd = Get-ToolVersion -ToolName 'python3'
@@ -157,6 +164,14 @@ function Run-PreflightChecks {
                 $pyyamlStatus = "MISSING (python module 'yaml')"
                 $recommendFail = $true
             }
+
+            $pipCmd = Get-ToolVersion -ToolName 'pip'
+            if (-not $pipCmd) { $pipCmd = Get-ToolVersion -ToolName 'pip3' }
+            if ($pipCmd) {
+                $pipStatus = 'OK'
+            } else {
+                $recommendFail = $true
+            }
         } catch {
             $pythonStatus = 'FOUND (version unknown)'
         }
@@ -166,7 +181,9 @@ function Run-PreflightChecks {
     Write-Host '  Required:'
     Write-Host "    - git: $gitStatus"
     Write-Host '  Recommended for full Python framework tooling:'
+    Write-Host "    - rg (ripgrep): $rgStatus"
     Write-Host "    - python: $pythonStatus"
+    Write-Host "    - pip: $pipStatus"
     Write-Host "    - pyyaml module: $pyyamlStatus"
 
     if ($requiredFail) {
@@ -179,10 +196,11 @@ function Run-PreflightChecks {
     if ($recommendFail) {
         Write-Host ''
         Write-Host 'Notice: install can continue, but some skill tooling may fail until recommended dependencies are installed.' -ForegroundColor Yellow
-        Write-Host 'Try one of:' -ForegroundColor Yellow
+        Write-Host 'Python and pip:' -ForegroundColor Yellow
         Write-Host '  winget install Python.Python.3.12'
-        Write-Host '  py -m pip install "PyYAML>=6.0"'
-        Write-Host '  python -m pip install "PyYAML>=6.0"'
+        Write-Host '  py -m pip install -r _localsetup\requirements.txt'
+        Write-Host '  python -m pip install -r _localsetup\requirements.txt'
+        Write-Host 'Ripgrep (rg): winget install BurntSushi.Ripgrep.MSVC'
     }
 }
 
