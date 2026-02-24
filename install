@@ -7,6 +7,8 @@
 #   Interactive:   curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash
 #   Non-interactive: curl ... | bash -s -- --directory . --tools cursor --yes
 #   Help:          install --help  or  install -h
+#   Note: sudo curl ... | bash only elevates curl; install/deploy run as current user.
+#   For full install as root: curl -sSL <url> -o /tmp/install.sh && sudo bash /tmp/install.sh [args]
 #
 # Options:
 #   --directory PATH   Client repo root (default: . or prompt). Must exist.
@@ -80,6 +82,10 @@ Examples:
   install --tools cursor,claude-code --yes
   install --tools cursor --yes --upgrade-policy fail-on-conflict
   install
+
+Note: "sudo curl ... | bash" only elevates curl; the install and deploy run as the current user.
+  For a full install as root (e.g. to avoid root-owned files when re-running upgrades later):
+  curl -sSL <url> -o /tmp/install.sh && sudo bash /tmp/install.sh [args]
 
 On Windows: run install.ps1; or from Git Bash this script delegates to install.ps1.
 USAGE_END

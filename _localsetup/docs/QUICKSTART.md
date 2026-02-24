@@ -27,6 +27,8 @@ The interactive installer prompts you for directory and platform. No flags requi
 curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash
 ```
 
+`sudo curl ... | bash` only elevates curl; install and deploy run as the current user. For a full install as root: `curl -sSL <url> -o /tmp/install.sh && sudo bash /tmp/install.sh`.
+
 ### Windows (PowerShell)
 
 ```powershell

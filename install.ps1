@@ -22,6 +22,11 @@
     .\install.ps1 -Directory . -Tools cursor -Yes
 .EXAMPLE
     .\install.ps1 -Help
+
+.NOTES
+    If you run this script elevated (Run as Administrator), install and deploy run as that account;
+    deployed files will be owned by it. Re-running as a normal user later can hit permission errors.
+    Prefer running as the user who will own the repo so upgrades work without changing ownership.
 #>
 param(
     [string]$Directory = '',
@@ -77,6 +82,9 @@ Tools (use with -Tools):
 Examples:
   .\install.ps1 -Directory C:\repos\myapp -Tools "cursor,claude-code" -Yes
   .\install.ps1
+
+Note: Running elevated (Run as Administrator) creates files owned by that account. Re-runs as a normal
+  user may then hit permission errors. Prefer running as the user who will own the repo.
 '@
 }
 

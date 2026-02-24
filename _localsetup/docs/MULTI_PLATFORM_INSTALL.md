@@ -23,6 +23,8 @@ From your client repo root:
 curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash
 ```
 
+Note: `sudo curl ... | bash` only elevates curl; install and deploy run as the current user. For a full install as root: `curl -sSL <url> -o /tmp/install.sh && sudo bash /tmp/install.sh`.
+
 Non-interactive (agents/CI):
 
 ```bash
@@ -91,7 +93,7 @@ If any **required** dependency is missing or too old, install aborts with instal
 
 ## Upgrade-aware install behavior
 
-On re-run, installer upgrades `_localsetup/` using managed-file metadata and conflict-aware rules, then redeploys platform files.
+On re-run, installer upgrades `_localsetup/` using managed-file metadata and conflict-aware rules, then redeploys platform files. Deploy overwrites destination files with updated content; if a destination file is root-owned (e.g. from a previous install run as root), deploy updates the file content and may print a single warning that metadata could not be set (permission denied). The upgrade still succeeds.
 
 - `preserve` (default): keep local customizations when possible
 - `force`: overwrite managed files with upstream

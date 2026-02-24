@@ -25,7 +25,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | **Repo-local engine** | The entire framework lives at `_localsetup/` inside your project. Clone or move the repo and everything travels together. No home-directory state, no cloud dependency. |
 | **Cross-platform installers** | Bash installer for Linux and macOS; PowerShell installer for Windows. Both support interactive and non-interactive modes. |
 | **Multi-host deployment** | Deploy context and skills to Cursor, Claude Code, OpenAI Codex CLI, or OpenClaw from a single install command. |
-| **Idempotent updates** | Re-running install updates the framework (via git pull) and redeploys context. Safe to run repeatedly. |
+| **Idempotent updates** | Re-running install updates the framework (via git pull) and redeploys context. Safe to run repeatedly. Deploy can overwrite root-owned destination files (content is updated; a metadata warning may appear). |
 | **Platform registry** | A single Markdown table ([PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md)) defines every supported platform ID, context path, and skills path. Add new platforms by editing one file. |
 
 ---

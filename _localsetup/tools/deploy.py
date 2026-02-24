@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # Purpose: Deploy platform-specific context loaders and skills. Called by install.
 # Created: 2026-02-20
-# Last updated: 2026-02-23
+# Last updated: 2026-02-24
 
 import argparse
+import errno
 import shutil
 import sys
 from pathlib import Path
@@ -15,15 +16,20 @@ from lib.path_resolution import get_engine_dir, get_project_root
 
 
 def _safe_copy2(src: Path, dst: Path) -> None:
-    """Copy file and metadata; on PermissionError (e.g. copystat on dest), copy content only."""
+    """Copy file and metadata; on EPERM (e.g. overwriting root-owned dest), copy content only then optionally metadata."""
     try:
         shutil.copy2(src, dst)
-    except PermissionError:
-        try:
-            shutil.copy(src, dst)
-        except OSError:
+    except (PermissionError, OSError) as e:
+        if isinstance(e, OSError) and e.errno != errno.EPERM:
             raise
-        print(f"Warning: copied {src.name} but could not set file metadata on {dst} (permission denied).", file=sys.stderr)
+        # copy2/copy both fail on root-owned dest (utimes/chmod). Use content-only then best-effort metadata.
+        shutil.copyfile(src, dst)
+        try:
+            shutil.copystat(src, dst)
+        except (PermissionError, OSError) as meta_err:
+            if isinstance(meta_err, OSError) and meta_err.errno != errno.EPERM:
+                raise
+            print(f"Warning: copied {dst.name} but could not set file metadata (permission denied).", file=sys.stderr)
 
 
 def deploy_cursor(engine_dir: Path, root: Path) -> None:
