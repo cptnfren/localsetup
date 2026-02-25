@@ -202,7 +202,7 @@ Skills are task-based instructions (SKILL.md with `name` and `description` front
 | `localsetup-safety-and-backup` | Destructive ops, backups, temp files, firewall |
 | `localsetup-script-and-docs-quality` | Generating scripts, markdown/docs |
 | `localsetup-communication-and-tools` | Communication style, tool choice, MCP/context updates |
-| `localsetup-tmux-shared-session-workflow` | Server/system commands, deployments, tmux, shared session; sudo discovery and single-prompt gate (join session, trigger, batch until timeout); human-in-the-loop ops |
+| `localsetup-tmux-shared-session-workflow` | Server/ops in tmux via tmux_ops (pick, probe, send); sudo gate via probe; 1 s delay between sends; REMOTE_TMUX_HOST for remote/VMs; human-in-the-loop ops |
 | `localsetup-automatic-versioning` | Version bumps, release workflow, conventional commits, versioning docs |
 | `localsetup-github-publishing-workflow` | Publishing to GitHub, public release prep, publishing checklist, repo readiness |
 | `localsetup-skill-creator` | Create new skill from workflow or existing doc/markdown/GitHub; capture workflow as framework skill |
@@ -243,6 +243,7 @@ Run from **client repo root** (so that `_localsetup/` is present). Tools live un
 | `verify_context` / `verify_context.ps1` | Verify Cursor context file exists (`.cursor/rules/localsetup-context.mdc`). |
 | `verify_rules` / `verify_rules.ps1` | Check git repo, data_paths (sh/ps1), and skills directory. |
 | `skill_importer_scan` / `skill_importer_scan.ps1` | Scan a directory for Agent Skills; output per-skill brief (what it does, what it has, code types) and heuristic security flags. Use after fetching a URL or for a local path; then use skill-importer workflow to let the user select which skills to import. |
+| `tmux_ops` / `tmux_ops.py` | Tmux ops workflow: pick session (idle = prompt on current line), probe sudo (ready vs password_required), send command with 1 s delay. When REMOTE_TMUX_HOST is set, wrapper runs the Python tool over SSH. See [docs/ops/tmux-ops-remote.md](docs/ops/tmux-ops-remote.md). |
 
 ---
 

@@ -12,7 +12,7 @@ This is the public documentation index for Localsetup v2. Use it to navigate fra
 <!-- facts-block:start -->
 - Current version: `2.5.5`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
-- Shipped skills: `35`
+- Shipped skills: `37`
 - Source: `_localsetup/docs/_generated/facts.json`
 <!-- facts-block:end -->
 
@@ -43,6 +43,7 @@ How agentic workflows operate inside this framework.
 | [Decision tree workflow](DECISION_TREE_WORKFLOW.md) | Reverse-prompt process: one question, four options, preferred + rationale |
 | [PRD schema and external agent guide](PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md) | Spec format for PRDs and outcome template |
 | [Git traceability](GIT_TRACEABILITY.md) | Linking PRDs, specs, and outcomes to git commits |
+| [Tmux ops (remote)](ops/tmux-ops-remote.md) | Use tmux_ops when tmux runs on another host (REMOTE_TMUX_HOST, REMOTE_TMUX_CWD) |
 
 ---
 

@@ -7,7 +7,7 @@ version: 2.5
 
 This page is generated from `_localsetup/skills/*/SKILL.md`.
 
-Total shipped skills: 35
+Total shipped skills: 37
 
 | Skill ID | Name | Version | Description |
 |---|---|---|---|
@@ -20,6 +20,7 @@ Total shipped skills: 35
 | `localsetup-backlog-and-reminders` | `localsetup-backlog-and-reminders` | `1.1` | Record deferred ideas, to-dos, and reminders (with optional due date or 'whenever'); show due/overdue when user starts a session or asks. Use when user says 'add to backlog', 'remind me', 'I'll do this later', 'what's due?', 'show my backlog', 'start my session', or wants to capture ideas for later. |
 | `localsetup-communication-and-tools` | `localsetup-communication-and-tools` | `1.2` | Communication and response guidelines, tool selection and enhancement, periodic context updates. Use for user communication style, choosing tools, MCP/context updates. |
 | `localsetup-context` | `localsetup-context` | `1.5` | Localsetup v2 framework context  - overview, invariants, and skills index. Load first when working in a repo that uses Localsetup v2. Use when starting work in this repo or when user asks about framework rules. |
+| `localsetup-cron-orchestrator` | `localsetup-cron-orchestrator` | `1.0` | Manage cron from a repo-local manifest: time triggers, on-boot-with-delay, sequenced tasks; create, remove, reorder, install. |
 | `localsetup-debug-pro` | `localsetup-debug-pro` | `1.1` | Systematic debugging methodology and language-specific debugging commands (Node, Python, Swift, network, git bisect). |
 | `localsetup-decision-tree-workflow` | `localsetup-decision-tree-workflow` | `1.1` | Decision tree / reverse prompt workflow  - AI prompts user one question at a time with 4 options (A-D), preferred choice + rationale; build context for maximum impact. Use when user says 'decision tree', 'run the decision tree', 'reverse prompt', or 'reverse prompt workflow'; or when editing .agent/queue/**, PRD.md, *.prd.md. |
 | `localsetup-framework-audit` | `localsetup-framework-audit` | `1.0` | Run doc, link, skill matrix, and version/facts checks before release. Single entrypoint script; output to user-specified path only; no in-repo default. Use when user says 'run audit', 'run framework audit', or before release. |
@@ -41,10 +42,11 @@ Total shipped skills: 35
 | `localsetup-skill-normalizer` | `localsetup-skill-normalizer` | `1.1` | Normalize skills already in the tree for Agent Skills spec compliance and platform-neutral wording. Use when the user wants to normalize one or more skills in _localsetup/skills/ (e.g. after import, or after copying files in), or when batch-reviewing previously imported skills. Applies _localsetup/docs/SKILL_NORMALIZATION.md; shows summary and key edits, then applies on approval. |
 | `localsetup-skill-sandbox-tester` | `localsetup-skill-sandbox-tester` | `1.0` | Test skills in an isolated sandbox before production. Run after vetting and normalization (not right after import). Creates a unique temp sandbox when the skill needs read/write; runs smoke checks; on failure uses localsetup-debug-pro to iterate until fixed; no writes to repo until user approves. Use when validating a skill after it is framework-compliant, testing a skill end-to-end, or ensuring it runs correctly on all supported platforms. |
 | `localsetup-skill-vetter` | `localsetup-skill-vetter` | `1.2` | Security-first skill vetting for AI agent skills. Use before installing any skill from public registries (e.g. skill hubs, GitHub) or other sources. Checks for red flags, permission scope, and suspicious patterns. |
+| `localsetup-system-info` | `localsetup-system-info` | `1.1` | Quick system diagnostics: CPU, memory, disk, uptime. Use when capturing server baseline or recording host layout and specs for further operations. |
 | `localsetup-task-skill-matcher` | `localsetup-task-skill-matcher` | `1.1` | Match user tasks to installed Localsetup skills, recommend top matches, and run single-task or batch skill-selection flow with minimal interruption. Includes top-3 complementary public-skill suggestions and public-index refresh handling. |
 | `localsetup-tdd-guide` | `localsetup-tdd-guide` | `1.1` | Test-driven development workflow with test generation, coverage analysis, and multi-framework support |
 | `localsetup-test-runner` | `localsetup-test-runner` | `1.1` | Write and run tests across languages and frameworks (Vitest, Jest, pytest, XCTest, Playwright). TDD workflow, coverage, and test patterns. |
-| `localsetup-tmux-shared-session-workflow` | `localsetup-tmux-shared-session-workflow` | `1.3` | Run server operations inside a shared tmux session so a human can attach, observe, and provide sudo. Agent captures output via log files or tmux capture. Use when running server/system commands, deployments, or when user mentions tmux, shared session, or human-in-the-loop ops. |
+| `localsetup-tmux-shared-session-workflow` | `localsetup-tmux-shared-session-workflow` | `3.3` | Server/ops in tmux; use tmux_ops tool to pick session (idle = prompt on current line) and probe sudo; run commands only in chosen session. Supports REMOTE_TMUX_HOST for VMs/remote/Docker. |
 | `localsetup-unfuck-my-git-state` | `localsetup-unfuck-my-git-state` | `1.2` | Diagnose and recover broken Git state and worktree metadata with a staged, low-risk recovery flow. Use when Git reports detached or contradictory HEAD state, phantom worktree locks, orphaned worktree entries, missing refs, 0000000000000000000000000000000000000000 hashes, or branch operations fail with errors like already checked out, unknown revision, not a valid object name, or cannot lock ref. |
 
 ---

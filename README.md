@@ -26,7 +26,7 @@ Out of the box you get [all shipped skills](_localsetup/docs/SKILLS.md): debuggi
 |---|---|
 | Current version | `2.5.5` |
 | Supported platforms | `cursor, claude-code, codex, openclaw` |
-| Shipped skills | `35` |
+| Shipped skills | `37` |
 | Source | `_localsetup/docs/_generated/facts.json` |
 <!-- facts-block:end -->
 
@@ -65,8 +65,8 @@ The installer runs a dependency preflight and prints missing items with copy-pas
 2. **Repo-local engine** - the entire framework lives at `_localsetup/`; clone or move your repo and everything travels together. No home-directory state, no cloud sync, no hidden drift.
 3. **Multi-platform install** - one command deploys context and skills for Cursor, Claude Code, Codex CLI, or OpenClaw. Add platforms later by editing one registry file.
 4. **Agent Skills spec compatible** - skills follow the open Agent Skills specification, so you can import from Anthropic's public repo, awesome lists, or your own library and export yours for others.
-5. **Shipped skills** - debugging, TDD, PR review, git recovery, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux handoff, PRD batching, decision trees, and more, ready to use out of the box. See [_localsetup/docs/SKILLS.md](_localsetup/docs/SKILLS.md) for the full catalog.
-6. **Human-in-the-loop gates** - tmux shared sessions, sudo discovery, and approval flow before destructive ops. The agent pauses and waits for you when it matters.
+5. **Shipped skills** - debugging, TDD, PR review, git recovery, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux ops (pick/probe/send), system-info, cron-orchestrator, PRD batching, decision trees, and more, ready to use out of the box. See [_localsetup/docs/SKILLS.md](_localsetup/docs/SKILLS.md) for the full catalog.
+6. **Human-in-the-loop gates** - tmux shared sessions via tmux_ops (pick, probe, send with 1 s delay), sudo discovery and approval flow before destructive ops. The agent pauses and waits for you when it matters.
 7. **Versioning** - VERSION at repo root; conventional commits; version and docs are maintained in a separate maintainer workflow (see [docs/VERSIONING.md](docs/VERSIONING.md)).
 8. **Skill metadata patching** - staged `SKILL.md` files get their `metadata.version` incremented automatically so skill docs stay accurate.
 9. **Platform registry** - a single [Markdown table](_localsetup/docs/PLATFORM_REGISTRY.md) defines every supported host, context path, and skills path. Extend support by editing one file.
@@ -83,7 +83,7 @@ The full feature catalog contains additional capabilities. See [_localsetup/docs
 5. `localsetup-linux-patcher` - automated server patching and Docker container updates.
 6. `localsetup-ansible-skill` - playbook-driven provisioning and multi-host orchestration.
 7. `localsetup-decision-tree-workflow` - reverse-prompt process: one question at a time, four options, rationale.
-8. `localsetup-tmux-shared-session-workflow` - human-in-the-loop ops via shared tmux session.
+8. `localsetup-tmux-shared-session-workflow` - human-in-the-loop ops via tmux_ops (pick/probe/send); REMOTE_TMUX_HOST for remote/VMs.
 9. `localsetup-skill-importer` - import external skills from URL or local path with security screening.
 10. `localsetup-humanizer` - remove AI-writing patterns from text based on Wikipedia cleanup guide.
 

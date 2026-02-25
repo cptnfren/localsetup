@@ -12,7 +12,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 <!-- facts-block:start -->
 - Current version: `2.5.5`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
-- Shipped skills: `35`
+- Shipped skills: `37`
 - Source: `_localsetup/docs/_generated/facts.json`
 <!-- facts-block:end -->
 
@@ -35,7 +35,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | Capability | Description |
 |---|---|
 | **Agent Skills spec compliance** | All shipped skills follow the [Agent Skills specification](https://agentskills.io/specification). Import skills from Anthropic's repo or any spec-compliant source. |
-| **Shipped skills** | Debugging, TDD, PR review, git recovery, Linux triage, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux handoff, PRD batching, decision trees, humanizer, and more. See [SKILLS.md](SKILLS.md) for the full catalog. |
+| **Shipped skills** | Debugging, TDD, PR review, git recovery, Linux triage, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux ops (pick/probe/send), system-info, cron-orchestrator, PRD batching, decision trees, humanizer, and more. See [SKILLS.md](SKILLS.md) for the full catalog. |
 | **Skill importing** | Import external skills from a GitHub URL or local path. The importer discovers, validates, runs a heuristic security screen, and summarizes each skill before you decide to add it. |
 | **Skill discovery** | Maintain a public skill registry ([PUBLIC_SKILL_REGISTRY.urls](PUBLIC_SKILL_REGISTRY.urls)) and index ([PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml)). Get recommendations for similar public skills when creating or importing. |
 | **Skill version metadata** | Each `SKILL.md` carries a `metadata.version` field. The commit hook auto-increments patch version on staged skill changes so skill docs stay accurate. |
@@ -51,7 +51,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | **PRD batch workflow** | Process specs from `.agent/queue/`; implement per spec, update status, write outcomes, and reference the PRD schema. |
 | **Framework compliance** | Checklist-based workflow for framework-safe modifications: certainty assessment, context load, document status, testing, git checkpoints. |
 | **Script and docs quality** | Markdown encoding standards, script generation quality rules, file creation discipline, and documentation discipline enforced by the `localsetup-script-and-docs-quality` skill. |
-| **Human-in-the-loop ops** | The tmux shared-session workflow lets a human attach, observe, and provide sudo. Agent captures output via log files. Use for privileged or risky operations. |
+| **Human-in-the-loop ops** | The tmux shared-session workflow uses the tmux_ops tool (pick, probe, send with 1 s delay). Human can attach and provide sudo; agent captures output via log files. Supports REMOTE_TMUX_HOST for VMs/remote/Docker. See [ops/tmux-ops-remote.md](ops/tmux-ops-remote.md). Use for privileged or risky operations. |
 | **Arbiter workflow** | Push decisions to Arbiter Zebu for async human review when you need approval before proceeding. |
 | **Framework audit** | Single entrypoint runs doc checks, link checks, skill matrix (discovery + sandbox smoke), version/facts, and optional Deep Analysis (`--deep`): derives invocations from SKILL.md and script `--help`, runs in sandbox, writes summary JSON and sidecar tarball. Output only to user-specified path; no in-repo default. See [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md) and skill `localsetup-framework-audit`. |
 
@@ -87,6 +87,8 @@ These skills ship with the framework and are ready to use immediately.
 | `localsetup-ansible-skill` | Ansible playbook-driven provisioning, configuration management, and multi-host orchestration. Includes example playbooks. |
 | `localsetup-agentlens` | Codebase navigation using agentlens hierarchy (INDEX.md, modules, outline, memory); explore projects, find modules/symbols, TODOs. |
 | `localsetup-mcp-builder` | Guide for creating high-quality MCP servers that enable LLMs to interact with external services. Python and Node/TypeScript. |
+| `localsetup-system-info` | Quick system diagnostics: CPU, memory, disk, uptime. Capture server baseline or host layout for further operations. |
+| `localsetup-cron-orchestrator` | Manage cron from a repo-local manifest: time triggers, on-boot-with-delay, sequenced tasks; create, remove, reorder, install. |
 
 ---
 
@@ -100,7 +102,7 @@ These skills ship with the framework and are ready to use immediately.
 | `localsetup-framework-compliance` | Pre-task workflow, certainty assessment, context load, document status, testing, git checkpoints. |
 | `localsetup-automatic-versioning` | Manage VERSION, conventional commits, sync to READMEs and docs; version maintained by repo maintainers. |
 | `localsetup-github-publishing-workflow` | Publishing checklist: doc structure, licensing, PII/secrets scrub, repo readiness. |
-| `localsetup-tmux-shared-session-workflow` | Human-in-the-loop ops via shared tmux session with sudo discovery and batch gates. |
+| `localsetup-tmux-shared-session-workflow` | Human-in-the-loop ops via tmux_ops (pick/probe/send); sudo gate on probe; 1 s delay between sends; REMOTE_TMUX_HOST for remote. |
 | `localsetup-arbiter` | Push decisions to Arbiter Zebu for async human review. |
 | `localsetup-backlog-and-reminders` | Record deferred ideas, to-dos, reminders; show due/overdue on session start. |
 | `localsetup-task-skill-matcher` | Match tasks to installed skills; recommend top matches; single or batch flow. |
