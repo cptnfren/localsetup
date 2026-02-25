@@ -37,5 +37,7 @@
 | localsetup-skill-sandbox-tester | Test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until user approves | Validate skill after import, test skill in sandbox, ensure skill runs before production |
 | localsetup-agentlens | Codebase navigation with agentlens hierarchy (INDEX.md, modules, outline, memory) | Explore codebases, find modules/symbols, TODOs/warnings; large repos |
 | localsetup-framework-audit | Run doc, link, skill matrix, version/facts checks; optional --deep (Deep Analysis); output to user path only | User says "run audit", "run framework audit", or before release |
+| localsetup-system-info | Quick system diagnostics: CPU, memory, disk, uptime | Capture server baseline, host layout and specs for further operations |
+| localsetup-cron-orchestrator | Manage cron from manifest: triggers, sequenced tasks, on-boot delay | Create/remove/reorder cron tasks; install crontab fragment |
 
 Framework docs: _localsetup/docs/ (AGENTIC_DESIGN_INDEX.md, WORKFLOW_REGISTRY.md, PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md).

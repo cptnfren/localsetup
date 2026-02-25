@@ -1,162 +1,74 @@
 ---
 name: localsetup-tmux-shared-session-workflow
-description: Run server operations inside a shared tmux session so a human can attach, observe, and provide sudo. Agent captures output via log files or tmux capture. Use when running server/system commands, deployments, or when user mentions tmux, shared session, or human-in-the-loop ops.
+description: Server/ops in tmux; use tmux_ops tool to pick session (idle = prompt on current line) and probe sudo; run commands only in chosen session. Supports REMOTE_TMUX_HOST for VMs/remote/Docker.
 metadata:
-  version: "1.3"
+  version: "3.3"
 ---
 
-# tmux Shared Session Workflow (Generic, Human Visible Ops)
+# tmux shared session workflow (ops)
 
-**Purpose:** Always run server operations inside a shared tmux session so a human can attach at any time, observe progress, and safely provide sudo when needed. The agent must read command output itself (no user copy/paste) via log files and/or tmux capture.
+**Rule:** Any request that involves running commands on the host uses this workflow. Sudo is always assumed required. Use the **tmux_ops** tool to pick session and probe; do not infer busy from `tmux ls` or parse raw capture yourself.
 
-## Definitions
+## Tool (use this)
 
-- **Base session name:** `ops`
-- **Derived sessions:** `ops1`, `ops2`, `ops3`, ...
-- **Idle session:** session/window/pane where the foreground command is a shell prompt (safe to type into).
-- **Busy session:** pane is running a foreground process or prompt state is unknown.
+- **Entrypoint:** From repo root run `./_localsetup/tools/tmux_ops` (or set `REMOTE_TMUX_HOST` to run the same tool on a remote host via SSH; see Remote below).
+- **Pick session:** `./_localsetup/tools/tmux_ops pick` → JSON e.g. `{"session": "ops", "reason": "idle"}` or `{"reason": "created"}` or `{"reason": "waiting_sudo"}`. Use that `session` for the whole run. `waiting_sudo` = cursor is on the sudo password prompt line; we reuse that session (probe will return password_required, user enters password there).
+- **Probe sudo:** `./_localsetup/tools/tmux_ops probe -t <session>` → JSON `{"sudo": "ready"}` or `{"sudo": "password_required"}`. The tool looks only at the **cursor line**: if the cursor is on the line showing the sudo password prompt, that is the stop signal (password_required). If ready, keep rolling; if password_required, stop and ask the user to enter password in that pane and reply "sudo ready".
+- **Send command (use this for every step):** `./_localsetup/tools/tmux_ops send -t <session> '...'` sends the command to the pane and then **waits 1 s** inside the tool. Use this instead of raw `tmux send-keys` so the delay is deterministic and avoids a "pylon effect" (commands racing ahead of output on high-latency links, e.g. 300–400 ms to a server). Optional: `--delay SECS` or env `TMUX_OPS_SEND_DELAY`.
+- **Idle definition:** The tool treats a session as free when the **current line** (cursor line) in the pane matches a shell prompt (line ends with `$` or `#`). It does not use "(attached)" or list-clients.
 
-## Hard Rules
+## Sequence (follow exactly)
 
-1. All operational commands must run inside tmux.
-2. Prefer reusing `ops` if it is idle.
-3. If `ops` exists but is busy, create/use the next available `opsN`.
-4. Never send keystrokes to a busy/unknown pane.
-5. If a task requires sudo, stop and request a human sudo trigger (see Sudo Gate).
-6. Create distinct windows for clarity: `sys`, `deploy`, `logs`.
-7. The agent must capture and read outputs itself. Do not rely on the user to relay tmux output.
-8. Always print "what I'm about to do" before running commands.
+1. **Pick session.** Run `./_localsetup/tools/tmux_ops pick`. Parse JSON; use the returned `session` for the whole run. If the tool errors, report and stop.
 
-## Standard Session Acquisition Algorithm
+2. **Show attach command immediately.** Right after pick (whether the session was created or already existed), display the join command in a **copy-paste code block** so the user can attach at any time. Do not wait for the user to confirm they joined.
+   - Put this in a fenced code block (e.g. ` ```bash ` … ` ``` `):
+     `tmux new-session -A -s <session>`
+   - Optionally one line: "Join this session to watch or enter sudo if prompted."
+   - **If pick returned `reason: "waiting_sudo"`:** the session may be abandoned with something like `sudo apt upgrade` waiting for the password. Cancel it so nothing runs after the user types the password: send `tmux send-keys -t <session> C-c` (Ctrl+C), wait ~1 s, then run the probe. That way only our trigger runs after they enter the password.
+   - Then run the probe: `./_localsetup/tools/tmux_ops probe -t <session>` (or after the cancel, when reason was waiting_sudo).
 
-1) **If not already inside tmux:**
-   - Attempt attach/create `ops`: `tmux new-session -A -s ops`
-2) **If `ops` exists but is busy or prompt state is unknown:**
-   - Use next available name: try `ops1`, then `ops2`, etc.
-   - Attach/create the first non-existent: `tmux new-session -A -s ops1`
-3) **Once attached, ensure windows exist:** `sys`, `deploy`, `logs` (create if missing).
+3. **Gate on probe only.** If the probe returns `"sudo": "password_required"` (cursor is on the line showing the sudo password prompt): stop. Do not send any further commands. Ask the user to attach to the session, enter the password in that pane, and reply "sudo ready". Only after they reply may you send the first command. If the probe returns `"sudo": "ready"`, continue to step 4. You do not wait for the user to confirm join before probing; the only stop is the password prompt on the cursor line.
 
-## Human Join Commands
+4. **Do not pile commands.** Send one logical step at a time (e.g. one block that sets LOG and runs one hardening step). Use **tmux_ops send** for each step so the built-in 1 s delay runs between sends. After sending, wait (e.g. 5 s), then read the log or capture the pane to confirm the step finished. Only then send the next step. Do not send multiple independent commands in one send.
 
-- Attach/create base: `tmux new-session -A -s ops`
-- List sessions: `tmux ls`
-- Attach specific: `tmux attach -t ops1`
+5. **Run.** Commands go via `./_localsetup/tools/tmux_ops send -t <session> '...'` (tool adds Enter and 1 s delay). Use a log: `/tmp/agent-<session>-YYYYmmdd-HHMMSS.log` (e.g. `|& tee -a $LOG`). Read the log yourself. Never run those commands in the agent shell.
 
-## Session/Window Conventions
+6. **Re-gate if sudo expires.** If a later command fails (e.g. sudo timeout), run the probe again; if password_required, stop and ask for "sudo ready"; only then continue.
 
-- Window 1: `sys`  - packages, firewall, users/groups, filesystem
-- Window 2: `deploy`  - git, builds, releases, switching versions
-- Window 3: `logs`  - journalctl, docker logs, tail -f
+## Remote (VMs, remote SSH, Docker)
 
-Create windows if missing:
+When the tmux server runs on a different host (e.g. Cursor on laptop, tmux on VM or remote server):
 
-```bash
-tmux new-window -t <session> -n sys
-tmux new-window -t <session> -n deploy
-tmux new-window -t <session> -n logs
-```
+- Set **REMOTE_TMUX_HOST** to that host (e.g. `export REMOTE_TMUX_HOST=sh0t`). Optionally **REMOTE_TMUX_CWD** to the repo path on the remote (default `/opt/devzone/devops`).
+- Run `./_localsetup/tools/tmux_ops pick` and `probe -t <session>` as usual; the wrapper runs the tool over SSH and returns the same JSON.
+- **Sending commands:** When REMOTE_TMUX_HOST is set, run `./_localsetup/tools/tmux_ops send -t <session> 'cmd'` as usual; the wrapper runs the tool over SSH, so the 1 s delay is applied on the remote side. Use the same session and log path on the remote (e.g. `/tmp/agent-ops-*.log`). If the agent runs on the same host as tmux (e.g. Cursor Remote SSH), do not set REMOTE_TMUX_HOST.
 
-## Output Awareness (Required)
+## Checklist
 
-The agent must be aware of command output without user transcription. Use one of these for every meaningful command batch.
+| Step | Do | Do not |
+|------|-----|--------|
+| 1 | Run tmux_ops pick; use returned session for whole run. | Infer session from tmux ls or "(attached)". |
+| 2 | Right after pick, show attach in code block. If reason was waiting_sudo, send C-c to session first (cancel abandoned command), then run probe. Do not wait for user to join. | Wait for "I joined"; skip cancel when waiting_sudo. |
+| 3 | If probe says password_required (cursor on sudo prompt line), stop and ask user; only then send commands. If ready, continue. | Send commands before user says sudo ready when probe said password_required. |
+| 4 | One step per send via tmux_ops send; wait and verify (log/capture) before next. | Pile multiple commands in one send; use raw tmux send-keys. |
+| 5 | Run in chosen session via tmux_ops send; tee to log; read log. | Run in agent shell; skip log. |
+| 6 | If sudo expired, probe again; if password_required, stop. | Assume sudo still valid. |
 
-### Method A (preferred): redirect to a log file the agent can read
+## Session and log
 
-Log filename must include the **tmux session name** so concurrent sessions stay separated.
+- Session: the one returned by `tmux_ops pick` (e.g. `ops` or `ops1`).
+- Log: `/tmp/agent-<session>-YYYYmmdd-HHMMSS.log`. Commands: `... |& tee -a $LOG`. After run: read log (e.g. `tail -n 200` that file).
 
-- **Log path format:** `/tmp/agent-<session>-YYYYmmdd-HHMMSS.log`
-- **Examples:** `/tmp/agent-ops-20260218-213045.log`, `/tmp/agent-ops1-20260218-213045.log`
+## Hard rules
 
-Run with output capture:
+1. Server/ops commands run only in tmux. Use tmux_ops to pick session (idle = prompt on current line) and probe; never in the agent shell for the actual ops commands.
+2. If probe returns ready, continue immediately; do not stop for a chat "sudo ready". Only stop when probe returns password_required.
+3. If password_required: ask user to enter password in the ops pane and reply "sudo ready"; then proceed.
+4. Right after pick, display the attach command in a copy-paste code block; do not wait for user to confirm join before probing.
+5. Capture output to the log path; the agent reads the log. State what you are about to do before running commands.
 
-```bash
-command |& tee -a /tmp/agent-<session>-YYYYmmdd-HHMMSS.log
-```
+## Reference
 
-After completion, read the log to decide next steps:
-
-```bash
-tail -n 200 /tmp/agent-<session>-YYYYmmdd-HHMMSS.log
-```
-
-Rules: Use `|&` (stdout+stderr) when available. Keep logs in `/tmp` unless retention elsewhere is required. Rotate by timestamp. For multi-batch tasks, reuse the same log file for that session/task where practical.
-
-### Method B: capture tmux pane content
-
-When needed:
-
-```bash
-tmux capture-pane -p -S -200 -t <session>:<window>.<pane>
-```
-
-Rules: Only use on panes the agent created or can safely inspect. Use to verify final status when commands were not tee'd.
-
-### Method C: long-running services  - system logs
-
-- **systemd:** `journalctl -u <service> -n 200 --no-pager`; follow: `journalctl -u <service> -f`
-- **Docker:** `docker logs --tail 200 <container>`; follow: `docker logs -f <container>`
-
-## Idle vs Busy Detection (Practical Heuristic)
-
-Policy: do not inject into an existing pane unless you can confirm it is idle.
-
-**Safe cases:** You just created the session in this run (you own the active pane), or you can clearly see a shell prompt waiting (no running foreground process).
-
-If uncertain, create a new session `opsN` instead.
-
-## Sudo discovery (once at start of ops)
-
-Before requesting sudo or running sudo-dependent commands, the agent must discover the environment:
-
-1. **Is sudo already valid?** Run `sudo -n true 2>/dev/null`. If it succeeds, no password is needed for this run (e.g. NOPASSWD or recent auth). Proceed without prompting.
-2. **What is the timeout?** Run `sudo -V 2>/dev/null` and look for "Authentication timestamp timeout" (minutes). Default on Ubuntu 24 is 15 minutes; each sudo use extends the timer, idle terminal lets it expire. Some systems use different timeouts or require sudo on every command; adjust strategy accordingly.
-3. **Is sudo actually required?** Only prompt when an upcoming command genuinely needs sudo. If none do, continue without the sudo gate.
-
-Use this to decide: skip gate (already valid or not needed), or request one human trigger and then run all sudo commands within the validity window without bothering the user again.
-
-## Sudo Gate (Human-in-the-loop)
-
-When a command genuinely requires sudo and `sudo -n true` failed (or was not run yet), the agent must pause and get one human-approved sudo in the shared session. After that, do not prompt again until sudo expires (re-check with `sudo -n true` before later sudo batches; if it fails, repeat the gate).
-
-### Step 1: Tell the user where to join
-
-Output the **exact session** the user must attach to so they run the trigger in the same pane the agent will use. Example:
-
-"Join the tmux session where I will run commands. In your terminal, run:
-
-```bash
-tmux attach -t ops
-```
-
-(or `tmux new-session -A -s ops` if the session does not exist yet). Use the window/pane I am using for this task (e.g. `sys` or `deploy`)."
-
-### Step 2: Output the trigger in a code block
-
-In the same message, give the exact command for the user to run **in that attached session**:
-
-```bash
-sudo -v && echo SUDO_READY
-```
-
-The user runs it, enters their password when prompted, and sees `SUDO_READY` when successful.
-
-### Step 3: Wait for confirmation (and optionally monitor)
-
-- **Preferred:** Monitor the session log or tmux capture for the line `SUDO_READY` so the agent can proceed as soon as it appears.
-- **Otherwise:** Wait for the user to report that they see `SUDO_READY` (e.g. "sudo ready" or "SUDO_READY").
-
-Do not send further keys or commands until SUDO_READY is confirmed (via log or user).
-
-### Step 4: Proceed without re-prompting
-
-Once SUDO_READY is confirmed, the agent sends or runs all subsequent commands that need sudo in that session. Do not ask the user for sudo again for each command. The system keeps the sudo timestamp valid for the discovered timeout (e.g. 15 minutes); each command run extends it. Only if sudo later fails (e.g. timeout expired) should the agent repeat the gate: output join instructions again, the same code block, wait for SUDO_READY, then continue.
-
-Summary: one join instruction, one code block, wait (monitor log or user), then run all sudo commands in the validity window. Re-prompt only when `sudo -n true` fails again.
-
-## Acceptance Criteria
-
-- Every server change is visible in tmux scrollback.
-- The agent can read and reason over outputs via logs or tmux capture.
-- A human can attach and see exactly what is happening.
-- No commands are injected into unknown/busy panes.
-- Sudo is never executed silently; always human-authorized via the sudo trigger.
+- Tool: `_localsetup/tools/tmux_ops` (pick, probe -t SESSION, send -t SESSION 'cmd'). Send enforces 1 s delay after each command. Remote: REMOTE_TMUX_HOST, REMOTE_TMUX_CWD.
+- Attach: `tmux new-session -A -s <name>`. Session names: `ops`, `ops1`, `ops2`, … Windows (optional): `sys`, `deploy`, `logs`.
