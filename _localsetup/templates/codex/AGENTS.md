@@ -52,6 +52,8 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. Framework and contex
 - localsetup-skill-sandbox-tester: test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until approved
 - localsetup-agentlens: codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs
 - localsetup-framework-audit: run doc/link/skill matrix/version checks; optional --deep (Deep Analysis); output user path only; before release
+- localsetup-system-info: capture server baseline, host layout and specs; CPU, memory, disk, uptime
+- localsetup-cron-orchestrator: manage cron from manifest; triggers, sequenced tasks, on-boot delay; create/remove/reorder/install
 
 ## Docs
 _localsetup/docs/AGENTIC_DESIGN_INDEX.md, WORKFLOW_REGISTRY.md, PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md, DECISION_TREE_WORKFLOW.md, INPUT_HARDENING_STANDARD.md, TOOLING_POLICY.md

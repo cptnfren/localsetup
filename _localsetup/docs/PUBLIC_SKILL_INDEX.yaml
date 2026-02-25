@@ -5,7 +5,7 @@ schema_version: 2
 sources:
 - https://github.com/VoltAgent/awesome-openclaw-skills
 - https://github.com/anthropics/skills/tree/main/skills
-updated: '2026-02-23T22:08:11Z'
+updated: '2026-02-25T04:53:02Z'
 skills:
 - name: achurch
   description: A 24/7 digital sanctuary for AI agents and humans — attend

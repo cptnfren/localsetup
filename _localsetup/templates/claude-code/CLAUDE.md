@@ -56,6 +56,8 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and co
 - **localsetup-skill-sandbox-tester**  - Test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until approved
 - **localsetup-agentlens**  - Codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs
 - **localsetup-framework-audit**  - Run doc/link/skill matrix/version checks; optional --deep (Deep Analysis); output user path only; before release
+- **localsetup-system-info**  - Capture server baseline, host layout and specs; CPU, memory, disk, uptime
+- **localsetup-cron-orchestrator**  - Manage cron from manifest; triggers, sequenced tasks, on-boot delay; create/remove/reorder/install
 
 ## Key docs
 
