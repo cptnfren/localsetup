@@ -55,7 +55,7 @@ For non-interactive one-liners (CI, automation, or when you already know the pla
 ### Minimum requirements
 
 - **Required:** `git >= 2.20.0`; on Linux/macOS, `rg` (ripgrep) is also required for the install script.
-- **Recommended:** `python >= 3.10`, `pip`, and the packages in `_localsetup/requirements.txt` (e.g. PyYAML). After install: `python3 -m pip install -r _localsetup/requirements.txt`.
+- **Recommended:** `python >= 3.10`, `pip`, and the packages in `_localsetup/requirements.txt` (PyYAML, requests, python-frontmatter). After install: `python3 -m pip install -r _localsetup/requirements.txt`, or pass `--install-deps` / `-InstallDeps` to install them automatically.
 
 The installer runs a dependency preflight and prints missing items with copy-paste install suggestions before proceeding. Full list: [_localsetup/docs/MULTI_PLATFORM_INSTALL.md](_localsetup/docs/MULTI_PLATFORM_INSTALL.md#dependency-preflight).
 

@@ -79,7 +79,9 @@ Before clone/deploy, both install scripts run a dependency preflight. The list b
 | `rg` (ripgrep) | Required on Linux/macOS (Bash install uses it for manifest build). Recommended on Windows. | Bash install manifest; framework/Grep tooling |
 | `python` >= 3.10 | Recommended | Framework tools (deploy, verify_context, verify_rules, tests); Python-first policy |
 | `pip` | Recommended | Install `_localsetup/requirements.txt` |
-| Python: `yaml` (PyYAML>=6.0) | Recommended | See `_localsetup/requirements.txt`; used by framework Python scripts |
+| Python: `yaml` (PyYAML>=6.0) | Recommended | YAML parsing for skill index, config, and PRD files |
+| Python: `requests` (requests>=2.28) | Recommended | HTTP client used by index refresh and scrub tools |
+| Python: `frontmatter` (python-frontmatter>=1.1) | Recommended | YAML frontmatter parsing for skill and PRD markdown files |
 
 Python packages are listed in `_localsetup/requirements.txt`. After install, run:
 
@@ -88,6 +90,18 @@ python3 -m pip install -r _localsetup/requirements.txt
 ```
 
 (PowerShell: `python -m pip install -r _localsetup\requirements.txt`.)
+
+To install dependencies automatically during install, add the `--install-deps` / `-InstallDeps` flag:
+
+```bash
+# Bash
+install --directory . --tools cursor --yes --install-deps
+
+# PowerShell
+.\install.ps1 -Directory . -Tools cursor -Yes -InstallDeps
+```
+
+Without `--install-deps`, install completes but prints a notice listing missing packages with copy-paste install commands. A `.deps-missing` file is written to `_localsetup/` as a reminder; it is cleared automatically the next time install runs and all packages are present.
 
 If any **required** dependency is missing or too old, install aborts with install hints. If only **recommended** ones are missing, install continues and prints copy-paste command hints for your OS.
 

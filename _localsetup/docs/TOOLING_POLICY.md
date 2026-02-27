@@ -31,6 +31,29 @@ Purpose: define project-wide tooling language and dependency rules.
   - recent release activity
 - Pin lower bounds in `requirements.txt` and document why each dependency exists.
 
+## Approved libraries (mandatory use)
+
+These libraries are pre-approved, listed in `requirements.txt`, and available after any framework install. When writing new tools or refactoring existing ones, **use these libraries** instead of reimplementing their functionality. Reinventing them (custom HTTP clients, bespoke YAML parsers, ad-hoc frontmatter splits) is explicitly prohibited when one of these covers the need.
+
+| Library | Import name | pip package | Use for |
+|---------|-------------|-------------|---------|
+| PyYAML | `yaml` | `PyYAML>=6.0` | All YAML parsing and serialization. Never use `json` as a workaround or parse YAML by hand. |
+| requests | `requests` | `requests>=2.28` | All outbound HTTP. Use `requests.Session` for multi-request tools. Never use `urllib.request` for new code. |
+| python-frontmatter | `frontmatter` | `python-frontmatter>=1.1` | Parse YAML front matter from skill and PRD markdown files. Never split frontmatter by hand. |
+
+**Shared dependency helper:** Import `lib.deps` at the top of every tool and call `require_deps()` before using any approved library. This gives users an actionable error message instead of a bare `ImportError` if the library is missing.
+
+```python
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'lib'))
+from deps import require_deps
+require_deps(["requests", "frontmatter"])  # list only the ones this tool uses
+```
+
+The `require_deps()` call always does a live `importlib` check. It never reads the `.deps-missing` sentinel file written by the install script, so a stale sentinel from an older install cannot block tools on a system where the packages are present.
+
+**For AI agents:** When generating or refactoring framework Python tooling, check whether the task involves HTTP requests, YAML parsing, or frontmatter parsing. If yes, use the approved library from the table above. Do not generate custom implementations of these.
+
 ## Lint and quality
 
 - Python tooling must be lint-clean before merge. Single source of truth for commands and expectations:

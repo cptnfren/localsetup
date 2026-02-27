@@ -10,7 +10,7 @@ Get Localsetup v2 running in your repo in under a minute. This page covers inter
 ## Prerequisites
 
 - **Required:** `git >= 2.20.0`; on Linux/macOS also `rg` (ripgrep), which the Bash install script uses to build the manifest.
-- **Recommended for full framework tooling:** `python >= 3.10`, `pip`, and the Python packages in `_localsetup/requirements.txt` (currently PyYAML>=6.0). After install, run `python3 -m pip install -r _localsetup/requirements.txt`.
+- **Recommended for full framework tooling:** `python >= 3.10`, `pip`, and the Python packages in `_localsetup/requirements.txt` (PyYAML, requests, python-frontmatter). After install, run `python3 -m pip install -r _localsetup/requirements.txt`, or pass `--install-deps` / `-InstallDeps` to have the install script do it automatically.
 - **Linux/macOS:** Bash and curl.
 - **Windows:** PowerShell 5.1+ or PowerShell Core.
 - **Any platform:** Network access to GitHub (or a local clone of this repo).
@@ -253,7 +253,7 @@ sudo apt-get install -y ripgrep
 # macOS: brew install ripgrep
 ```
 
-If preflight reports missing **Python/pip/yaml**, install and then install the framework requirements:
+If preflight reports missing **Python/pip** or any Python modules, install and then install the framework requirements:
 
 ```bash
 # Debian/Ubuntu
@@ -265,7 +265,7 @@ sudo dnf install -y python3 python3-pip python3-pyyaml
 # Arch
 sudo pacman -S --needed python python-pip python-yaml
 
-# Any: after install, from repo root
+# Any: install all Python packages at once from repo root
 python3 -m pip install -r _localsetup/requirements.txt
 ```
 
@@ -274,6 +274,8 @@ python3 -m pip install -r _localsetup/requirements.txt
 winget install Python.Python.3.12
 py -m pip install -r _localsetup\requirements.txt
 ```
+
+Alternatively, re-run install with `--install-deps` (Bash) or `-InstallDeps` (PowerShell) to have the script run `pip install` automatically after deploying the framework.
 
 ## 📖 Next steps
 
