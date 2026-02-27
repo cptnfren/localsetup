@@ -732,52 +732,60 @@ class TestHTTPErrorHandling(unittest.TestCase):
         return client
 
     def test_http_error_dies_with_message(self):
-        from urllib.error import HTTPError
+        """HTTP 4xx/5xx from NPM raises SystemExit with the structured error message."""
+        import requests as req_lib
         with tempfile.TemporaryDirectory() as td:
             client = self._make_client(Path(td))
-            error_body = json.dumps({"error": {"message": "Host not found"}}).encode()
-            mock_exc = HTTPError(
-                url="http://127.0.0.1:81/api/nginx/proxy-hosts/999",
-                code=404,
-                msg="Not Found",
-                hdrs=None,
-                fp=None,
-            )
-            mock_exc.read = lambda: error_body
+            # Build a mock response that raise_for_status() will raise HTTPError on
+            mock_resp = MagicMock()
+            mock_resp.status_code = 404
+            mock_resp.json.return_value = {"error": {"message": "Host not found"}}
+            mock_resp.text = json.dumps({"error": {"message": "Host not found"}})
+            http_error = req_lib.HTTPError(response=mock_resp)
+            mock_resp.raise_for_status.side_effect = http_error
 
-            with patch("npm_api.request.urlopen", side_effect=mock_exc):
+            with patch.object(client._session, "request", return_value=mock_resp):
                 with self.assertRaises(SystemExit):
                     client._raw_request("GET", "/nginx/proxy-hosts/999", auth_token="faketoken")
 
     def test_network_error_dies_with_message(self):
-        from urllib.error import URLError
+        """Connection-level errors (unreachable host) raise SystemExit."""
+        import requests as req_lib
         with tempfile.TemporaryDirectory() as td:
             client = self._make_client(Path(td))
-            with patch("npm_api.request.urlopen", side_effect=URLError("Connection refused")):
+            with patch.object(
+                client._session, "request",
+                side_effect=req_lib.ConnectionError("Connection refused"),
+            ):
                 with self.assertRaises(SystemExit):
                     client._raw_request("GET", "/nginx/proxy-hosts", auth_token="faketoken")
 
     def test_invalid_json_response_dies(self):
+        """A non-JSON body from a 2xx response raises SystemExit."""
+        import requests as req_lib
         with tempfile.TemporaryDirectory() as td:
             client = self._make_client(Path(td))
             mock_resp = MagicMock()
-            mock_resp.read.return_value = b"not json at all {"
-            mock_resp.__enter__ = lambda s: mock_resp
-            mock_resp.__exit__ = MagicMock(return_value=False)
+            mock_resp.status_code = 200
+            mock_resp.raise_for_status.return_value = None
+            mock_resp.content = b"not json at all {"
+            mock_resp.text = "not json at all {"
+            mock_resp.json.side_effect = req_lib.exceptions.JSONDecodeError("err", "doc", 0)
 
-            with patch("npm_api.request.urlopen", return_value=mock_resp):
+            with patch.object(client._session, "request", return_value=mock_resp):
                 with self.assertRaises(SystemExit):
                     client._raw_request("GET", "/nginx/proxy-hosts", auth_token="faketoken")
 
     def test_empty_response_returns_empty_dict(self):
+        """Empty body (e.g. DELETE 204) returns {}."""
         with tempfile.TemporaryDirectory() as td:
             client = self._make_client(Path(td))
             mock_resp = MagicMock()
-            mock_resp.read.return_value = b""
-            mock_resp.__enter__ = lambda s: mock_resp
-            mock_resp.__exit__ = MagicMock(return_value=False)
+            mock_resp.status_code = 204
+            mock_resp.raise_for_status.return_value = None
+            mock_resp.content = b""
 
-            with patch("npm_api.request.urlopen", return_value=mock_resp):
+            with patch.object(client._session, "request", return_value=mock_resp):
                 result = client._raw_request("DELETE", "/nginx/proxy-hosts/1", auth_token="faketoken")
                 self.assertEqual(result, {})
 
