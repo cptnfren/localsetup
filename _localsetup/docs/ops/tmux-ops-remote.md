@@ -17,13 +17,15 @@ export REMOTE_TMUX_HOST=sh0t
 ./_localsetup/tools/tmux_ops probe -t ops
 ```
 
-When REMOTE_TMUX_HOST is set, run commands via the same wrapper so the 1 s send delay is applied on the remote side:
+When REMOTE_TMUX_HOST is set, run commands via the same wrapper so the pylon-guard delay runs on the remote side:
 
 ```bash
 ./_localsetup/tools/tmux_ops send -t ops 'sudo apt update'
+./_localsetup/tools/tmux_ops send -t ops --wait 'echo done'        # wait for idle
+./_localsetup/tools/tmux_ops wait -t ops --timeout 120              # standalone wait for long ops
 ```
 
-Do not use raw `tmux send-keys` over SSH; use `tmux_ops send` as usual so the tool runs on the remote and applies the delay there.
+Do not use raw `tmux send-keys` over SSH; use `tmux_ops send` (and `wait`) as usual so the tool runs on the remote.
 
 Log paths and session names are the same; they refer to paths and sessions on the remote host.
 
@@ -34,4 +36,4 @@ If you use Cursor Remote SSH and the agent runs on the same host as tmux, do **n
 ## Reference
 
 - Skill: **localsetup-tmux-shared-session-workflow**
-- Tool: `_localsetup/tools/tmux_ops` (pick, probe -t SESSION, send -t SESSION 'cmd')
+- Tool: `_localsetup/tools/tmux_ops` (pick, probe -t SESSION, send -t SESSION [--wait] 'cmd', wait -t SESSION [--timeout N])
