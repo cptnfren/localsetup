@@ -1,13 +1,13 @@
 ---
 status: ACTIVE
-version: 2.5
+version: 2.6
 ---
 
 # Shipped skills catalog
 
 This page is generated from `_localsetup/skills/*/SKILL.md`.
 
-Total shipped skills: 37
+Total shipped skills: 39
 
 | Skill ID | Name | Version | Description |
 |---|---|---|---|
@@ -18,6 +18,7 @@ Total shipped skills: 37
 | `localsetup-arbiter` | `localsetup-arbiter` | `1.2` | Push decisions to Arbiter Zebu for async human review. Use when you need human input on plans, architectural choices, or approval before proceeding. |
 | `localsetup-automatic-versioning` | `localsetup-automatic-versioning` | `1.1` | Use and maintain automatic versioning from conventional commits; VERSION as source of truth; sync to READMEs and docs. Use when working on version bumps, release workflow, or when the user asks about versioning or conventional commits. |
 | `localsetup-backlog-and-reminders` | `localsetup-backlog-and-reminders` | `1.1` | Record deferred ideas, to-dos, and reminders (with optional due date or 'whenever'); show due/overdue when user starts a session or asks. Use when user says 'add to backlog', 'remind me', 'I'll do this later', 'what's due?', 'show my backlog', 'start my session', or wants to capture ideas for later. |
+| `localsetup-cloudflare-dns` | `localsetup-cloudflare-dns` | `1.0` | Manage Cloudflare DNS records (list, create, modify, delete) and run zone surveys via the flarectl CLI and a Python wrapper. Use when adding, changing, or removing DNS records, surveying zones, or scheduling automated DNS snapshots. |
 | `localsetup-communication-and-tools` | `localsetup-communication-and-tools` | `1.2` | Communication and response guidelines, tool selection and enhancement, periodic context updates. Use for user communication style, choosing tools, MCP/context updates. |
 | `localsetup-context` | `localsetup-context` | `1.5` | Localsetup v2 framework context  - overview, invariants, and skills index. Load first when working in a repo that uses Localsetup v2. Use when starting work in this repo or when user asks about framework rules. |
 | `localsetup-cron-orchestrator` | `localsetup-cron-orchestrator` | `1.0` | Manage cron from a repo-local manifest: time triggers, on-boot-with-delay, sequenced tasks; create, remove, reorder, install. |
@@ -31,13 +32,14 @@ Total shipped skills: 37
 | `localsetup-linux-patcher` | `localsetup-linux-patcher` | `1.1` | Automated Linux server patching and Docker container updates. Use when the user asks to update, patch, or upgrade Linux servers, apply security updates, update Docker containers, check for system updates, or manage server maintenance across multiple hosts. Supports Ubuntu, Debian, RHEL, AlmaLinux, Rocky Linux, CentOS, Amazon Linux, and SUSE. Includes PatchMon integration for automatic host detection and intelligent Docker handling. |
 | `localsetup-linux-service-triage` | `localsetup-linux-service-triage` | `1.1` | Diagnoses common Linux service issues using logs, systemd/PM2, file permissions, Nginx reverse proxy checks, and DNS sanity checks. Use when a server app is failing, unreachable, or misconfigured. |
 | `localsetup-mcp-builder` | `localsetup-mcp-builder` | `1.2` | Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK). |
+| `localsetup-npm-management` | `localsetup-npm-management` | `1.0` | Manage Nginx Proxy Manager (NPM) reverse proxy hosts via its REST API using the native Python client npm_api.py. Use when creating, modifying, diagnosing, removing, or cleaning up proxy hosts, or when coordinating Docker service deployments with NPM routing. |
 | `localsetup-pr-reviewer` | `localsetup-pr-reviewer` | `1.1` | Automated GitHub PR code review with diff analysis, lint integration, and structured reports. Use when reviewing pull requests, checking for security issues, error handling gaps, test coverage, or code style problems. Supports Go, Python, and JavaScript/TypeScript. Requires gh CLI authenticated with repo access. |
 | `localsetup-public-repo-identity` | `localsetup-public-repo-identity` | `1.2` | Public repo identity – use in README and published repos. For your identity, use local-identity (gitignored) or copy from framework template. Use when editing README*, CONTRIBUTING*. |
 | `localsetup-receiving-code-review` | `localsetup-receiving-code-review` | `1.2` | Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable. Requires technical rigor and verification, not performative agreement or blind implementation. |
 | `localsetup-safety-and-backup` | `localsetup-safety-and-backup` | `1.1` | Security and safety (conservative), backup management, temporary file management, firewall management. Use for destructive ops, system config changes, backups, temp files, or when adding services. |
 | `localsetup-script-and-docs-quality` | `localsetup-script-and-docs-quality` | `1.1` | Markdown/encoding standards, script generation quality, file creation discipline, documentation discipline. Use when generating scripts, creating/editing markdown or docs. |
 | `localsetup-skill-creator` | `localsetup-skill-creator` | `1.3` | Create or import Agent Skills–compliant skills for this framework; import skills from Anthropic or elsewhere; export framework skills for use in other hosts. Use when creating a new skill, importing an existing skill (e.g. anthropics/skills), adapting a doc into a skill, or making skills interchangeable across ecosystems. |
-| `localsetup-skill-discovery` | `localsetup-skill-discovery` | `1.3` | Discover and recommend public skills from external registries (e.g. awesome lists, skill hubs). Use when the user is creating a new skill, importing a skill, or asking to find similar public skills. Maintains PUBLIC_SKILL_REGISTRY.urls and PUBLIC_SKILL_INDEX.yaml; returns top 5 similar matches with rich summaries and clear next actions. |
+| `localsetup-skill-discovery` | `localsetup-skill-discovery` | `1.4` | Discover and recommend public skills from external registries (e.g. awesome lists, skill hubs). Use when the user is creating a new skill, importing a skill, or asking to find similar public skills. Maintains PUBLIC_SKILL_REGISTRY.urls and PUBLIC_SKILL_INDEX.yaml; returns top 5 similar matches with rich summaries and clear next actions. |
 | `localsetup-skill-importer` | `localsetup-skill-importer` | `1.3` | Import external skills from a URL (GitHub or other) or local path; discover, validate, security-screen, and summarize each skill so the user can choose which to import. Use when the user wants to add skills from a repo/URL or local folder, or when screening and selecting skills to add to the framework. |
 | `localsetup-skill-normalizer` | `localsetup-skill-normalizer` | `1.1` | Normalize skills already in the tree for Agent Skills spec compliance and platform-neutral wording. Use when the user wants to normalize one or more skills in _localsetup/skills/ (e.g. after import, or after copying files in), or when batch-reviewing previously imported skills. Applies _localsetup/docs/SKILL_NORMALIZATION.md; shows summary and key edits, then applies on approval. |
 | `localsetup-skill-sandbox-tester` | `localsetup-skill-sandbox-tester` | `1.0` | Test skills in an isolated sandbox before production. Run after vetting and normalization (not right after import). Creates a unique temp sandbox when the skill needs read/write; runs smoke checks; on failure uses localsetup-debug-pro to iterate until fixed; no writes to repo until user approves. Use when validating a skill after it is framework-compliant, testing a skill end-to-end, or ensuring it runs correctly on all supported platforms. |

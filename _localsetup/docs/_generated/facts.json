@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-02-25T04:53:09.842207+00:00",
-  "version": "2.5.6",
-  "major_minor": "2.5",
+  "generated_at": "2026-02-27T02:33:38.823066+00:00",
+  "version": "2.6.0",
+  "major_minor": "2.6",
   "platform_count": 4,
-  "skill_count": 37,
+  "skill_count": 39,
   "platforms": [
     {
       "id": "cursor",
@@ -72,6 +72,12 @@
       "name": "localsetup-backlog-and-reminders",
       "version": "1.1",
       "path": "_localsetup/skills/localsetup-backlog-and-reminders/SKILL.md"
+    },
+    {
+      "id": "localsetup-cloudflare-dns",
+      "name": "localsetup-cloudflare-dns",
+      "version": "1.0",
+      "path": "_localsetup/skills/localsetup-cloudflare-dns/SKILL.md"
     },
     {
       "id": "localsetup-communication-and-tools",
@@ -152,6 +158,12 @@
       "path": "_localsetup/skills/localsetup-mcp-builder/SKILL.md"
     },
     {
+      "id": "localsetup-npm-management",
+      "name": "localsetup-npm-management",
+      "version": "1.0",
+      "path": "_localsetup/skills/localsetup-npm-management/SKILL.md"
+    },
+    {
       "id": "localsetup-pr-reviewer",
       "name": "localsetup-pr-reviewer",
       "version": "1.1",
@@ -190,7 +202,7 @@
     {
       "id": "localsetup-skill-discovery",
       "name": "localsetup-skill-discovery",
-      "version": "1.3",
+      "version": "1.4",
       "path": "_localsetup/skills/localsetup-skill-discovery/SKILL.md"
     },
     {

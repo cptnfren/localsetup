@@ -4,7 +4,7 @@
 # Scope: skill_body (SKILL.md text), scripts_and_assets (scripts/assets only), all.
 # Descriptions are shown to the user in plain language; do not use heavy jargon.
 
-updated: "2026-02-19T00:00:00Z"
+updated: "2026-02-27T00:00:00Z"
 version: "1.0"
 sources:
   - "OWASP LLM prompt injection guidance"

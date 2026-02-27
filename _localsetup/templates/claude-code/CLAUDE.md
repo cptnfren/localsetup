@@ -58,6 +58,8 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and co
 - **localsetup-framework-audit**  - Run doc/link/skill matrix/version checks; optional --deep (Deep Analysis); output user path only; before release
 - **localsetup-system-info**  - Capture server baseline, host layout and specs; CPU, memory, disk, uptime
 - **localsetup-cron-orchestrator**  - Manage cron from manifest; triggers, sequenced tasks, on-boot delay; create/remove/reorder/install
+- **localsetup-cloudflare-dns**  - Manage Cloudflare DNS records (list, create, modify, delete) and zone surveys via flarectl; adding, changing, or removing DNS records
+- **localsetup-npm-management**  - Manage Nginx Proxy Manager proxy hosts via REST API; coordinate Docker + NPM deploy workflows; diagnose 502s; backup/restore
 
 ## Key docs
 

@@ -2,7 +2,7 @@
 name: localsetup-skill-discovery
 description: "Discover and recommend public skills from external registries (e.g. awesome lists, skill hubs). Use when the user is creating a new skill, importing a skill, or asking to find similar public skills. Maintains PUBLIC_SKILL_REGISTRY.urls and PUBLIC_SKILL_INDEX.yaml; returns top 5 similar matches with rich summaries and clear next actions."
 metadata:
-  version: "1.3"
+  version: "1.4"
 ---
 
 # Skill discovery (public registries)
@@ -29,12 +29,28 @@ metadata:
 - **On every skill operation:** Whenever you use this skill (create, import, or discover), **remind the user**: "Last index refresh: YYYY-MM-DD (X days ago)." or "(X weeks ago)" or "(X years ago)" using the `updated` value and the current date. Then if the index is older than 7 days, add: "The index is over 7 days old. Would you like to refresh it now?" If the user says yes, perform the refresh (fetch registry URLs, parse, write YAML, set `updated` to now).
 - **After refresh:** Write `updated` to the YAML with the current date/time (ISO8601) so the next run shows the correct "last refreshed" age.
 
+## Post-refresh scrub (mandatory)
+
+After every index refresh, the scrub step **must** run before the index is considered ready for discovery. The scrub catches dead URLs, stub/placeholder descriptions, and schema gaps that the refresh tool introduces automatically (e.g. Anthropic skills get generated placeholder descriptions; OpenClaw entries often have minimal or truncated text).
+
+**Sequence (agent steps):**
+
+1. **Refresh** - Run `python3 _localsetup/tools/refresh_public_skill_index.py`. Wait for completion and confirm the skill count written to stdout.
+2. **Scrub dry-run** - Run `python3 _localsetup/tools/skill_index_scrub.py --skip-url-check`. This fetches real descriptions from upstream SKILL.md files for any stub entries and produces a GFM report. URL checking is skipped in normal flow to keep runtime short; run with full URL checking only when explicitly requested or before a public release.
+3. **Review report** - Check the summary table. If "Fixable (upstream desc found)" > 0, proceed to step 4. If "Stub or too-short descriptions" > 0 but fixable count is 0, note the unfixable entries (upstream had no usable content) and accept them.
+4. **Apply fixes** - Run `python3 _localsetup/tools/skill_index_scrub.py --skip-url-check --fix`. Confirm the "Applied fixes" count in the report.
+5. **Done** - The index is now ready. Report summary to the user: total skills, stubs fixed, stubs unfixable (if any), `updated` timestamp.
+
+**With URL check (optional, slower):** Add `--workers 20` and remove `--skip-url-check` to also validate liveness of all skill URLs. Recommended before publishing the index upstream or before a framework release. Use `--report FILE` to save the GFM report.
+
+**Shorthand for agents:** "refresh and scrub" means run steps 1-5 above in order.
+
 ## Workflow (agent steps)
 
-1. **Check index and last refresh**  - Read PUBLIC_SKILL_INDEX.yaml (or confirm it is missing). Get current date from the environment. If file missing or `updated` is null/empty: prompt user to build the index; do not continue until built or user declines. Otherwise compute age (days/weeks/years since `updated`) and show: "Last index refresh: <date> (<X days/weeks/years ago>)." If age >= 7 days, prompt: "The index is over 7 days old. Would you like to refresh it now?" If user says yes, refresh (fetch registry URLs, parse, write YAML, set `updated` to now).
-2. **Match and rank**  - Read the user's intent (proposed skill description, or candidate skill name/description). Compare to each index entry using `summary_*`, `capabilities`, and `description` with keyword overlap and intent similarity. Return the **top 5** best matches. If fewer than 5 exist, return what is available.
-3. **Present recommendations**  - Always use the **default recommendation format** (see below). Each recommendation must include a concise but rich summary (2-4 sentences), constraints, and a clear recommendation status. After the formatted list, offer: "Would you like: **(1) In-depth summary** of each, **(2) Use a public skill** (I'll pull it from the source and run it through our import process so it's compliant), **(3) Continue on your own** (ignore these and keep creating/importing as planned), or **(4) Adapt from one** (use one as a base and customize)?" Ask the user to choose.
-4. **Handle choice**  - (1) For each of the top 5, fetch or summarize the skill (e.g. from README or SKILL.md) and present a short in-depth summary. (2) Resolve the skill URL (e.g. from awesome list to actual repo), then run the **skill-importer** workflow: fetch, run skill_importer_scan, validate, security screen, user selects, duplicate/overlap check, import. The result is a framework-compliant skill; no need to recreate. (3) Do nothing; continue with skill-creator or skill-importer as before. (4) Same as (2) but after import, help the user adapt the skill (edit name, description, add/remove sections) so it fits their case.
+1. **Check index and last refresh** - Read PUBLIC_SKILL_INDEX.yaml (or confirm it is missing). Get current date from the environment. If file missing or `updated` is null/empty: prompt user to build the index; do not continue until built or user declines. Otherwise compute age (days/weeks/years since `updated`) and show: "Last index refresh: <date> (<X days/weeks/years ago>)." If age >= 7 days, prompt: "The index is over 7 days old. Would you like to refresh it now?" If user says yes, run the **full refresh + scrub sequence** (see "Post-refresh scrub" above): refresh, dry-run scrub, apply fixes, report summary.
+2. **Match and rank** - Read the user's intent (proposed skill description, or candidate skill name/description). Compare to each index entry using `summary_*`, `capabilities`, and `description` with keyword overlap and intent similarity. Return the **top 5** best matches. If fewer than 5 exist, return what is available.
+3. **Present recommendations** - Always use the **default recommendation format** (see below). Each recommendation must include a concise but rich summary (2-4 sentences), constraints, and a clear recommendation status. After the formatted list, offer: "Would you like: **(1) In-depth summary** of each, **(2) Use a public skill** (I'll pull it from the source and run it through our import process so it's compliant), **(3) Continue on your own** (ignore these and keep creating/importing as planned), or **(4) Adapt from one** (use one as a base and customize)?" Ask the user to choose.
+4. **Handle choice** - (1) For each of the top 5, fetch or summarize the skill (e.g. from README or SKILL.md) and present a short in-depth summary. (2) Resolve the skill URL (e.g. from awesome list to actual repo), then run the **skill-importer** workflow: fetch, run skill_importer_scan, validate, security screen, user selects, duplicate/overlap check, import. The result is a framework-compliant skill; no need to recreate. (3) Do nothing; continue with skill-creator or skill-importer as before. (4) Same as (2) but after import, help the user adapt the skill (edit name, description, add/remove sections) so it fits their case.
 
 ## Integration with skill-creator and skill-importer
 
@@ -74,7 +90,9 @@ Presentation fallback by platform capability:
 
 ## Reference
 
-- _localsetup/docs/SKILL_DISCOVERY.md  - Registry and index format; when discovery runs; recommendation flow.
+- _localsetup/docs/SKILL_DISCOVERY.md  - Registry and index format; post-refresh scrub sequence; when discovery runs; recommendation flow.
 - _localsetup/docs/PUBLIC_SKILL_REGISTRY.urls  - One URL per line; where to look for public skills.
-- _localsetup/docs/PUBLIC_SKILL_INDEX.yaml  - Index of skills for similarity; refresh from registry.
+- _localsetup/docs/PUBLIC_SKILL_INDEX.yaml  - Index of skills for similarity; refresh + scrub before use.
+- _localsetup/tools/refresh_public_skill_index.py  - Step 1 of the maintenance sequence: fetch from registries.
+- _localsetup/tools/skill_index_scrub.py  - Step 2 of the maintenance sequence: audit and fix descriptions.
 - Use with **localsetup-skill-creator** and **localsetup-skill-importer** when creating or importing.

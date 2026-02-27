@@ -1,6 +1,6 @@
 # Localsetup v2 Framework
 
-**Version:** 2.5.6  
+**Version:** 2.6.0  
 **Last updated:** 2026-02-19
 
 This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw). For first-time setup and overview, see the [root README](../../README.md). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.
@@ -106,7 +106,7 @@ See [Multi-platform install](docs/MULTI_PLATFORM_INSTALL.md) for details.
 - **Linux/macOS:** Bash (for install, deploy, and framework scripts). **Windows:** PowerShell 5.1+ or PowerShell Core (for `install.ps1` and `*.ps1` tools).
 - **Git** (for install clone/update; optional for `verify_rules`).
 - One or more platforms from the [platform registry](docs/PLATFORM_REGISTRY.md) (e.g. cursor, claude-code, codex, openclaw), selected via `--tools` / `-Tools`.
-- **Recommended (Python tooling):** For full skill validation/discovery tooling and public skill index refresh (`tools/skill_validation_scan.py`, `tools/refresh_public_skill_index.py`), use Python `>= 3.10` with module `yaml` (`PyYAML>=6.0`). Install with your preferred package manager, or run `python3 -m pip install -r _localsetup/requirements.txt`.
+- **Recommended (Python tooling):** For full skill validation/discovery tooling, public skill index refresh, and scrub (`tools/skill_validation_scan.py`, `tools/refresh_public_skill_index.py`, `tools/skill_index_scrub.py`), use Python `>= 3.10` with module `yaml` (`PyYAML>=6.0`). Install with your preferred package manager, or run `python3 -m pip install -r _localsetup/requirements.txt`.
 
 ---
 
@@ -152,6 +152,9 @@ _localsetup/
     ├── deploy                   # Write platform context + skills (Bash; on Windows delegates to .ps1)
     ├── deploy.ps1               # Same (PowerShell)
     ├── refresh_public_skill_index.py   # Refresh PUBLIC_SKILL_INDEX.yaml from registry URLs (requires PyYAML; see requirements.txt)
+    ├── skill_index_scrub.py            # Audit index for dead URLs, stub descriptions, schema gaps; --fix fetches real descriptions upstream
+    ├── tmux_terminal_mode              # Enable/disable/status tmux-default terminal mode (Bash wrapper)
+    ├── tmux_terminal_mode.py           # Main script: ide profile or shell auto-attach + agent rule injection
     ├── verify_context           # Check Cursor context file (Bash; on Windows delegates to .ps1)
     ├── verify_context.ps1       # Same (PowerShell)
     ├── verify_rules             # Check git, data_paths, skills (Bash; on Windows delegates to .ps1)
@@ -228,6 +231,8 @@ Skills are task-based instructions (SKILL.md with `name` and `description` front
 | `localsetup-skill-sandbox-tester` | Test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until user approves |
 | `localsetup-agentlens` | Codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs |
 | `localsetup-framework-audit` | Run doc/link/skill matrix/version checks; optional `--deep` (Deep Analysis); output to user path only; before release |
+| `localsetup-cloudflare-dns` | Manage Cloudflare DNS records (list, create, modify, delete) and zone surveys via flarectl |
+| `localsetup-npm-management` | Manage Nginx Proxy Manager proxy hosts via REST API; coordinate Docker + NPM deploy workflows |
 
 Skills follow the [Agent Skills](https://agentskills.io/specification) specification and are interchangeable with other spec-compliant hosts (import from URLs or local path; export framework skills for use elsewhere). See [SKILLS_AND_RULES.md](docs/SKILLS_AND_RULES.md), [PLATFORM_REGISTRY.md](docs/PLATFORM_REGISTRY.md), [SKILL_INTEROPERABILITY.md](docs/SKILL_INTEROPERABILITY.md), and [SKILL_IMPORTING.md](docs/SKILL_IMPORTING.md) for platform paths, loading behavior, and import/export.
 
@@ -244,6 +249,7 @@ Run from **client repo root** (so that `_localsetup/` is present). Tools live un
 | `verify_rules` / `verify_rules.ps1` | Check git repo, data_paths (sh/ps1), and skills directory. |
 | `skill_importer_scan` / `skill_importer_scan.ps1` | Scan a directory for Agent Skills; output per-skill brief (what it does, what it has, code types) and heuristic security flags. Use after fetching a URL or for a local path; then use skill-importer workflow to let the user select which skills to import. |
 | `tmux_ops` / `tmux_ops.py` | Tmux ops workflow: pick session (idle = prompt on current line), probe sudo (ready vs password_required), send command with 1 s delay. When REMOTE_TMUX_HOST is set, wrapper runs the Python tool over SSH. See [docs/ops/tmux-ops-remote.md](docs/ops/tmux-ops-remote.md). |
+| `tmux_terminal_mode` / `tmux_terminal_mode.py` | Toggle tmux-default terminal mode: `enable` (ide or shell layer + agent rule), `disable` (restore originals), `status` (all layers). See [docs/TMUX_TERMINAL_MODE.md](docs/TMUX_TERMINAL_MODE.md). |
 
 ---
 

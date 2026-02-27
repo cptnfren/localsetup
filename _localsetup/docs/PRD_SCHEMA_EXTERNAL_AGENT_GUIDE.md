@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.5
+version: 2.6
 ---
 
 # PRD schema and external agent guide (Localsetup v2)

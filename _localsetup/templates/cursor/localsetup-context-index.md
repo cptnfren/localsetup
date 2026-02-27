@@ -39,5 +39,7 @@
 | localsetup-framework-audit | Run doc, link, skill matrix, version/facts checks; optional --deep (Deep Analysis); output to user path only | User says "run audit", "run framework audit", or before release |
 | localsetup-system-info | Quick system diagnostics: CPU, memory, disk, uptime | Capture server baseline, host layout and specs for further operations |
 | localsetup-cron-orchestrator | Manage cron from manifest: triggers, sequenced tasks, on-boot delay | Create/remove/reorder cron tasks; install crontab fragment |
+| localsetup-cloudflare-dns | Manage Cloudflare DNS records (list, create, modify, delete) and run zone surveys via flarectl | Adding, changing, or removing DNS records; zone survey; automated DNS snapshots |
+| localsetup-npm-management | Manage Nginx Proxy Manager proxy hosts via REST API; coordinate Docker service deployments with NPM routing | Create/modify/remove NPM proxy hosts; diagnose 502s; backup/restore; Docker + NPM deploy workflows |
 
 Framework docs: _localsetup/docs/ (AGENTIC_DESIGN_INDEX.md, WORKFLOW_REGISTRY.md, PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md).

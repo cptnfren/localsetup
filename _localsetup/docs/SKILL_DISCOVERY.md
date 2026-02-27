@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.5
+version: 2.6
 ---
 
 # Skill discovery (public registries)
@@ -24,7 +24,20 @@ version: 2.5
 
 - **File:** [PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml)
 - **Schema:** `schema_version`, `sources` (optional list of URLs), `updated` (ISO8601 date or datetime of last refresh), `skills`. Each skill entry includes `name`, `description`, `url`, `source_registry`, optional `category`, and enriched metadata (`summary_short`, `summary_long`, `capabilities`, `requirements`, `risk_flags`, `quality_signals`). Used for stronger similarity matching and richer recommendation output.
-- **Refresh:** The agent or a script updates the index from the registry URLs: fetch each URL, parse the list (e.g. awesome list markdown, ClawHub API), write normalized entries to the YAML, and set `updated` to the current date/time (ISO8601). To run the refresh script locally: `python3 _localsetup/tools/refresh_public_skill_index.py` (requires Python deps in `_localsetup/requirements.txt`; run `pip install -r _localsetup/requirements.txt` first).
+- **Refresh + scrub (mandatory sequence):** The index must always go through both steps before use. Refresh fetches new entries from registries; scrub fixes the stub/placeholder descriptions that refresh inevitably produces. Run them in order:
+
+  ```
+  # Step 1: fetch from registries
+  python3 _localsetup/tools/refresh_public_skill_index.py
+
+  # Step 2: audit and fix descriptions (skip URL check for speed; add --workers 20 for parallelism)
+  python3 _localsetup/tools/skill_index_scrub.py --skip-url-check
+
+  # Step 3: apply fixes
+  python3 _localsetup/tools/skill_index_scrub.py --skip-url-check --fix
+  ```
+
+  Optional: save a report with `--report path/to/report.md`. Full URL liveness checking (omit `--skip-url-check`) is only needed before a public release or when dead link auditing is explicitly requested. See the scrub tool's `--help` for all options.
 
 ## Index refresh and user prompts
 

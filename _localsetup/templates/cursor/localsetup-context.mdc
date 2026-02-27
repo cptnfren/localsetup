@@ -72,6 +72,8 @@ Load the appropriate skill when the task matches. All skills live under .cursor/
 | localsetup-framework-audit | Run doc/link/skill matrix/version checks; optional --deep (Deep Analysis); output user-specified path only; before release |
 | localsetup-system-info | Capture server baseline, host layout and specs; CPU, memory, disk, uptime |
 | localsetup-cron-orchestrator | Manage cron from manifest; triggers, sequenced tasks, on-boot delay; create/remove/reorder/install |
+| localsetup-cloudflare-dns | Manage Cloudflare DNS records (list, create, modify, delete) and zone surveys via flarectl | Adding, changing, or removing DNS records; zone survey; DNS snapshots |
+| localsetup-npm-management | Manage Nginx Proxy Manager proxy hosts via REST API; coordinate Docker + NPM deploy workflows | Create/modify/remove NPM proxy hosts; diagnose 502s; backup/restore; Docker service deployments |
 
 ## Framework docs index
 

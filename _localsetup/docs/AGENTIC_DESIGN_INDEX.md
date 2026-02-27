@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.5
+version: 2.6
 ---
 
 # Agentic design index (Localsetup v2)
@@ -32,6 +32,7 @@ Copyright (c) 2026 Crux Experts LLC. MIT License  - see repository root [LICENSE
 | [SKILL_DISCOVERY.md](SKILL_DISCOVERY.md) | Public skill registries ([PUBLIC_SKILL_REGISTRY.urls](PUBLIC_SKILL_REGISTRY.urls), [PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml)); recommend similar when creating/importing |
 | [TASK_SKILL_MATCHING.md](TASK_SKILL_MATCHING.md) | Task-to-installed-skill matching flow: single vs batch, auto-pick/parcel, complementary public-skill suggestions |
 | [ops/tmux-ops-remote.md](ops/tmux-ops-remote.md) | Tmux ops when tmux runs on another host: REMOTE_TMUX_HOST, REMOTE_TMUX_CWD; use tmux_ops send as usual |
+| [TMUX_TERMINAL_MODE.md](TMUX_TERMINAL_MODE.md) | Tmux-default terminal mode: enable/disable/status, ide vs shell mode, flags, manual rollback, layer reference |
 
 ## Skills index (in repo)
 
@@ -45,7 +46,9 @@ Copyright (c) 2026 Crux Experts LLC. MIT License  - see repository root [LICENSE
 - **Create a new skill:** Load localsetup-skill-creator; see [SKILL_INTEROPERABILITY.md](SKILL_INTEROPERABILITY.md).
 - **Import skills from URL or path:** Load localsetup-skill-importer; run `_localsetup/tools/skill_importer_scan <path>`; see [SKILL_IMPORTING.md](SKILL_IMPORTING.md).
 - **Discover similar public skills:** Load localsetup-skill-discovery when creating or importing; uses [PUBLIC_SKILL_REGISTRY.urls](PUBLIC_SKILL_REGISTRY.urls) and [PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml); see [SKILL_DISCOVERY.md](SKILL_DISCOVERY.md).
+- **Audit and scrub the public skill index:** Run `python3 _localsetup/tools/skill_index_scrub.py` to check for dead URLs, stub/placeholder descriptions, and schema gaps. Add `--fix` to fetch real descriptions from upstream and write them back. Add `--report FILE` for a GFM report.
 - **Tmux shared session and sudo:** Load localsetup-tmux-shared-session-workflow; use tool `_localsetup/tools/tmux_ops` (pick, probe, send with 1 s delay). Skill defines sudo gate via probe (ready vs password_required); use tmux_ops send for every step. For remote/VMs: see [ops/tmux-ops-remote.md](ops/tmux-ops-remote.md) (REMOTE_TMUX_HOST). See WORKFLOW_REGISTRY.md.
+- **Tmux-default terminal mode:** Run `_localsetup/tools/tmux_terminal_mode enable [--mode ide|shell]` to wire up automatic tmux session launch (IDE terminal profile or shell RC auto-attach) and inject the mandatory agent ops rule. `disable` restores originals from backup. `status` reports all layers. See [TMUX_TERMINAL_MODE.md](TMUX_TERMINAL_MODE.md).
 - **Run framework audit:** Load localsetup-framework-audit; run from repo root with `--output /path/to/report.md` (or set `LOCALSETUP_AUDIT_OUTPUT`). Optional `--deep` runs Deep Analysis (derive invocations from SKILL.md and script `--help`, run in sandbox, summary JSON + sidecar tarball; requires output path). See [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md).
 
 ---
