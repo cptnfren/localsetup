@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-02-27T03:15:09.349029+00:00",
-  "version": "2.7.0",
-  "major_minor": "2.7",
+  "generated_at": "2026-02-27T03:40:26.228430+00:00",
+  "version": "2.8.0",
+  "major_minor": "2.8",
   "platform_count": 4,
   "skill_count": 39,
   "platforms": [
@@ -256,7 +256,7 @@
     {
       "id": "localsetup-tmux-shared-session-workflow",
       "name": "localsetup-tmux-shared-session-workflow",
-      "version": "3.3",
+      "version": "4.0",
       "path": "_localsetup/skills/localsetup-tmux-shared-session-workflow/SKILL.md"
     },
     {

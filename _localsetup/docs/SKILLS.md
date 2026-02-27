@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.7
+version: 2.8
 ---
 
 # Shipped skills catalog
@@ -48,7 +48,7 @@ Total shipped skills: 39
 | `localsetup-task-skill-matcher` | `localsetup-task-skill-matcher` | `1.1` | Match user tasks to installed Localsetup skills, recommend top matches, and run single-task or batch skill-selection flow with minimal interruption. Includes top-3 complementary public-skill suggestions and public-index refresh handling. |
 | `localsetup-tdd-guide` | `localsetup-tdd-guide` | `1.1` | Test-driven development workflow with test generation, coverage analysis, and multi-framework support |
 | `localsetup-test-runner` | `localsetup-test-runner` | `1.1` | Write and run tests across languages and frameworks (Vitest, Jest, pytest, XCTest, Playwright). TDD workflow, coverage, and test patterns. |
-| `localsetup-tmux-shared-session-workflow` | `localsetup-tmux-shared-session-workflow` | `3.3` | Server/ops in tmux; use tmux_ops tool to pick session (idle = prompt on current line) and probe sudo; run commands only in chosen session. Supports REMOTE_TMUX_HOST for VMs/remote/Docker. |
+| `localsetup-tmux-shared-session-workflow` | `localsetup-tmux-shared-session-workflow` | `4.0` | Server/ops in tmux; use tmux_ops tool to pick session (idle = prompt on current line) and probe sudo; run commands only in chosen session. Supports REMOTE_TMUX_HOST for VMs/remote/Docker. |
 | `localsetup-unfuck-my-git-state` | `localsetup-unfuck-my-git-state` | `1.2` | Diagnose and recover broken Git state and worktree metadata with a staged, low-risk recovery flow. Use when Git reports detached or contradictory HEAD state, phantom worktree locks, orphaned worktree entries, missing refs, 0000000000000000000000000000000000000000 hashes, or branch operations fail with errors like already checked out, unknown revision, not a valid object name, or cannot lock ref. |
 
 ---

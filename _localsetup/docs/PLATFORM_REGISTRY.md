@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.7
+version: 2.8
 ---
 
 # Platform registry (Localsetup v2)
