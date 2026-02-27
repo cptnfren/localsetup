@@ -528,3 +528,29 @@ Use these consistently across all workflow docs so they can be adapted to any en
 ---
 
 *Local doc. Not part of the framework repo.*
+
+---
+
+## Implementation outcome
+
+**Status:** done  
+**Completed:** 2026-02-26  
+**Implemented by:** Cursor agent (claude-4.6-sonnet-medium)  
+**Commit:** 09c1aa3 (v2.6.0)
+
+### What was built
+
+- `_localsetup/skills/localsetup-npm-management/SKILL.md` — skill entrypoint with full operation catalogue
+- `_localsetup/skills/localsetup-npm-management/scripts/npm_api.py` — native Python REST client (replaces npm-api.sh entirely)
+- `_localsetup/skills/localsetup-npm-management/scripts/test_npm_api.py` — unittest suite covering input hardening, config, token logic, CLI, and HTTP error handling
+- `_localsetup/skills/localsetup-npm-management/references/npm-api-conf-example.md` — config template with security notes
+- `_localsetup/skills/localsetup-npm-management/references/proxy-host-template.md` — full proxy host parameter reference
+
+### Deviations from PRD
+
+- **Tooling:** PRD specified `npm-api.sh` (Erreur32/nginx-proxy-manager-Bash-API). After evaluation, the upstream script was identified as a `curl`/`jq` wrapper around a REST API. Replaced entirely with a native Python client (`npm_api.py`) using only Python standard library (`urllib`, `json`, `configparser`). Eliminates Bash, curl, and jq dependencies. All PRD behaviors replicated verbatim.
+- No other deviations. All 19 spec sections implemented.
+
+### Registration
+
+Registered in localsetup-context/SKILL.md and all platform templates (Cursor, Claude Code, Codex, OpenClaw). Skill count bumped from 37 to 39 (shared count with cloudflare-dns).

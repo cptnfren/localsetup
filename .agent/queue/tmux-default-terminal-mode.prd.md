@@ -356,3 +356,40 @@ operator explicitly runs `enable`.
   detect the OS and adjust the default, or document the `--shell-rc` override clearly.
 - The `status` command must check all layers unconditionally, not just the ones that match the
   current `--mode`. A user may have enabled with one mode and be checking with another.
+
+---
+
+## Implementation outcome
+
+**Status:** done  
+**Completed:** 2026-02-27  
+**Implemented by:** Cursor agent (claude-4.6-sonnet-medium)  
+**Commit:** 09c1aa3 (v2.6.0)
+
+### What was built
+
+- `_localsetup/tools/tmux_terminal_mode.py` — main Python script; `enable`, `disable`, `status` sub-commands; `--mode ide` and `--mode shell`; atomic file writes; sentinel-wrapped blocks; backup/restore
+- `_localsetup/tools/tmux_terminal_mode` — Bash wrapper (chmod +x)
+- `_localsetup/docs/TMUX_TERMINAL_MODE.md` — user-facing reference doc
+
+### Post-implementation fix
+
+After testing, `--mode ide` was updated to auto-create `settings.json` as `{}` when the parent directory exists but the file does not (default state of a fresh Cursor Remote SSH install). Eliminates the need for manual file creation or extra flags.
+
+### Acceptance criteria
+
+All 25 acceptance criteria from the PRD verified by live smoke tests in the `ops` tmux session on SKTOP01:
+- `status` reports all layers correctly before and after enable/disable
+- `enable --mode shell` backs up `.bashrc`, appends sentinel block, injects agent rule
+- `enable --mode ide` auto-creates `settings.json` when missing, writes terminal profile and default
+- `disable` restores from backup for both layers
+- Idempotency confirmed (running enable twice is safe)
+- `--dry-run` makes no file writes
+
+### Deviations from PRD
+
+None. All spec sections and acceptance criteria implemented as written.
+
+### Documentation updates
+
+Registered in FEATURES.md, WORKFLOW_REGISTRY.md, AGENTIC_DESIGN_INDEX.md, _localsetup/README.md, and CHANGELOG-2.5.6.md.

@@ -414,3 +414,28 @@ The skill's `SKILL.md` (or equivalent entrypoint) should:
 ---
 
 *Local doc. Not part of the framework repo.*
+
+---
+
+## Implementation outcome
+
+**Status:** done  
+**Completed:** 2026-02-26  
+**Implemented by:** Cursor agent (claude-4.6-sonnet-medium)  
+**Commit:** 09c1aa3 (v2.6.0)
+
+### What was built
+
+- `_localsetup/skills/localsetup-cloudflare-dns/SKILL.md` — skill entrypoint with full operation catalogue
+- `_localsetup/skills/localsetup-cloudflare-dns/references/flarectl-install.md` — flarectl installation guide
+- `_localsetup/skills/localsetup-cloudflare-dns/references/api-token-setup.md` — Cloudflare API token setup guide
+- `_localsetup/skills/localsetup-cloudflare-dns/references/survey-schema.md` — zone survey output schema
+
+### Deviations from PRD
+
+- **Tooling:** PRD specified a Bash wrapper (`cf-dns.sh`). Framework Python-first policy took precedence; implemented as a Python wrapper (`cf_dns.py`) around `flarectl`. All PRD behaviors replicated verbatim.
+- No other deviations. All 16 spec sections implemented.
+
+### Registration
+
+Registered in localsetup-context/SKILL.md and all platform templates (Cursor, Claude Code, Codex, OpenClaw). Skill count bumped from 37 to 39.
