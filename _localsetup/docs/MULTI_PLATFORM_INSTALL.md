@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.6
+version: 2.7
 ---
 
 # Multi-platform install (Localsetup v2)

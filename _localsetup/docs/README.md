@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.6
+version: 2.7
 ---
 
 # 📚 Framework docs index
@@ -10,7 +10,7 @@ This is the public documentation index for Localsetup v2. Use it to navigate fra
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.6.0`
+- Current version: `2.7.0`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `39`
 - Source: `_localsetup/docs/_generated/facts.json`
