@@ -3,7 +3,8 @@ Purpose: Native Python client for Nginx Proxy Manager REST API.
          Replaces the upstream npm-api.sh Bash script entirely.
          No shell, curl, or jq dependencies required.
 Created: 2026-02-26
-Last Updated: 2026-02-26
+Last Updated: 2026-02-27
+Requires: requests (see _localsetup/requirements.txt)
 
 Usage:
     python3 npm_api.py --info
@@ -33,7 +34,14 @@ from configparser import ConfigParser
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from urllib import request, error as urllib_error
+
+# Resolve _localsetup/lib/ from skills/localsetup-npm-management/scripts/
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "lib"))
+from deps import require_deps  # noqa: E402
+
+require_deps(["requests"])
+
+import requests  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -187,6 +195,8 @@ class NPMClient:
     def __init__(self, config: Config) -> None:
         self.cfg = config
         self._token: str | None = None
+        self._session = requests.Session()
+        self._session.headers.update({"Accept": "application/json"})
 
     # --- Token management ---------------------------------------------------
 
@@ -226,13 +236,12 @@ class NPMClient:
     def _refresh_token(self) -> None:
         """Obtain a new bearer token from NPM and cache it."""
         _debug("Requesting new API token")
-        payload = json.dumps({
+
+        # Step 1: short-lived token (no auth header)
+        resp = self._raw_request("POST", "/tokens", {
             "identity": self.cfg.api_user,
             "secret":   self.cfg.api_pass,
-        }).encode()
-
-        # Step 1: short-lived token
-        resp = self._raw_request("POST", "/tokens", payload, auth=False)
+        }, auth=False)
         short_token = resp.get("token")
         if not short_token:
             _die(
@@ -252,13 +261,14 @@ class NPMClient:
         if not token or not expiry:
             _die("Failed to obtain long-lived token from NPM")
 
-        # Persist
+        # Persist token files, then update session Authorization header
         self.cfg.token_dir.mkdir(parents=True, mode=0o700, exist_ok=True)
         self.cfg.token_file.write_text(token, encoding="utf-8")
         self.cfg.expiry_file.write_text(expiry, encoding="utf-8")
         os.chmod(self.cfg.token_file, 0o600)
         os.chmod(self.cfg.expiry_file, 0o600)
         self._token = token
+        self._session.headers.update({"Authorization": f"Bearer {token}"})
         _debug(f"Token cached; expires {expiry}")
 
     # --- Core HTTP ----------------------------------------------------------
@@ -267,63 +277,76 @@ class NPMClient:
         self,
         method: str,
         path: str,
-        body: bytes | None = None,
+        body: dict | None = None,
         auth: bool = True,
         auth_token: str | None = None,
     ) -> Any:
         """
-        Execute a single HTTP request. Returns parsed JSON body on success.
-        Raises SystemExit on HTTP or network errors.
+        Execute a single HTTP request using the shared session.
+        Returns parsed JSON body on success. Raises SystemExit on errors.
         """
         url = self.cfg.base_url + path
-        headers: dict[str, str] = {"Accept": "application/json"}
-        if body is not None:
-            headers["Content-Type"] = "application/json; charset=UTF-8"
-        token = auth_token or (self._token if auth else None)
-        if token:
-            headers["Authorization"] = f"Bearer {token}"
-
         _debug(f"{method} {url}")
-        req = request.Request(url, data=body, headers=headers, method=method)
+
+        # Override Authorization for this single call when auth_token is given
+        # (used during token bootstrap before the session header is set).
+        headers: dict[str, str] = {}
+        if auth_token:
+            headers["Authorization"] = f"Bearer {auth_token}"
+        elif not auth:
+            # Temporarily strip Authorization for unauthenticated calls
+            headers["Authorization"] = ""
+
         try:
-            with request.urlopen(req, timeout=CONNECT_TIMEOUT + READ_TIMEOUT) as resp:
-                raw = resp.read()
-        except urllib_error.HTTPError as exc:
-            raw = exc.read()
-            status = exc.code
-            body_text = raw.decode("utf-8", errors="replace")
-            # Try to extract NPM's structured error message
-            try:
-                err_json = json.loads(body_text)
-                msg = err_json.get("error", {}).get("message") or err_json.get("message") or body_text
-            except (json.JSONDecodeError, AttributeError):
-                msg = body_text
+            resp = self._session.request(
+                method,
+                url,
+                json=body,
+                headers={k: v for k, v in headers.items() if v} or None,
+                timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
+            )
+            resp.raise_for_status()
+        except requests.HTTPError as exc:
+            status = exc.response.status_code if exc.response is not None else 0
+            # Extract NPM's structured error message (behavioral parity)
+            msg = ""
+            if exc.response is not None:
+                try:
+                    err_json = exc.response.json()
+                    msg = (
+                        err_json.get("error", {}).get("message")
+                        or err_json.get("message")
+                        or exc.response.text
+                    )
+                except Exception:
+                    msg = exc.response.text
             _die(
                 f"HTTP {status} from {method} {url}\n"
                 f"  {msg}\n"
                 "  Check NPM admin credentials and that the API is reachable."
             )
-        except urllib_error.URLError as exc:
+        except requests.ConnectionError as exc:
             _die(
-                f"Network error reaching {url}: {exc.reason}\n"
+                f"Network error reaching {url}: {exc}\n"
                 f"  Verify NGINX_IP={self.cfg.nginx_ip} and NGINX_PORT={self.cfg.nginx_port}."
             )
+        except requests.RequestException as exc:
+            _die(f"Request failed for {method} {url}: {exc}")
 
-        if not raw:
+        if not resp.content:
             return {}
         try:
-            return json.loads(raw.decode("utf-8", errors="replace"))
-        except json.JSONDecodeError as exc:
+            return resp.json()
+        except Exception as exc:
             _die(
                 f"Invalid JSON response from {method} {url}: {exc}\n"
-                f"  Raw (first 200 chars): {raw[:200]!r}"
+                f"  Raw (first 200 chars): {resp.text[:200]!r}"
             )
 
     def request(self, method: str, path: str, body: dict | None = None) -> Any:
         """Authenticated request with automatic token refresh."""
         token = self._ensure_token()
-        payload = json.dumps(body).encode() if body is not None else None
-        return self._raw_request(method, path, payload, auth_token=token)
+        return self._raw_request(method, path, body, auth_token=token)
 
     # --- Connectivity check --------------------------------------------------
 

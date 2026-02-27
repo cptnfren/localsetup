@@ -48,6 +48,7 @@ FRAMEWORK_DIRNAME="_localsetup"
 TARGET_DIR=""
 TOOLS_CSV=""
 NONINTERACTIVE=false
+INSTALL_DEPS=false
 MIN_GIT_VERSION="2.20.0"
 MIN_PYTHON_VERSION="3.10.0"
 UPGRADE_POLICY="preserve"
@@ -69,6 +70,8 @@ Options:
   --tools LIST       Comma-separated tools (required with --yes). See below.
   --yes              Non-interactive; no prompts. Requires --tools.
   --upgrade-policy   preserve | force | fail-on-conflict (default: preserve)
+  --install-deps     Automatically install missing Python packages via pip after deploy.
+                     Without this flag, missing deps are reported but install still completes.
   --help, -h         Print this help and exit.
 
 Tools (valid values for --tools):
@@ -123,7 +126,9 @@ preflight_checks() {
   local rg_status="MISSING (required for install manifest build on Linux/macOS)"
   local python_status="MISSING (recommended for Python-first framework tooling)"
   local pip_status="MISSING (recommended to install _localsetup/requirements.txt)"
-  local pyyaml_status="MISSING (recommended for Python-first framework tooling)"
+  local pyyaml_status="MISSING (python module 'yaml')"
+  local requests_status="MISSING (python module 'requests')"
+  local frontmatter_status="MISSING (python module 'frontmatter')"
   local git_version=""
   local python_bin=""
   local python_version=""
@@ -175,6 +180,26 @@ PY
       recommend_fail=1
     fi
 
+    if "$python_bin" - <<'PY' >/dev/null 2>&1
+import requests
+PY
+    then
+      requests_status="OK (import requests)"
+    else
+      requests_status="MISSING (python module 'requests')"
+      recommend_fail=1
+    fi
+
+    if "$python_bin" - <<'PY' >/dev/null 2>&1
+import frontmatter
+PY
+    then
+      frontmatter_status="OK (import frontmatter)"
+    else
+      frontmatter_status="MISSING (python module 'frontmatter')"
+      recommend_fail=1
+    fi
+
     if command -v pip3 >/dev/null 2>&1 || command -v pip >/dev/null 2>&1; then
       pip_status="OK"
     else
@@ -190,6 +215,8 @@ PY
   echo "    - python: $python_status"
   echo "    - pip: $pip_status"
   echo "    - pyyaml module: $pyyaml_status"
+  echo "    - requests module: $requests_status"
+  echo "    - frontmatter module: $frontmatter_status"
 
   if [[ "$required_fail" -ne 0 ]]; then
     echo
@@ -216,6 +243,7 @@ PY
     echo
     echo "Notice: install can continue, but some skill tooling may fail until recommended dependencies are installed."
     echo "Python packages: install with  python3 -m pip install -r _localsetup/requirements.txt  (after clone)."
+    echo "Or re-run install with --install-deps to have this script install them automatically."
     case "$(uname -s 2>/dev/null || true)" in
       Linux)
         echo "System packages:"
@@ -224,7 +252,7 @@ PY
         echo "  Arch:          sudo pacman -S --needed python python-pip python-yaml"
         ;;
       Darwin)
-        echo "  Homebrew: brew install python pyyaml  (pip ships with python)"
+        echo "  Homebrew: brew install python  (pip ships with python)"
         ;;
       *)
         echo "  python3 -m pip install -r _localsetup/requirements.txt"
@@ -251,6 +279,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --yes)
       NONINTERACTIVE=true
+      shift
+      ;;
+    --install-deps)
+      INSTALL_DEPS=true
       shift
       ;;
     --upgrade-policy)
@@ -652,3 +684,53 @@ else
 fi
 
 echo "Done. Framework at $FRAMEWORK_DIR; platform files written to $TARGET_DIR."
+
+# --- Python dependency notice / auto-install ---
+# Determine python binary (reuse same logic as preflight)
+_PYTHON_BIN=""
+if command -v python3 >/dev/null 2>&1; then
+  _PYTHON_BIN="python3"
+elif command -v python >/dev/null 2>&1; then
+  _PYTHON_BIN="python"
+fi
+
+_SENTINEL="$FRAMEWORK_DIR/.deps-missing"
+_REQUIREMENTS="$FRAMEWORK_DIR/requirements.txt"
+
+if [[ -n "$_PYTHON_BIN" ]]; then
+  _missing_pkgs=()
+  for _pkg_check in "yaml:PyYAML" "requests:requests" "frontmatter:python-frontmatter"; do
+    _import="${_pkg_check%%:*}"
+    _pip="${_pkg_check##*:}"
+    if ! "$_PYTHON_BIN" - <<PY >/dev/null 2>&1
+import $_import
+PY
+    then
+      _missing_pkgs+=("$_pip")
+    fi
+  done
+
+  if [[ "${#_missing_pkgs[@]}" -gt 0 ]]; then
+    if $INSTALL_DEPS; then
+      echo "Installing missing Python packages: ${_missing_pkgs[*]}"
+      "$_PYTHON_BIN" -m pip install "${_missing_pkgs[@]}"
+      # Clear sentinel if it existed from a previous run
+      rm -f "$_SENTINEL"
+    else
+      # Write sentinel as a notice-only file for tooling to advise users
+      # Tools NEVER read this file as a gate; they always do live import checks.
+      printf '%s\n' "${_missing_pkgs[@]}" > "$_SENTINEL"
+      echo
+      echo "Notice: The following Python packages are not installed: ${_missing_pkgs[*]}"
+      echo "  Some framework tools will not work until they are installed."
+      echo "  Install manually: $_PYTHON_BIN -m pip install ${_missing_pkgs[*]}"
+      if [[ -f "$_REQUIREMENTS" ]]; then
+        echo "  Or install all at once: $_PYTHON_BIN -m pip install -r $FRAMEWORK_DIR/requirements.txt"
+      fi
+      echo "  Re-run install with --install-deps to install automatically."
+    fi
+  else
+    # All packages present; clear any stale sentinel from a prior run
+    rm -f "$_SENTINEL"
+  fi
+fi

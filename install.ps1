@@ -15,6 +15,10 @@
 .PARAMETER Yes
     Non-interactive mode. Requires -Tools. No prompts.
 
+.PARAMETER InstallDeps
+    Automatically install missing Python packages via pip after deploy.
+    Without this switch, missing deps are reported but install still completes.
+
 .PARAMETER Help
     Display this help and exit. Also: -? or -h.
 
@@ -34,6 +38,7 @@ param(
     [ValidateSet('preserve', 'force', 'fail-on-conflict')]
     [string]$UpgradePolicy = 'preserve',
     [switch]$Yes,
+    [switch]$InstallDeps,
     [switch]$Help
 )
 
@@ -43,7 +48,8 @@ if ($args.Count -gt 0) {
         switch ($args[$i]) {
             '--directory' { if ($i + 1 -lt $args.Count) { $Directory = $args[$i + 1]; $i++ } }
             '--tools'     { if ($i + 1 -lt $args.Count) { $Tools = $args[$i + 1]; $i++ } }
-            '--yes'       { $Yes = $true }
+            '--yes'          { $Yes = $true }
+            '--install-deps' { $InstallDeps = $true }
             '--upgrade-policy' { if ($i + 1 -lt $args.Count) { $UpgradePolicy = $args[$i + 1]; $i++ } }
             '--help' { $Help = $true }
             '-h'     { $Help = $true }
@@ -71,6 +77,8 @@ Parameters:
   -Tools LIST       Comma-separated: cursor, claude-code, codex, openclaw (required with -Yes)
   -Yes              Non-interactive; no prompts
   -UpgradePolicy    preserve | force | fail-on-conflict (default: preserve)
+  -InstallDeps      Automatically install missing Python packages via pip after deploy.
+                    Without this flag, missing deps are reported but install still completes.
   -Help, -?, -h     Show this help and exit
 
 Tools (use with -Tools):
@@ -123,6 +131,8 @@ function Run-PreflightChecks {
     $pythonStatus = 'MISSING (recommended for Python-first framework tooling)'
     $pipStatus = 'MISSING (recommended to install _localsetup\requirements.txt)'
     $pyyamlStatus = "MISSING (python module 'yaml')"
+    $requestsStatus = "MISSING (python module 'requests')"
+    $frontmatterStatus = "MISSING (python module 'frontmatter')"
 
     $gitCmd = Get-ToolVersion -ToolName 'git'
     if ($gitCmd) {
@@ -173,6 +183,22 @@ function Run-PreflightChecks {
                 $recommendFail = $true
             }
 
+            $null = & $pythonCmd.Source -c "import requests" 2>$null
+            if ($LASTEXITCODE -eq 0) {
+                $requestsStatus = 'OK (import requests)'
+            } else {
+                $requestsStatus = "MISSING (python module 'requests')"
+                $recommendFail = $true
+            }
+
+            $null = & $pythonCmd.Source -c "import frontmatter" 2>$null
+            if ($LASTEXITCODE -eq 0) {
+                $frontmatterStatus = 'OK (import frontmatter)'
+            } else {
+                $frontmatterStatus = "MISSING (python module 'frontmatter')"
+                $recommendFail = $true
+            }
+
             $pipCmd = Get-ToolVersion -ToolName 'pip'
             if (-not $pipCmd) { $pipCmd = Get-ToolVersion -ToolName 'pip3' }
             if ($pipCmd) {
@@ -193,6 +219,8 @@ function Run-PreflightChecks {
     Write-Host "    - python: $pythonStatus"
     Write-Host "    - pip: $pipStatus"
     Write-Host "    - pyyaml module: $pyyamlStatus"
+    Write-Host "    - requests module: $requestsStatus"
+    Write-Host "    - frontmatter module: $frontmatterStatus"
 
     if ($requiredFail) {
         Write-Host ''
@@ -208,6 +236,7 @@ function Run-PreflightChecks {
         Write-Host '  winget install Python.Python.3.12'
         Write-Host '  py -m pip install -r _localsetup\requirements.txt'
         Write-Host '  python -m pip install -r _localsetup\requirements.txt'
+        Write-Host '  Or re-run install with -InstallDeps to install them automatically.'
         Write-Host 'Ripgrep (rg): winget install BurntSushi.Ripgrep.MSVC'
     }
 }
@@ -523,3 +552,54 @@ try {
 }
 
 Write-Host "Done. Framework at $FrameworkDir; platform files written to $TargetDir."
+
+# --- Python dependency notice / auto-install ---
+# .deps-missing is written as a notice-only sentinel.
+# Tools NEVER read this file as a gate; they always perform live import checks.
+$_pythonCmd = Get-ToolVersion -ToolName 'python3'
+if (-not $_pythonCmd) { $_pythonCmd = Get-ToolVersion -ToolName 'python' }
+
+$_sentinelPath = Join-Path $FrameworkDir '.deps-missing'
+$_requirementsPath = Join-Path $FrameworkDir 'requirements.txt'
+
+if ($_pythonCmd) {
+    $_missingPkgs = @()
+    $pkgMap = @(
+        @{ Import = 'yaml';        Pip = 'PyYAML' },
+        @{ Import = 'requests';    Pip = 'requests' },
+        @{ Import = 'frontmatter'; Pip = 'python-frontmatter' }
+    )
+    foreach ($entry in $pkgMap) {
+        $null = & $_pythonCmd.Source -c "import $($entry.Import)" 2>$null
+        if ($LASTEXITCODE -ne 0) {
+            $_missingPkgs += $entry.Pip
+        }
+    }
+
+    if ($_missingPkgs.Count -gt 0) {
+        if ($InstallDeps) {
+            Write-Host "Installing missing Python packages: $($_missingPkgs -join ', ')"
+            & $_pythonCmd.Source -m pip install $_missingPkgs
+            # Clear any stale sentinel from a previous run
+            if (Test-Path -LiteralPath $_sentinelPath) {
+                Remove-Item -LiteralPath $_sentinelPath -Force
+            }
+        } else {
+            # Write sentinel as notice-only; tools do live import checks and never read this.
+            $_missingPkgs | Set-Content -LiteralPath $_sentinelPath -Encoding UTF8
+            Write-Host ''
+            Write-Host "Notice: The following Python packages are not installed: $($_missingPkgs -join ', ')" -ForegroundColor Yellow
+            Write-Host '  Some framework tools will not work until they are installed.' -ForegroundColor Yellow
+            Write-Host "  Install manually: $($_pythonCmd.Source) -m pip install $($_missingPkgs -join ' ')" -ForegroundColor Yellow
+            if (Test-Path -LiteralPath $_requirementsPath) {
+                Write-Host "  Or install all at once: $($_pythonCmd.Source) -m pip install -r $_requirementsPath" -ForegroundColor Yellow
+            }
+            Write-Host '  Re-run install with -InstallDeps to install automatically.' -ForegroundColor Yellow
+        }
+    } else {
+        # All packages present; clear any stale sentinel from a prior run
+        if (Test-Path -LiteralPath $_sentinelPath) {
+            Remove-Item -LiteralPath $_sentinelPath -Force
+        }
+    }
+}

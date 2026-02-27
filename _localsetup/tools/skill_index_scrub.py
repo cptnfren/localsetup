@@ -3,6 +3,7 @@
 #          Optionally fetch real descriptions from upstream SKILL.md/README.md and write fixes.
 # Created: 2026-02-27
 # Last Updated: 2026-02-27
+# Requires: PyYAML, requests, python-frontmatter (see _localsetup/requirements.txt)
 
 """
 Usage:
@@ -31,24 +32,24 @@ Exit codes:
 
 import argparse
 import concurrent.futures
-import json
 import os
 import re
 import sys
 import time
 import traceback
-import urllib.error
-import urllib.parse
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-try:
-    import yaml
-except ImportError:
-    print("[FATAL] PyYAML is required: pip install pyyaml", file=sys.stderr)
-    sys.exit(2)
+# Resolve lib/ relative to this tool (tools/ -> lib/)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
+from deps import require_deps  # noqa: E402
+
+require_deps(["yaml", "requests", "frontmatter"])
+
+import frontmatter  # noqa: E402
+import requests  # noqa: E402
+import yaml  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -143,107 +144,81 @@ def _raw_skill_candidates(tree_url: str) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
-# HTTP fetch
+# HTTP session
 # ---------------------------------------------------------------------------
 
-def _http_request(url: str, method: str = "GET", timeout: int = DEFAULT_TIMEOUT) -> tuple[int, str]:
-    """
-    Returns (status_code, body_text). On network error returns (0, error_message).
-    Never raises.
-    """
-    try:
-        req = urllib.request.Request(
-            url,
-            method=method,
-            headers={"User-Agent": f"localsetup-{TOOL_NAME}/{TOOL_VERSION}"},
-        )
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            body = resp.read().decode("utf-8", errors="replace") if method == "GET" else ""
-            return resp.status, body
-    except urllib.error.HTTPError as e:
-        return e.code, ""
-    except Exception as e:
-        _debug(f"{method} {url} => network error: {e}")
-        return 0, str(e)
+def _make_session() -> requests.Session:
+    sess = requests.Session()
+    sess.headers["User-Agent"] = f"localsetup-{TOOL_NAME}/{TOOL_VERSION}"
+    return sess
 
+
+_SESSION: Optional[requests.Session] = None
+
+
+def _session() -> requests.Session:
+    global _SESSION
+    if _SESSION is None:
+        _SESSION = _make_session()
+    return _SESSION
+
+
+# ---------------------------------------------------------------------------
+# HTTP fetch
+# ---------------------------------------------------------------------------
 
 def check_url_liveness(url: str, timeout: int = DEFAULT_TIMEOUT) -> tuple[bool, int]:
     """
     Returns (is_live, status_code).
-    Tries HEAD first; falls back to GET if HEAD returns 405 or 0.
+    Tries HEAD first; falls back to GET if HEAD returns 405.
     """
-    status, _ = _http_request(url, method="HEAD", timeout=timeout)
-    if status == 0 or status == 405:
-        status, _ = _http_request(url, method="GET", timeout=timeout)
+    sess = _session()
+    try:
+        resp = sess.head(url, timeout=timeout, allow_redirects=True)
+        status = resp.status_code
+        if status == 405:
+            resp = sess.get(url, timeout=timeout, allow_redirects=True)
+            status = resp.status_code
+    except requests.RequestException as exc:
+        _debug(f"HEAD {url} => network error: {exc}")
+        return False, 0
     live = 200 <= status < 400
     return live, status
+
+
+def _fetch_text(url: str, timeout: int = DEFAULT_TIMEOUT) -> tuple[int, str]:
+    """GET url; returns (status_code, body). On network error returns (0, '')."""
+    sess = _session()
+    try:
+        resp = sess.get(url, timeout=timeout, allow_redirects=True)
+        return resp.status_code, resp.text
+    except requests.RequestException as exc:
+        _debug(f"GET {url} => network error: {exc}")
+        return 0, ""
 
 
 # ---------------------------------------------------------------------------
 # Description extraction from upstream content
 # ---------------------------------------------------------------------------
 
-def _extract_from_frontmatter(text: str) -> Optional[str]:
-    """Pull description: field from YAML frontmatter."""
-    m = re.search(r"^description:\s*['\"]?(.+?)['\"]?\s*$", text, re.MULTILINE | re.IGNORECASE)
-    if m:
-        d = m.group(1).strip().strip("\"'")
-        if len(d) > 15:
-            return d[:MAX_DESC_LEN]
-    return None
-
-
-def _extract_after_h1(text: str) -> Optional[str]:
-    """Find the first H1 heading and return the next substantive paragraph."""
-    lines = text.splitlines()
-    fm_depth = 0
-    for i, line in enumerate(lines):
-        stripped = line.strip()
-        if stripped == "---":
-            fm_depth += 1
-            continue
-        # Skip inside frontmatter (between first and second ---)
-        if fm_depth == 1:
-            continue
-        if stripped.startswith("# "):
-            # Scan forward for substantive content
-            for j in range(i + 1, min(i + 10, len(lines))):
-                candidate = lines[j].strip()
-                if not candidate or candidate.startswith("#") or candidate == "---":
-                    continue
-                # Strip markdown formatting
-                candidate = re.sub(r"\*{1,3}([^*]+)\*{1,3}", r"\1", candidate)
-                candidate = re.sub(r"`([^`]+)`", r"\1", candidate)
-                candidate = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", candidate)
-                candidate = _sanitize(candidate)
-                if len(candidate) > 20:
-                    return candidate[:MAX_DESC_LEN]
-    return None
-
-
-def _extract_first_paragraph(text: str) -> Optional[str]:
-    """Return the first substantive paragraph that doesn't look like metadata."""
-    skip_prefixes = ("---", "#", "name:", "description:", "version:", "status:", "id:", "<!--")
-    paragraphs = re.split(r"\n\s*\n", text)
-    for p in paragraphs:
-        p = p.strip()
-        if not p:
-            continue
-        if any(p.startswith(pfx) for pfx in skip_prefixes):
-            continue
-        p_clean = re.sub(r"[#*`>\[\]|]", "", p)
-        p_clean = _sanitize(p_clean)
-        if len(p_clean) > 25:
-            return p_clean[:MAX_DESC_LEN]
-    return None
-
-
 def extract_description_from_content(text: str) -> Optional[str]:
-    """Try multiple extraction strategies in priority order."""
-    for strategy in (_extract_from_frontmatter, _extract_after_h1, _extract_first_paragraph):
-        result = strategy(text)
-        if result and len(result) > 15:
-            return result
+    """
+    Parse frontmatter with python-frontmatter; use description field if present
+    and long enough, otherwise fall back to the first substantive paragraph of
+    the body content.
+    """
+    try:
+        post = frontmatter.loads(text)
+        desc = (post.metadata.get("description") or "").strip()
+        if len(desc) > 15:
+            return desc[:MAX_DESC_LEN]
+        for para in re.split(r"\n\s*\n", post.content):
+            clean = re.sub(r"[#*`>\[\]|]", "", para).strip()
+            clean = _sanitize(clean)
+            if len(clean) > 25:
+                return clean[:MAX_DESC_LEN]
+    except Exception:
+        pass
     return None
 
 
@@ -255,7 +230,7 @@ def fetch_upstream_description(skill_url: str, timeout: int = DEFAULT_TIMEOUT) -
     candidates = _raw_skill_candidates(skill_url)
     for raw_url in candidates:
         _debug(f"Trying upstream: {raw_url}")
-        status, body = _http_request(raw_url, method="GET", timeout=timeout)
+        status, body = _fetch_text(raw_url, timeout=timeout)
         if status == 200 and len(body) > 50:
             desc = extract_description_from_content(body)
             if desc:

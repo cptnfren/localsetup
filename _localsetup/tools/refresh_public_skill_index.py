@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # Purpose: Refresh PUBLIC_SKILL_INDEX.yaml from PUBLIC_SKILL_REGISTRY.urls.
 # Created: 2026-02-18
-# Last updated: 2026-02-18
+# Last Updated: 2026-02-27
+# Requires: PyYAML, requests (see _localsetup/requirements.txt)
 
 """
 Fetches each registry URL, parses skill entries (awesome-list markdown or
@@ -13,16 +14,22 @@ import re
 import sys
 import os
 import traceback
-import urllib.request
 import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
 
-try:
-    import yaml
-except ImportError:
-    print("PyYAML required: pip install pyyaml", file=sys.stderr)
-    sys.exit(1)
+# Resolve lib/ relative to this tool (tools/ -> lib/)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
+from deps import require_deps  # noqa: E402
+
+require_deps(["yaml", "requests"])
+
+import requests  # noqa: E402
+import yaml  # noqa: E402
+
+# Module-level session shared by all fetch operations in this process.
+_SESSION = requests.Session()
+_SESSION.headers["User-Agent"] = "Localsetup-Skill-Index/1.0"
 
 # Awesome list: - [name](url) - description
 AWESOME_LINE = re.compile(r"^\s*-\s*\[([^\]]+)\]\(([^)]+)\)\s*-\s*(.+)$")
@@ -64,15 +71,18 @@ RISK_HINTS = {
 
 
 def fetch_text(url: str) -> str:
-    req = urllib.request.Request(url, headers={"User-Agent": "Localsetup-Skill-Index/1.0"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return r.read().decode("utf-8", errors="replace")
+    try:
+        resp = _SESSION.get(url, timeout=60)
+        resp.raise_for_status()
+        return resp.text
+    except requests.RequestException as exc:
+        raise OSError(f"HTTP fetch failed for {url}: {exc}") from exc
 
 
 def fetch_json(url: str):
-    import json
     text = fetch_text(url)
     try:
+        import json
         return json.loads(text)
     except Exception as exc:
         raise ValueError(f"Invalid JSON payload from {url}: {exc}") from exc
