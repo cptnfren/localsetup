@@ -1,6 +1,6 @@
 # Localsetup v2 Framework
 
-**Version:** 2.8.0  
+**Version:** 2.9.0  
 **Last updated:** 2026-02-19
 
 This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw). For first-time setup and overview, see the [root README](../../README.md). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.
@@ -37,7 +37,8 @@ Localsetup v2 provides:
 
 - **One always-loaded context** per supported platform (canonical list: [docs/PLATFORM_REGISTRY.md](docs/PLATFORM_REGISTRY.md)) with invariants, skills index, and docs index.
 - **Skills** (task-based instructions) that agents load when the task matches -e.g. decision tree, PRD batch, safety, tmux, versioning, publishing. Create new skills from workflows or docs (skill-creator); import external skills from a URL or path with validation and security screening (skill-importer). Skills are [Agent Skills](https://agentskills.io/specification)–compliant and interchangeable with other spec-compliant hosts.
-- **Named workflows** (decision tree, Agent Q queue, umbrella workflow, manual/lazy admin) with impact review where required.
+- **Named workflows and quick reference**: decision tree, Agent Q queue, umbrella workflow, guarded/manual ops, tmux terminal mode, and more, all indexed with Workflow IDs, display names, and aliases in [docs/WORKFLOW_REGISTRY.md](docs/WORKFLOW_REGISTRY.md), with an agent-facing quick reference and composite pipelines in [docs/WORKFLOW_QUICK_REF.md](docs/WORKFLOW_QUICK_REF.md).
+- **Bidirectional Agent Q + PRD integration**: PRD schema, queue pattern, and agent-to-agent protocol are wired together. See [docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md](docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md) for PRD shape and outcome blocks, [docs/AGENTIC_AGENT_Q_PATTERN.md](docs/AGENTIC_AGENT_Q_PATTERN.md) for queue layout, and [docs/AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](docs/AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) plus [docs/AGENTIC_AGENT_Q_SCENARIOS.md](docs/AGENTIC_AGENT_Q_SCENARIOS.md) for transport behavior.
 - **Repo-local everything**: engine at `_localsetup/`, user/context data under the repo; [git traceability](docs/GIT_TRACEABILITY.md) for PRDs, specs, and outcomes so operations stay transparent and auditable.
 
 After installation, the client repo contains `_localsetup/` (this framework plus docs) and platform-specific paths at repo root (e.g. `.cursor/rules/`, `.cursor/skills/` for Cursor). Version displayed in READMEs and framework docs is kept in sync with the repo **VERSION** file; release and publish are maintained in a separate maintainer repository.

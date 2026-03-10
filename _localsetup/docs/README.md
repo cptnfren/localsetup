@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.8
+version: 2.9
 ---
 
 # 📚 Framework docs index
@@ -10,7 +10,7 @@ This is the public documentation index for Localsetup v2. Use it to navigate fra
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.8.0`
+- Current version: `2.9.0`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `41`
 - Source: `_localsetup/docs/_generated/facts.json`
@@ -39,9 +39,10 @@ How agentic workflows operate inside this framework.
 | Page | What it covers |
 |---|---|
 | [Agentic design index](AGENTIC_DESIGN_INDEX.md) | Index of agentic design documents |
-| [Workflow registry](WORKFLOW_REGISTRY.md) | Named workflows, when to use them, impact review expectations |
+| [Workflow registry](WORKFLOW_REGISTRY.md) | Named workflows, when to use them, Workflow IDs and aliases, impact review expectations |
+| [Workflow quick reference](WORKFLOW_QUICK_REF.md) | Agent-facing workflow IDs, names, aliases, common-phrase mapping, and composite pipelines (PR feedback loop, git repair and hygiene, server triage and patch, repo polish) |
 | [Decision tree workflow](DECISION_TREE_WORKFLOW.md) | Reverse-prompt process: one question, four options, preferred + rationale |
-| [PRD schema and external agent guide](PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md) | Spec format for PRDs and outcome template |
+| [PRD schema and external agent guide](PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md) | Spec format for PRDs, outcome template, and how PRDs interact with bidirectional Agent Q |
 | [Git traceability](GIT_TRACEABILITY.md) | Linking PRDs, specs, and outcomes to git commits |
 | [Tmux ops (remote)](ops/tmux-ops-remote.md) | Use tmux_ops when tmux runs on another host (REMOTE_TMUX_HOST, REMOTE_TMUX_CWD) |
 
@@ -53,10 +54,10 @@ Agent-to-agent PRD exchange over file_drop or mail; OpenPGP sealed blobs; regist
 
 | Page | What it covers |
 |---|---|
-| [Agent-to-agent protocol](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) | Principles, flows, pre-ship, version stamp |
-| [Agent Q scenarios](AGENTIC_AGENT_Q_SCENARIOS.md) | Same machine / different repos, local vs remote, mail vs file_drop, agent decision guide |
-| [Agent Q build spec](AGENTIC_AGENT_Q_BIDIRECTIONAL_BUILD_SPEC.md) | Build order, Part 19 backlog |
-| [Agent Q pattern](AGENTIC_AGENT_Q_PATTERN.md) | Queue layout inbox/in/out/pending/archive |
+| [Agent-to-agent protocol](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) | Principles, flows, pre-ship, version stamp, and how transport interprets PRD fields like `ack_required`, `delivery`, `deliverable`, `conversation_id`, `iteration` |
+| [Agent Q scenarios](AGENTIC_AGENT_Q_SCENARIOS.md) | Same machine / different repos, local vs remote, mail vs file_drop, agent decision guide, and how transports behave across deployments |
+| [Agent Q build spec](AGENTIC_AGENT_Q_BIDIRECTIONAL_BUILD_SPEC.md) | Implementation build order and backlog for the transport client (Part 19 backlog; see DEFERRED.md) |
+| [Agent Q pattern](AGENTIC_AGENT_Q_PATTERN.md) | Queue layout inbox/in/out/pending/archive and how the batch walks PRDs on disk |
 | Client [USER_GUIDE](../tools/agentq_transport_client/docs/USER_GUIDE.md) | agentq_cli commands |
 | Client [ADMIN_GUIDE](../tools/agentq_transport_client/docs/ADMIN_GUIDE.md) | Policy, rotation, force ingest |
 

@@ -18,7 +18,7 @@ version: 2.9
 
 ## Queue layout (structured optional)
 
-When using agent-to-agent transports, a **structured** layout may exist under the queue root:
+When using agent-to-agent transports, a **structured** layout may exist under the queue root. **This document only defines the filesystem layout and batch behavior; OpenPGP envelopes, registry rules, `to_agent_ids`, ack routing, and delivery/deliverable semantics are defined in [AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) and [AGENTIC_AGENT_Q_SCENARIOS.md](AGENTIC_AGENT_Q_SCENARIOS.md).**
 
 | Folder | Role |
 |--------|------|

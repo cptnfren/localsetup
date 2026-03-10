@@ -1,14 +1,14 @@
 ---
 status: ACTIVE
-version: 2.0
+version: 2.9
 implemented: "mail preencrypted armored send; ship-mail-strict; mail pull direct manifest; ship-file-drop-multi to_agent_ids; manifest.schema to_agent_ids; StubDrive/Telegram + ADAPTER_REGISTRY; claim lockfile + poll --use-lockfile; ADMIN_GUIDE Part 18; plus prior: ready-sha256; mail-move-retry; archive-prune; queue-pending; strict gpg file_drop; ship-bundle; tests"
 deferred: "_localsetup/tools/agentq_transport_client/docs/DEFERRED.md"
 remaining_build: "Part 19"
 ---
 
-# Agent Q bidirectional transport spec (build order)
+# Agent Q bidirectional transport build order
 
-**Single document.** Read in order. Each block is executable without waiting on a later section. **Canonical protocol doc when shipped:** AGENTIC_AGENT_TO_AGENT_PROTOCOL.md (ACTIVE). This file is the build contract until then.
+**Single document.** Read in order. Each block is executable without waiting on a later section. This file is the **implementation and backlog build contract** for the Agent Q transport client. **Canonical protocol behavior lives in** [AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) (ACTIVE); PRD shape and queue layout live in [PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md](PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md) and [AGENTIC_AGENT_Q_PATTERN.md](AGENTIC_AGENT_Q_PATTERN.md).
 
 ---
 

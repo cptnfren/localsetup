@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.8
+version: 2.9
 ---
 
 # ⚡ Features
@@ -10,7 +10,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.8.0`
+- Current version: `2.9.0`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
 - Shipped skills: `41`
 - Source: `_localsetup/docs/_generated/facts.json`
@@ -36,10 +36,10 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 |---|---|
 | **Agent Skills spec compliance** | All shipped skills follow the [Agent Skills specification](https://agentskills.io/specification). Import skills from Anthropic's repo or any spec-compliant source. |
 | **Shipped skills** | Debugging, TDD, PR review, git recovery, Linux triage, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux ops (pick/probe/send), system-info, cron-orchestrator, PRD batching, decision trees, humanizer, and more. See [SKILLS.md](SKILLS.md) for the full catalog. |
-| **Skill importing** | Import external skills from a GitHub URL or local path. The importer discovers, validates, runs a heuristic security screen, and summarizes each skill before you decide to add it. |
+| **Skill importing** | Import external skills from a GitHub URL or local path. The importer discovers, validates, runs a heuristic security screen, and summarizes each skill before you decide to add it. Imported skills are always normalized per [SKILL_IMPORTING.md](SKILL_IMPORTING.md) and the `localsetup-skill-importer` skill. |
 | **Skill discovery** | Maintain a public skill registry ([PUBLIC_SKILL_REGISTRY.urls](PUBLIC_SKILL_REGISTRY.urls)) and index ([PUBLIC_SKILL_INDEX.yaml](PUBLIC_SKILL_INDEX.yaml)). Get recommendations for similar public skills when creating or importing. The discovery workflow includes a mandatory post-refresh scrub step that catches dead URLs, stub/placeholder descriptions, and schema gaps automatically. |
 | **Skill version metadata** | Each `SKILL.md` carries a `metadata.version` field. The commit hook auto-increments patch version on staged skill changes so skill docs stay accurate. |
-| **Skill normalization** | Normalize imported or in-tree skills: Phase 1 (documents) offers a choice when the skill is platform-specific (keep as is, keep platform-specific but normalized, or fully normalize); Phase 2 (tooling) rewrites bundled scripts to the framework standard unless the user requests an exception. Use the `localsetup-skill-normalizer` skill or run during import. |
+| **Skill normalization** | Normalize imported or in-tree skills: Phase 1 (documents) offers a choice when the skill is platform-specific (keep as is, keep platform-specific but normalized, or fully normalize); Phase 2 (tooling) rewrites bundled scripts to the framework standard unless the user requests an exception. Normalization is mandatory for imported skills (run as part of the import flow) and available as a standalone step via the `localsetup-skill-normalizer` skill. |
 
 ---
 
@@ -49,14 +49,16 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 |---|---|
 | **Decision tree workflow** | A reverse-prompt process where the agent asks one question at a time with four options, a preferred choice, and rationale. Builds context before implementation. |
 | **PRD batch workflow** | Process specs from `.agent/queue/` (or structured `in/`); implement per spec, update status, write outcomes, and reference the PRD schema. |
-| **Agent Q bidirectional** | file_drop ingest: OpenPGP outer blob, registry validate, ledger, quarantine on failure. Key-gen via gpg batch. Mail adapter post-ingest move via mail skill. Client: `_localsetup/tools/agentq_transport_client/`. Docs: AGENTIC_AGENT_TO_AGENT_PROTOCOL.md (ACTIVE); scenarios: AGENTIC_AGENT_Q_SCENARIOS.md. |
+| **Workflow registry and quick reference** | Central registry of named workflows with IDs, names, aliases, and impact review expectations in [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md), plus an agent-facing quick reference in [WORKFLOW_QUICK_REF.md](WORKFLOW_QUICK_REF.md) with common-phrase mapping and composite pipelines so agents can invoke multi-step workflows by intent. |
+| **Composite pipelines (built from skills)** | Predefined multi-step flows that reuse existing skills: PR feedback loop (`pipeline-pr-feedback-loop`), git repair and hygiene (`pipeline-git-repair-hygiene`), server triage and patch (`pipeline-server-triage-patch`), and repo polish (`pipeline-repo-polish`). Documented in [WORKFLOW_QUICK_REF.md](WORKFLOW_QUICK_REF.md) and the workflow build spec, they provide higher-level workflows without new engine code. |
+| **Agent Q bidirectional** | Bidirectional PRD exchange over file_drop or mail: file_drop ingest of OpenPGP outer blobs, registry validation, ledger, quarantine on failure, key generation via gpg batch, mail adapter post-ingest move via mail skill. PRD schema, queue pattern, and protocol are explicitly wired together: see [PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md](PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md) for PRD shape and field mapping, [AGENTIC_AGENT_Q_PATTERN.md](AGENTIC_AGENT_Q_PATTERN.md) for queue layout, and [AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) plus [AGENTIC_AGENT_Q_SCENARIOS.md](AGENTIC_AGENT_Q_SCENARIOS.md) for transport behavior. Client: `_localsetup/tools/agentq_transport_client/`. |
 | **Framework compliance** | Checklist-based workflow for framework-safe modifications: certainty assessment, context load, document status, testing, git checkpoints. |
 | **Script and docs quality** | Markdown encoding standards, script generation quality rules, file creation discipline, and documentation discipline enforced by the `localsetup-script-and-docs-quality` skill. |
 | **Human-in-the-loop ops** | The tmux shared-session workflow uses the tmux_ops tool (pick, probe, send, wait). Pylon-guard delay prevents command racing; `send --wait` or standalone `wait --timeout N` provides adaptive idle polling. Human can attach and provide sudo; agent captures output via log files. Supports REMOTE_TMUX_HOST for VMs/remote/Docker. See [ops/tmux-ops-remote.md](ops/tmux-ops-remote.md). Use for privileged or risky operations. |
-| **Tmux-default terminal mode** | Toggleable feature (`tmux_terminal_mode enable/disable/status`) that makes new terminals open inside a tmux session automatically and injects a mandatory tmux + sudo gate rule for agents. Two modes: `--mode ide` (Cursor/VS Code terminal profile) and `--mode shell` (bashrc/bash_profile auto-attach). Single command to enable or disable; backups created before any file is modified; idempotent. See [TMUX_TERMINAL_MODE.md](TMUX_TERMINAL_MODE.md). |
+| **Tmux-default terminal mode (Always-On-TMUX)** | Toggleable feature (`tmux_terminal_mode enable/disable/status`) that makes new terminals open inside a tmux session automatically and injects a mandatory tmux + sudo gate rule for agents. Two modes: `--mode ide` (Cursor/VS Code terminal profile) and `--mode shell` (bashrc/bash_profile auto-attach). Can be used as an \"always-on tmux\" layer for this repo or machine. Single command to enable or disable; backups created before any file is modified; idempotent. See [TMUX_TERMINAL_MODE.md](TMUX_TERMINAL_MODE.md). |
 | **Arbiter workflow** | Push decisions to Arbiter Zebu for async human review when you need approval before proceeding. |
 | **Framework audit** | Single entrypoint runs doc checks, link checks, skill matrix (sandbox smoke from `skill_smoke_commands.yaml`), version/facts. Output only to user-specified path; no in-repo default. Entrypoint: `run_framework_audit.py --output /path`. Deep Analysis (`--deep`) is not implemented in the current script; see [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md) and skill `localsetup-framework-audit`. |
-| **Public skill index maintenance** | Named workflow (trigger: "refresh skills", "refresh and scrub", "update public skill index") that runs the full three-step sequence: (1) refresh from registries, (2) dry-run scrub to detect stubs and dead URLs, (3) apply fixes. Implemented by `refresh_public_skill_index.py` and `skill_index_scrub.py`. See [SKILL_DISCOVERY.md](SKILL_DISCOVERY.md). |
+| **Public skill index maintenance** | Named workflow (trigger: \"refresh skills\", \"refresh and scrub\", \"update public skill index\") that runs the full three-step sequence: (1) refresh from registries, (2) dry-run scrub to detect stubs and dead URLs, (3) apply fixes. Implemented by `refresh_public_skill_index.py` and `skill_index_scrub.py`. See [SKILL_DISCOVERY.md](SKILL_DISCOVERY.md). |
 
 ---
 

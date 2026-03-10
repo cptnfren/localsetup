@@ -1,9 +1,11 @@
 ---
 status: ACTIVE
-version: 2.8
+version: 2.9
 ---
 
 # Decision tree workflow (reverse prompt)
+
+Workflow ID: `spec-clarify-reverse`
 
 **Purpose:** AI prompts the user one question at a time with four options (A-D), preferred choice, and rationale. Used to build context before implementation (e.g. PRD/spec clarification). Load skill localsetup-decision-tree-workflow when user invokes it.
 

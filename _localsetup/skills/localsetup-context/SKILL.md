@@ -28,6 +28,7 @@ Localsetup v2 is deployed at `_localsetup/`. Framework and context are repo-loca
 - localsetup-decision-tree-workflow  - "decision tree", "reverse prompt"; .agent/queue/**, PRD
 - localsetup-agentic-umbrella-queue  - queue/PRD scope; named workflows; impact + confirmation
 - localsetup-agentic-prd-batch  - "process PRDs", "run batch from PRD folder"
+- localsetup-agentq-transport  - ship/ingest Agent Q manifests over file_drop or mail, strict encrypted mail mode, trust registry checks, and queue/archive operations
 - localsetup-public-repo-identity  - README*, CONTRIBUTING*
 - localsetup-framework-compliance  - framework mods, PRDs, checkpoints
 - localsetup-safety-and-backup  - destructive ops, backups, firewall

@@ -1,12 +1,12 @@
 ---
 status: ACTIVE
-version: 1.0
+version: 2.9
 audience: humans, agents
 ---
 
 # Agent Q scenarios: repos, agents, local, remote
 
-**Purpose:** Describe how **file_drop** (and when relevant **mail**) works across common deployments: same machine vs remote, same repo vs different repos, and how agents A/B align on paths and keys. Written for operators and for agents that must choose commands without guessing.
+**Purpose:** Describe how **file_drop** (and when relevant **mail**) works across common deployments: same machine vs remote, same repo vs different repos, and how agents A/B align on paths and keys. Written for operators and for agents that must choose commands without guessing. **This document and [AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) define transport and registry behavior; queue layout and batch processing live in [AGENTIC_AGENT_Q_PATTERN.md](AGENTIC_AGENT_Q_PATTERN.md).**
 
 **Prerequisites:** [AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md), [AGENTIC_AGENT_Q_BIDIRECTIONAL_BUILD_SPEC.md](AGENTIC_AGENT_Q_BIDIRECTIONAL_BUILD_SPEC.md). Client CLI: `_localsetup/tools/agentq_transport_client/agentq_cli.py`.
 
