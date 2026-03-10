@@ -65,6 +65,7 @@ Localsetup v2 is deployed at `_localsetup/`. Framework and context are repo-loca
 - localsetup-cloudflare-dns  - manage Cloudflare DNS records (list, create, modify, delete) and zone surveys via flarectl; adding, changing, or removing DNS records
 - localsetup-npm-management  - manage Nginx Proxy Manager proxy hosts via REST API; coordinate Docker + NPM deploy workflows; diagnose 502s; backup/restore
 - localsetup-mail-protocol-control  - manage delegated SMTP/IMAP accounts with attachment-first MIME handling, chunked attachment retrieval, and full-envelope encryption/decryption tools; agent-driven mailbox read/send/mutate/encrypt workflows
+- localsetup-docs-organization  - docs organization router; classify documentation requests, choose folder slugs, and keep docs indexes up to date.
 
 ## Key docs
 _localsetup/docs/AGENTIC_DESIGN_INDEX.md, WORKFLOW_REGISTRY.md, PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md, DECISION_TREE_WORKFLOW.md, INPUT_HARDENING_STANDARD.md, TOOLING_POLICY.md

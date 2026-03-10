@@ -43,5 +43,6 @@
 | localsetup-npm-management | Manage Nginx Proxy Manager proxy hosts via REST API; coordinate Docker service deployments with NPM routing | Create/modify/remove NPM proxy hosts; diagnose 502s; backup/restore; Docker + NPM deploy workflows |
 | localsetup-mail-protocol-control | Manage delegated SMTP/IMAP accounts with attachment-first MIME handling, chunked attachment retrieval, and full-envelope encryption/decryption tools | Agent-driven mailbox read/send/mutate/encrypt workflows; preencrypted_openpgp_armored for Agent Q strict mail ship |
 | localsetup-agentq-transport | Agent Q bidirectional transport: file_drop ship/ingest, mail pull/ship (strict gpg), registry, queue-pending, archive-prune | Ship/ingest sealed PRD manifests between agents; see AGENTIC_AGENT_Q_SCENARIOS.md |
+| localsetup-docs-organization | Docs organization router for repo docs; classify doc work, choose folder slugs, and keep docs indexes in sync | Creating, moving, or significantly updating docs; deciding placement and index updates |
 
 Framework docs: _localsetup/docs/ (AGENTIC_DESIGN_INDEX.md, WORKFLOW_REGISTRY.md, PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md).

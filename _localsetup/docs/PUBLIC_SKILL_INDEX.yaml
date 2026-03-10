@@ -5,7 +5,7 @@ schema_version: 2
 sources:
 - https://github.com/VoltAgent/awesome-openclaw-skills
 - https://github.com/anthropics/skills/tree/main/skills
-updated: '2026-03-10T02:43:57Z'
+updated: '2026-03-10T03:34:14Z'
 skills:
 - name: agent-commons
   description: Consult, commit, extend, and challenge reasoning chains.
