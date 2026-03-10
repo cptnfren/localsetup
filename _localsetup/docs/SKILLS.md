@@ -7,7 +7,7 @@ version: 2.9
 
 This page is generated from `_localsetup/skills/*/SKILL.md`.
 
-Total shipped skills: 41
+Total shipped skills: 42
 
 | Skill ID | Name | Version | Description |
 |---|---|---|---|
@@ -40,6 +40,7 @@ Total shipped skills: 41
 | `localsetup-receiving-code-review` | `localsetup-receiving-code-review` | `1.2` | Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable. Requires technical rigor and verification, not performative agreement or blind implementation. |
 | `localsetup-safety-and-backup` | `localsetup-safety-and-backup` | `1.1` | Security and safety (conservative), backup management, temporary file management, firewall management. Use for destructive ops, system config changes, backups, temp files, or when adding services. |
 | `localsetup-script-and-docs-quality` | `localsetup-script-and-docs-quality` | `1.1` | Markdown/encoding standards, script generation quality, file creation discipline, documentation discipline. Use when generating scripts, creating/editing markdown or docs. |
+| `localsetup-docs-organization` | `localsetup-docs-organization` | `0.1.0` | Repo-level docs router for classification, folder slugs, and index maintenance. Use when creating, moving, or significantly updating docs so placement and indexes stay consistent. |
 | `localsetup-skill-creator` | `localsetup-skill-creator` | `1.3` | Create or import Agent Skills–compliant skills for this framework; import skills from Anthropic or elsewhere; export framework skills for use in other hosts. Use when creating a new skill, importing an existing skill (e.g. anthropics/skills), adapting a doc into a skill, or making skills interchangeable across ecosystems. |
 | `localsetup-skill-discovery` | `localsetup-skill-discovery` | `1.4` | Discover and recommend public skills from external registries (e.g. awesome lists, skill hubs). Use when the user is creating a new skill, importing a skill, or asking to find similar public skills. Maintains PUBLIC_SKILL_REGISTRY.urls and PUBLIC_SKILL_INDEX.yaml; returns top 5 similar matches with rich summaries and clear next actions. |
 | `localsetup-skill-importer` | `localsetup-skill-importer` | `1.4` | Import external skills from a URL (GitHub or other) or local path; discover, validate, security-screen, and summarize each skill so the user can choose which to import. Use when the user wants to add skills from a repo/URL or local folder, or when screening and selecting skills to add to the framework. |
