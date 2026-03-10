@@ -1,0 +1,60 @@
+version: 1
+default_profile: restricted
+profiles:
+  full:
+    allow_actions:
+      - smtp.*
+      - imap.*
+      - crypto.*
+    deny_actions: []
+    thresholds:
+      delete_count_confirm: 1000
+      move_count_confirm: 1000
+      expunge_requires_confirm: false
+      folder_delete_requires_confirm: false
+    constraints:
+      allowed_encryption_modes:
+        - psk
+        - password
+        - openpgp
+  restricted:
+    allow_actions:
+      - smtp.*
+      - imap.read.*
+      - imap.write.*
+      - imap.destructive.*
+      - crypto.*
+    deny_actions:
+      - imap.delete_mailbox
+    thresholds:
+      delete_count_confirm: 50
+      move_count_confirm: 100
+      expunge_requires_confirm: true
+      folder_delete_requires_confirm: true
+    constraints:
+      allowed_encryption_modes:
+        - psk
+        - password
+        - openpgp
+  read_only:
+    allow_actions:
+      - smtp.verify_connectivity
+      - imap.read.*
+      - imap.admin.*
+      - crypto.decrypt_payload
+    deny_actions:
+      - smtp.send_message
+      - imap.write.*
+      - imap.destructive.*
+    thresholds:
+      delete_count_confirm: 1
+      move_count_confirm: 1
+      expunge_requires_confirm: true
+      folder_delete_requires_confirm: true
+    constraints:
+      allowed_encryption_modes:
+        - psk
+        - password
+        - openpgp
+accounts: {}
+

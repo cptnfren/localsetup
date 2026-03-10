@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-02-27T03:40:26.228430+00:00",
+  "generated_at": "2026-03-10T01:25:31.850849+00:00",
   "version": "2.8.0",
   "major_minor": "2.8",
   "platform_count": 4,
-  "skill_count": 39,
+  "skill_count": 41,
   "platforms": [
     {
       "id": "cursor",
@@ -34,7 +34,7 @@
     {
       "id": "localsetup-agentic-prd-batch",
       "name": "localsetup-agentic-prd-batch",
-      "version": "1.2",
+      "version": "1.3",
       "path": "_localsetup/skills/localsetup-agentic-prd-batch/SKILL.md"
     },
     {
@@ -48,6 +48,12 @@
       "name": "localsetup-agentlens",
       "version": "1.0",
       "path": "_localsetup/skills/localsetup-agentlens/SKILL.md"
+    },
+    {
+      "id": "localsetup-agentq-transport",
+      "name": "localsetup-agentq-transport",
+      "version": "1.0",
+      "path": "_localsetup/skills/localsetup-agentq-transport/SKILL.md"
     },
     {
       "id": "localsetup-ansible-skill",
@@ -150,6 +156,12 @@
       "name": "localsetup-linux-service-triage",
       "version": "1.1",
       "path": "_localsetup/skills/localsetup-linux-service-triage/SKILL.md"
+    },
+    {
+      "id": "localsetup-mail-protocol-control",
+      "name": "localsetup-mail-protocol-control",
+      "version": "1.2",
+      "path": "_localsetup/skills/localsetup-mail-protocol-control/SKILL.md"
     },
     {
       "id": "localsetup-mcp-builder",

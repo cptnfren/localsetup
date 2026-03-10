@@ -12,7 +12,7 @@ This is the public documentation index for Localsetup v2. Use it to navigate fra
 <!-- facts-block:start -->
 - Current version: `2.8.0`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
-- Shipped skills: `39`
+- Shipped skills: `41`
 - Source: `_localsetup/docs/_generated/facts.json`
 <!-- facts-block:end -->
 
@@ -44,6 +44,23 @@ How agentic workflows operate inside this framework.
 | [PRD schema and external agent guide](PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md) | Spec format for PRDs and outcome template |
 | [Git traceability](GIT_TRACEABILITY.md) | Linking PRDs, specs, and outcomes to git commits |
 | [Tmux ops (remote)](ops/tmux-ops-remote.md) | Use tmux_ops when tmux runs on another host (REMOTE_TMUX_HOST, REMOTE_TMUX_CWD) |
+
+---
+
+## Agent Q transport (bidirectional handoff)
+
+Agent-to-agent PRD exchange over file_drop or mail; OpenPGP sealed blobs; registry and ledger.
+
+| Page | What it covers |
+|---|---|
+| [Agent-to-agent protocol](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) | Principles, flows, pre-ship, version stamp |
+| [Agent Q scenarios](AGENTIC_AGENT_Q_SCENARIOS.md) | Same machine / different repos, local vs remote, mail vs file_drop, agent decision guide |
+| [Agent Q build spec](AGENTIC_AGENT_Q_BIDIRECTIONAL_BUILD_SPEC.md) | Build order, Part 19 backlog |
+| [Agent Q pattern](AGENTIC_AGENT_Q_PATTERN.md) | Queue layout inbox/in/out/pending/archive |
+| Client [USER_GUIDE](../tools/agentq_transport_client/docs/USER_GUIDE.md) | agentq_cli commands |
+| Client [ADMIN_GUIDE](../tools/agentq_transport_client/docs/ADMIN_GUIDE.md) | Policy, rotation, force ingest |
+
+Skill: **localsetup-agentq-transport** (see [SKILLS.md](SKILLS.md)).
 
 ---
 

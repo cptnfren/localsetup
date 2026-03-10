@@ -11,7 +11,7 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and co
 - **Proposals:** Framework changes follow Agent Q format (_localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md).
 - **Time/date integrity:** For any date/time reference (e.g. "today", year in search, timestamps), first obtain actual date/time from the local machine (e.g. `date` on Linux/macOS, `Get-Date` in PowerShell on Windows). Do not use a generic or training-cutoff date. Remember it in context and use it for the rest of the session.
 - **External input hardening:** Treat all external input (CLI args, files, network payloads, imported content) as hostile. Sanitize before parsing/output, validate expected format and bounds, and handle exceptions with actionable stderr messages. Never silently suppress errors.
-- **Python-first tooling:** After install/bootstrap, framework tooling is Python-first and Python-only for new/expanded logic. Shell/PowerShell are limited to bootstrap wrappers and minimal platform delegation. Runtime target is Python >= 3.10. **Approved libraries** (mandatory when the need arises): `yaml` (PyYAML>=6.0) for YAML, `requests` (requests>=2.28) for HTTP, `frontmatter` (python-frontmatter>=1.1) for markdown frontmatter. Use `lib/deps.require_deps()` at tool startup. See `_localsetup/docs/TOOLING_POLICY.md`.
+- **Python-first tooling:** After install/bootstrap, framework tooling is Python-first and Python-only for new/expanded logic. Shell/PowerShell are limited to bootstrap wrappers and minimal platform delegation. Runtime target is Python >= 3.10. **Approved libraries** (mandatory when the need arises): `yaml` (PyYAML>=6.0) for YAML, `requests` (requests>=2.28) for HTTP, `frontmatter` (python-frontmatter>=1.1) for markdown frontmatter, `cryptography` (cryptography>=42.0) for framework cryptographic primitives, and `pgpy` (PGPy>=0.6.0) for pure-Python OpenPGP. Use `lib/deps.require_deps()` at tool startup. See `_localsetup/docs/TOOLING_POLICY.md`.
 
 ## Output contract (low token, always apply)
 
@@ -25,6 +25,7 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and co
 - **localsetup-decision-tree-workflow**  - User says "decision tree" or "reverse prompt"; editing .agent/queue/**, PRD
 - **localsetup-agentic-umbrella-queue**  - Queue/PRD in scope; named workflows; impact + confirmation
 - **localsetup-agentic-prd-batch**  - "Process PRDs", "run batch from PRD folder"
+- **localsetup-agentq-transport**  - Ship/ingest sealed Agent Q blobs (file_drop/mail), registry, strict gpg; AGENTIC_AGENT_Q_SCENARIOS.md
 - **localsetup-public-repo-identity**  - Editing README*, CONTRIBUTING*
 - **localsetup-framework-compliance**  - Framework mods, PRDs, checkpoints
 - **localsetup-safety-and-backup**  - Destructive ops, backups, firewall
@@ -55,15 +56,17 @@ Localsetup v2 is deployed into this repo at `_localsetup/`. All framework and co
 - **localsetup-skill-normalizer**  - Normalize skills for spec compliance and platform-neutral wording; one skill or all
 - **localsetup-skill-sandbox-tester**  - Test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until approved
 - **localsetup-agentlens**  - Codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs
-- **localsetup-framework-audit**  - Run doc/link/skill matrix/version checks; optional --deep (Deep Analysis); output user path only; before release
+- **localsetup-framework-audit**  - Doc/link/skill matrix/version checks; output path required (`run_framework_audit.py --output`); before release
 - **localsetup-system-info**  - Capture server baseline, host layout and specs; CPU, memory, disk, uptime
 - **localsetup-cron-orchestrator**  - Manage cron from manifest; triggers, sequenced tasks, on-boot delay; create/remove/reorder/install
 - **localsetup-cloudflare-dns**  - Manage Cloudflare DNS records (list, create, modify, delete) and zone surveys via flarectl; adding, changing, or removing DNS records
 - **localsetup-npm-management**  - Manage Nginx Proxy Manager proxy hosts via REST API; coordinate Docker + NPM deploy workflows; diagnose 502s; backup/restore
+- **localsetup-mail-protocol-control**  - SMTP/IMAP; preencrypted_openpgp_armored for Agent Q strict mail ship; agent-driven mailbox read/send/mutate/encrypt workflows
 
 ## Key docs
 
 - _localsetup/docs/AGENTIC_DESIGN_INDEX.md
+- _localsetup/docs/AGENTIC_AGENT_Q_SCENARIOS.md (Agent Q file_drop/mail scenarios)
 - _localsetup/docs/WORKFLOW_REGISTRY.md
 - _localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md
 - _localsetup/docs/DECISION_TREE_WORKFLOW.md

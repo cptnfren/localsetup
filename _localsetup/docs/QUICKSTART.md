@@ -10,7 +10,7 @@ Get Localsetup v2 running in your repo in under a minute. This page covers inter
 ## Prerequisites
 
 - **Required:** `git >= 2.20.0`; on Linux/macOS also `rg` (ripgrep), which the Bash install script uses to build the manifest.
-- **Recommended for full framework tooling:** `python >= 3.10`, `pip`, and the Python packages in `_localsetup/requirements.txt` (PyYAML, requests, python-frontmatter). After install, run `python3 -m pip install -r _localsetup/requirements.txt`, or pass `--install-deps` / `-InstallDeps` to have the install script do it automatically.
+- **Recommended for full framework tooling:** `python >= 3.10`, `pip`, and the Python packages in `_localsetup/requirements.txt` (PyYAML, requests, python-frontmatter, cryptography, PGPy). After install, run `python3 -m pip install -r _localsetup/requirements.txt`, or pass `--install-deps` / `-InstallDeps` to have the install script do it automatically.
 - **Linux/macOS:** Bash and curl.
 - **Windows:** PowerShell 5.1+ or PowerShell Core.
 - **Any platform:** Network access to GitHub (or a local clone of this repo).
@@ -279,6 +279,7 @@ Alternatively, re-run install with `--install-deps` (Bash) or `-InstallDeps` (Po
 
 ## 📖 Next steps
 
+- **Agent-to-agent PRD handoff (PROPOSAL):** Stamp PRDs with `python _localsetup/tools/agentq_transport_client/agentq_cli.py stamp-prd <path>`. Protocol: [AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md). Client docs: `_localsetup/tools/agentq_transport_client/docs/USER_GUIDE.md`.
 - [Features](FEATURES.md) - full capability list
 - [Shipped skills catalog](SKILLS.md) - all shipped skills
 - [Platform registry](PLATFORM_REGISTRY.md) - canonical platform definitions

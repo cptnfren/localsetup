@@ -17,7 +17,10 @@ Copyright (c) 2026 Crux Experts LLC. MIT License  - see repository root [LICENSE
 | [PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md](PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md) | PRD/spec format, outcome template, external confirmation |
 | [DECISION_TREE_WORKFLOW.md](DECISION_TREE_WORKFLOW.md) | Decision tree: one Q per turn, 4 options A-D, preferred + rationale |
 | [AGENTIC_UMBRELLA_WORKFLOWS.md](AGENTIC_UMBRELLA_WORKFLOWS.md) | Umbrella workflows: single kickoff, PHC gates, single final webhook |
-| [AGENTIC_AGENT_Q_PATTERN.md](AGENTIC_AGENT_Q_PATTERN.md) | Agent Q (queue) pattern: locate, implement, status, outcome |
+| [AGENTIC_AGENT_Q_PATTERN.md](AGENTIC_AGENT_Q_PATTERN.md) | Agent Q (queue) pattern: locate, implement, status, outcome; structured inbox/in/out/pending |
+| [AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) | Agent-to-agent PRD handoff: OpenPGP outer blob, registry, file_drop ingest (ACTIVE) |
+| [AGENTIC_AGENT_Q_BIDIRECTIONAL_BUILD_SPEC.md](AGENTIC_AGENT_Q_BIDIRECTIONAL_BUILD_SPEC.md) | Bidirectional Agent Q build order (ACTIVE); **Part 19** = remaining backlog; DEFERRED.md = short list |
+| [AGENTIC_AGENT_Q_SCENARIOS.md](AGENTIC_AGENT_Q_SCENARIOS.md) | file_drop/mail scenarios: same machine different repos, local/remote, sync, agent decision guide |
 | [DOCUMENT_LIFECYCLE_MANAGEMENT.md](DOCUMENT_LIFECYCLE_MANAGEMENT.md) | Doc status (ACTIVE/PROPOSAL/DRAFT); check before assuming implemented |
 | [OUTPUT_AND_DOC_GENERATION.md](OUTPUT_AND_DOC_GENERATION.md) | Platform default: rich output (code blocks, lists, typography, links, glyphs, humanized prose) for all generated content |
 | [REPO_AND_DATA_SEPARATION.md](REPO_AND_DATA_SEPARATION.md) | Engine at _localsetup/; local context vs framework; propose via PRD |
@@ -42,6 +45,7 @@ Copyright (c) 2026 Crux Experts LLC. MIT License  - see repository root [LICENSE
 
 - **Run decision tree:** Load skill localsetup-decision-tree-workflow; see [DECISION_TREE_WORKFLOW.md](DECISION_TREE_WORKFLOW.md).
 - **Process queue / PRDs:** Load localsetup-agentic-prd-batch; see [PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md](PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md), [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md).
+- **Agent Q ship/ingest (file_drop or mail):** Load localsetup-agentq-transport; see [AGENTIC_AGENT_Q_SCENARIOS.md](AGENTIC_AGENT_Q_SCENARIOS.md), `_localsetup/tools/agentq_transport_client/docs/USER_GUIDE.md`; mail strict path uses localsetup-mail-protocol-control with `preencrypted_openpgp_armored`.
 - **Umbrella workflow:** Load localsetup-agentic-umbrella-queue; see [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md).
 - **Create a new skill:** Load localsetup-skill-creator; see [SKILL_INTEROPERABILITY.md](SKILL_INTEROPERABILITY.md).
 - **Import skills from URL or path:** Load localsetup-skill-importer; run `_localsetup/tools/skill_importer_scan <path>`; see [SKILL_IMPORTING.md](SKILL_IMPORTING.md).
@@ -49,7 +53,7 @@ Copyright (c) 2026 Crux Experts LLC. MIT License  - see repository root [LICENSE
 - **Audit and scrub the public skill index:** Run `python3 _localsetup/tools/skill_index_scrub.py` to check for dead URLs, stub/placeholder descriptions, and schema gaps. Add `--fix` to fetch real descriptions from upstream and write them back. Add `--report FILE` for a GFM report.
 - **Tmux shared session and sudo:** Load localsetup-tmux-shared-session-workflow; use tool `_localsetup/tools/tmux_ops` (pick, probe, send, wait). Skill defines sudo gate via probe (ready vs password_required); use `send --wait` for short commands or `wait --timeout N` for long ops; never use raw tmux send-keys. For remote/VMs: see [ops/tmux-ops-remote.md](ops/tmux-ops-remote.md) (REMOTE_TMUX_HOST). See WORKFLOW_REGISTRY.md.
 - **Tmux-default terminal mode:** Run `_localsetup/tools/tmux_terminal_mode enable [--mode ide|shell]` to wire up automatic tmux session launch (IDE terminal profile or shell RC auto-attach) and inject the mandatory agent ops rule. `disable` restores originals from backup. `status` reports all layers. See [TMUX_TERMINAL_MODE.md](TMUX_TERMINAL_MODE.md).
-- **Run framework audit:** Load localsetup-framework-audit; run from repo root with `--output /path/to/report.md` (or set `LOCALSETUP_AUDIT_OUTPUT`). Optional `--deep` runs Deep Analysis (derive invocations from SKILL.md and script `--help`, run in sandbox, summary JSON + sidecar tarball; requires output path). See [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md).
+- **Run framework audit:** Load localsetup-framework-audit; run from repo root: `python _localsetup/skills/localsetup-framework-audit/scripts/run_framework_audit.py --output /path/to/report.md` (or set `LOCALSETUP_AUDIT_OUTPUT`). No `--deep` in the current script; if docs elsewhere mention Deep Analysis, treat as backlog until the audit skill ships it. See [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md).
 
 ---
 

@@ -11,6 +11,9 @@ _localsetup/.localsetup-meta/
 # Repo-local data (PR review state, audit output, etc.; never publish)
 data/
 
+# Mail accounts (credentials; use example template only in repo)
+_localsetup/config/mail_accounts.json
+
 # Agent work queue (local-only PRDs and task files; never publish)
 .agent/
 

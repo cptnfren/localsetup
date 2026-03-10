@@ -82,6 +82,8 @@ Before clone/deploy, both install scripts run a dependency preflight. The list b
 | Python: `yaml` (PyYAML>=6.0) | Recommended | YAML parsing for skill index, config, and PRD files |
 | Python: `requests` (requests>=2.28) | Recommended | HTTP client used by index refresh and scrub tools |
 | Python: `frontmatter` (python-frontmatter>=1.1) | Recommended | YAML frontmatter parsing for skill and PRD markdown files |
+| Python: `cryptography` (cryptography>=42.0) | Recommended | Framework cryptographic primitives for secure envelope workflows |
+| Python: `pgpy` (PGPy>=0.6.0) | Recommended | Pure-Python OpenPGP support for secure mail workflows |
 
 Python packages are listed in `_localsetup/requirements.txt`. After install, run:
 

@@ -12,7 +12,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 <!-- facts-block:start -->
 - Current version: `2.8.0`
 - Supported platforms: `cursor, claude-code, codex, openclaw`
-- Shipped skills: `39`
+- Shipped skills: `41`
 - Source: `_localsetup/docs/_generated/facts.json`
 <!-- facts-block:end -->
 
@@ -48,13 +48,14 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | Capability | Description |
 |---|---|
 | **Decision tree workflow** | A reverse-prompt process where the agent asks one question at a time with four options, a preferred choice, and rationale. Builds context before implementation. |
-| **PRD batch workflow** | Process specs from `.agent/queue/`; implement per spec, update status, write outcomes, and reference the PRD schema. |
+| **PRD batch workflow** | Process specs from `.agent/queue/` (or structured `in/`); implement per spec, update status, write outcomes, and reference the PRD schema. |
+| **Agent Q bidirectional** | file_drop ingest: OpenPGP outer blob, registry validate, ledger, quarantine on failure. Key-gen via gpg batch. Mail adapter post-ingest move via mail skill. Client: `_localsetup/tools/agentq_transport_client/`. Docs: AGENTIC_AGENT_TO_AGENT_PROTOCOL.md (ACTIVE); scenarios: AGENTIC_AGENT_Q_SCENARIOS.md. |
 | **Framework compliance** | Checklist-based workflow for framework-safe modifications: certainty assessment, context load, document status, testing, git checkpoints. |
 | **Script and docs quality** | Markdown encoding standards, script generation quality rules, file creation discipline, and documentation discipline enforced by the `localsetup-script-and-docs-quality` skill. |
 | **Human-in-the-loop ops** | The tmux shared-session workflow uses the tmux_ops tool (pick, probe, send, wait). Pylon-guard delay prevents command racing; `send --wait` or standalone `wait --timeout N` provides adaptive idle polling. Human can attach and provide sudo; agent captures output via log files. Supports REMOTE_TMUX_HOST for VMs/remote/Docker. See [ops/tmux-ops-remote.md](ops/tmux-ops-remote.md). Use for privileged or risky operations. |
 | **Tmux-default terminal mode** | Toggleable feature (`tmux_terminal_mode enable/disable/status`) that makes new terminals open inside a tmux session automatically and injects a mandatory tmux + sudo gate rule for agents. Two modes: `--mode ide` (Cursor/VS Code terminal profile) and `--mode shell` (bashrc/bash_profile auto-attach). Single command to enable or disable; backups created before any file is modified; idempotent. See [TMUX_TERMINAL_MODE.md](TMUX_TERMINAL_MODE.md). |
 | **Arbiter workflow** | Push decisions to Arbiter Zebu for async human review when you need approval before proceeding. |
-| **Framework audit** | Single entrypoint runs doc checks, link checks, skill matrix (discovery + sandbox smoke), version/facts, and optional Deep Analysis (`--deep`): derives invocations from SKILL.md and script `--help`, runs in sandbox, writes summary JSON and sidecar tarball. Output only to user-specified path; no in-repo default. See [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md) and skill `localsetup-framework-audit`. |
+| **Framework audit** | Single entrypoint runs doc checks, link checks, skill matrix (sandbox smoke from `skill_smoke_commands.yaml`), version/facts. Output only to user-specified path; no in-repo default. Entrypoint: `run_framework_audit.py --output /path`. Deep Analysis (`--deep`) is not implemented in the current script; see [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md) and skill `localsetup-framework-audit`. |
 | **Public skill index maintenance** | Named workflow (trigger: "refresh skills", "refresh and scrub", "update public skill index") that runs the full three-step sequence: (1) refresh from registries, (2) dry-run scrub to detect stubs and dead URLs, (3) apply fixes. Implemented by `refresh_public_skill_index.py` and `skill_index_scrub.py`. See [SKILL_DISCOVERY.md](SKILL_DISCOVERY.md). |
 
 ---
@@ -110,7 +111,7 @@ These skills ship with the framework and are ready to use immediately.
 | `localsetup-arbiter` | Push decisions to Arbiter Zebu for async human review. |
 | `localsetup-backlog-and-reminders` | Record deferred ideas, to-dos, reminders; show due/overdue on session start. |
 | `localsetup-task-skill-matcher` | Match tasks to installed skills; recommend top matches; single or batch flow. |
-| `localsetup-framework-audit` | Run doc/link/skill matrix/version checks before release; optional `--deep` (Deep Analysis: derive invocations, run in sandbox, summary JSON + tarball); output to user path only. |
+| `localsetup-framework-audit` | Run doc/link/skill matrix/version checks before release; output to user path only (`run_framework_audit.py --output`). No `--deep` in current entrypoint. |
 
 ---
 

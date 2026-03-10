@@ -26,7 +26,7 @@ Out of the box you get [all shipped skills](_localsetup/docs/SKILLS.md): debuggi
 |---|---|
 | Current version | `2.8.0` |
 | Supported platforms | `cursor, claude-code, codex, openclaw` |
-| Shipped skills | `39` |
+| Shipped skills | `41` |
 | Source | `_localsetup/docs/_generated/facts.json` |
 <!-- facts-block:end -->
 

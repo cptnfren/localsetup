@@ -40,6 +40,8 @@ These libraries are pre-approved, listed in `requirements.txt`, and available af
 | PyYAML | `yaml` | `PyYAML>=6.0` | All YAML parsing and serialization. Never use `json` as a workaround or parse YAML by hand. |
 | requests | `requests` | `requests>=2.28` | All outbound HTTP. Use `requests.Session` for multi-request tools. Never use `urllib.request` for new code. |
 | python-frontmatter | `frontmatter` | `python-frontmatter>=1.1` | Parse YAML front matter from skill and PRD markdown files. Never split frontmatter by hand. |
+| cryptography | `cryptography` | `cryptography>=42.0` | Framework cryptographic primitives (AES-GCM, HKDF, PBKDF2, secure random). Use for encryption/decryption and key derivation. |
+| PGPy | `pgpy` | `PGPy>=0.6.0` | Pure-Python OpenPGP encryption and decryption in framework tooling. |
 
 **Shared dependency helper:** Import `lib.deps` at the top of every tool and call `require_deps()` before using any approved library. This gives users an actionable error message instead of a bare `ImportError` if the library is missing.
 
@@ -87,7 +89,7 @@ All framework tooling that produces reports or structured output intended for hu
 - Non-GFM or non–CommonMark markdown that GitHub does not render (e.g. custom HTML for layout; prefer standard markdown).
 - Unstructured walls of text; break content into sections and use the formatting above so importance and hierarchy are visually clear.
 
-Scripts and skills that generate reports (e.g. [framework audit](WORKFLOW_REGISTRY.md) including optional Deep Analysis, PR review, validation summaries) must follow this section. New tooling must adopt it by default.
+Scripts and skills that generate reports (e.g. [framework audit](WORKFLOW_REGISTRY.md), PR review, validation summaries) must follow this section. New tooling must adopt it by default.
 
 ## External input rule
 

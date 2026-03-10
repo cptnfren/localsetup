@@ -5,6 +5,7 @@
 # Path and schema documented in localsetup-framework-audit SKILL.md.
 
 localsetup-agentic-prd-batch: "N/A"
+localsetup-agentq-transport: "N/A"
 localsetup-agentic-umbrella-queue: "N/A"
 localsetup-agentlens: "N/A"
 localsetup-ansible-skill: "N/A"

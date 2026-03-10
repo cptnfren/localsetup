@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://localsetup/agentq/manifest.schema.json",
+  "title": "Agent Q inner payload manifest",
+  "type": "object",
+  "required": ["manifest_version", "from_agent_id"],
+  "additionalProperties": true,
+  "properties": {
+    "manifest_version": {
+      "type": "string",
+      "description": "Schema version for inner manifest after OpenPGP decrypt."
+    },
+    "from_agent_id": {
+      "type": "string",
+      "description": "Must match OpenPGP signer binding per agent_trust_registry."
+    },
+    "to_agent_id": { "type": "string" },
+    "to_agent_ids": {
+      "type": "array",
+      "maxItems": 16,
+      "items": { "type": "string" },
+      "description": "Phase 2 multi-recipient; pairwise ship loops over list"
+    },
+    "conversation_id": { "type": "string" },
+    "iteration": { "type": "integer", "minimum": 1 },
+    "idempotency_key": { "type": "string" },
+    "transport": { "type": "string", "enum": ["mail", "file_drop", "manual"] },
+    "attachments": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "object",
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": { "type": "string", "maxLength": 512 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "bytes": { "type": "integer", "minimum": 0, "maximum": 1073741824 },
+          "content_b64": { "type": "string", "description": "Optional inline payload; sha256 must match after decode" }
+        }
+      }
+    }
+  }
+}

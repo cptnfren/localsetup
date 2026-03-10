@@ -106,7 +106,7 @@ See [Multi-platform install](docs/MULTI_PLATFORM_INSTALL.md) for details.
 - **Linux/macOS:** Bash (for install, deploy, and framework scripts). **Windows:** PowerShell 5.1+ or PowerShell Core (for `install.ps1` and `*.ps1` tools).
 - **Git** (for install clone/update; optional for `verify_rules`).
 - One or more platforms from the [platform registry](docs/PLATFORM_REGISTRY.md) (e.g. cursor, claude-code, codex, openclaw), selected via `--tools` / `-Tools`.
-- **Recommended (Python tooling):** For full skill validation/discovery tooling, public skill index refresh, scrub, and NPM management (`tools/skill_validation_scan.py`, `tools/refresh_public_skill_index.py`, `tools/skill_index_scrub.py`, and skills with Python clients), use Python `>= 3.10` with the packages in `_localsetup/requirements.txt` (PyYAML>=6.0, requests>=2.28, python-frontmatter>=1.1). Run `python3 -m pip install -r _localsetup/requirements.txt`, or pass `--install-deps` to the install script to do it automatically.
+- **Recommended (Python tooling):** For full skill validation/discovery tooling, public skill index refresh, scrub, and Python client skills (including secure mail crypto flows), use Python `>= 3.10` with the packages in `_localsetup/requirements.txt` (PyYAML>=6.0, requests>=2.28, python-frontmatter>=1.1, cryptography>=42.0, PGPy>=0.6.0). Run `python3 -m pip install -r _localsetup/requirements.txt`, or pass `--install-deps` to the install script to do it automatically.
 
 ---
 
@@ -149,6 +149,7 @@ _localsetup/
 │   ├── automated_test.sh        # Minimal sanity tests (Bash)
 │   └── automated_test.ps1       # Minimal sanity tests (PowerShell)
 └── tools/
+    ├── agentq_transport_client/ # Agent Q bidirectional CLI (ship-file-drop, ingest-blob, mail-pull, strict gpg)
     ├── deploy                   # Write platform context + skills (Bash; on Windows delegates to .ps1)
     ├── deploy.ps1               # Same (PowerShell)
     ├── refresh_public_skill_index.py   # Refresh PUBLIC_SKILL_INDEX.yaml from registry URLs (requires PyYAML; see requirements.txt)
@@ -188,6 +189,8 @@ All docs live under `docs/` and are copied to `_localsetup/docs/` on deploy so t
 | [TASK_SKILL_MATCHING.md](docs/TASK_SKILL_MATCHING.md) | Task-to-installed-skill matching flow: single vs batch, auto-pick/parcel, complementary public-skill suggestions |
 | [INPUT_HARDENING_STANDARD.md](docs/INPUT_HARDENING_STANDARD.md) | Hostile-input baseline: sanitization, validation, actionable error handling, and no-silent-failure policy |
 | [TOOLING_POLICY.md](docs/TOOLING_POLICY.md) | Python-first tooling scope, runtime target, and minimal dependency policy |
+| [AGENTIC_AGENT_Q_SCENARIOS.md](docs/AGENTIC_AGENT_Q_SCENARIOS.md) | file_drop/mail scenarios: repos, agents, local/remote |
+| [AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](docs/AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) | Agent-to-agent PRD handoff (ACTIVE) |
 
 ---
 
@@ -200,6 +203,8 @@ Skills are task-based instructions (SKILL.md with `name` and `description` front
 | `localsetup-decision-tree-workflow` | User says "decision tree", "reverse prompt"; editing `.agent/queue/**`, PRD |
 | `localsetup-agentic-umbrella-queue` | Queue/PRD in scope; named workflows; impact summary + confirmation |
 | `localsetup-agentic-prd-batch` | "Process PRDs", "run batch from PRD folder"; implement per spec, outcome |
+| `localsetup-agentq-transport` | Ship/ingest sealed Agent Q blobs (file_drop/mail), registry, strict gpg; see AGENTIC_AGENT_Q_SCENARIOS.md |
+| `localsetup-mail-protocol-control` | SMTP/IMAP with preencrypted_openpgp_armored for Agent Q strict mail ship |
 | `localsetup-public-repo-identity` | Editing README*, CONTRIBUTING*; public identity |
 | `localsetup-framework-compliance` | Framework modifications, PRDs, checklist/checkpoints |
 | `localsetup-safety-and-backup` | Destructive ops, backups, temp files, firewall |
@@ -230,7 +235,7 @@ Skills are task-based instructions (SKILL.md with `name` and `description` front
 | `localsetup-skill-normalizer` | Normalize skills: Phase 1 (documents, platform choice when platform-specific); Phase 2 (tooling rewrite to framework standard). One skill or all. |
 | `localsetup-skill-sandbox-tester` | Test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until user approves |
 | `localsetup-agentlens` | Codebase navigation with agentlens hierarchy; explore projects, find modules/symbols, TODOs |
-| `localsetup-framework-audit` | Run doc/link/skill matrix/version checks; optional `--deep` (Deep Analysis); output to user path only; before release |
+| `localsetup-framework-audit` | Doc/link/skill matrix/version checks; output path required (`run_framework_audit.py --output`); before release |
 | `localsetup-cloudflare-dns` | Manage Cloudflare DNS records (list, create, modify, delete) and zone surveys via flarectl |
 | `localsetup-npm-management` | Manage Nginx Proxy Manager proxy hosts via REST API; coordinate Docker + NPM deploy workflows |
 
@@ -250,6 +255,7 @@ Run from **client repo root** (so that `_localsetup/` is present). Tools live un
 | `skill_importer_scan` / `skill_importer_scan.ps1` | Scan a directory for Agent Skills; output per-skill brief (what it does, what it has, code types) and heuristic security flags. Use after fetching a URL or for a local path; then use skill-importer workflow to let the user select which skills to import. |
 | `tmux_ops` / `tmux_ops.py` | Tmux ops workflow: pick session (idle = prompt on current line), probe sudo (ready vs password_required), send with pylon-guard delay, `send --wait` for adaptive idle detection, standalone `wait --timeout N` for long ops. When REMOTE_TMUX_HOST is set, wrapper runs the Python tool over SSH. See [docs/ops/tmux-ops-remote.md](docs/ops/tmux-ops-remote.md). |
 | `tmux_terminal_mode` / `tmux_terminal_mode.py` | Toggle tmux-default terminal mode: `enable` (ide or shell layer + agent rule), `disable` (restore originals), `status` (all layers). See [docs/TMUX_TERMINAL_MODE.md](docs/TMUX_TERMINAL_MODE.md). |
+| `agentq_transport_client/agentq_cli.py` | Agent Q transport: ship-file-drop, ingest-blob, file-drop-poll, ship-mail-strict, queue-pending, archive-prune. See [docs/AGENTIC_AGENT_Q_SCENARIOS.md](docs/AGENTIC_AGENT_Q_SCENARIOS.md) and client USER_GUIDE. |
 
 ---
 
@@ -268,7 +274,8 @@ Run from **client repo root** (so that `_localsetup/` is present). Tools live un
 |----------|-------------|-------------|---------------|
 | Master rule / context | Always-loaded framework context | Always | No |
 | Decision tree | One Q per turn, 4 options A–D, preferred + rationale | User says "decision tree" or "reverse prompt" | No |
-| Agent Q (queue) | Process specs in `.agent/queue/`; implement, status, outcome | "Process PRDs", "run batch from PRD folder" | Yes if destructive |
+| Agent Q (queue) | Process specs in `.agent/queue/` (or structured `in/`); implement, status, outcome | "Process PRDs", "run batch from PRD folder" | Yes if destructive |
+| Agent Q bidirectional | Mail/file_drop adapters + OpenPGP; client `tools/agentq_transport_client/` (ACTIVE); protocol AGENTIC_AGENT_TO_AGENT_PROTOCOL.md | Agent-to-agent PRD handoff | Yes if destructive ship |
 | Umbrella workflow | Multi-phase single kickoff; named workflows | User invokes by name | Yes for big/destructive |
 | Manual (lazy admin) | Human-in-the-loop; three-block format; info-gather before destructive | Sudo, confirmation, manual steps | No (protocol is guardrail) |
 

@@ -36,10 +36,12 @@
 | localsetup-skill-normalizer | Phase 1: documents (platform choice when platform-specific); Phase 2: tooling to framework standard | Normalize one or all skills; batch review imported or dropped-in skills |
 | localsetup-skill-sandbox-tester | Test skills in isolated sandbox; smoke check; on failure use debug-pro; no repo writes until user approves | Validate skill after import, test skill in sandbox, ensure skill runs before production |
 | localsetup-agentlens | Codebase navigation with agentlens hierarchy (INDEX.md, modules, outline, memory) | Explore codebases, find modules/symbols, TODOs/warnings; large repos |
-| localsetup-framework-audit | Run doc, link, skill matrix, version/facts checks; optional --deep (Deep Analysis); output to user path only | User says "run audit", "run framework audit", or before release |
+| localsetup-framework-audit | Doc/link/skill matrix/version checks; output path required (`run_framework_audit.py --output`) | User says "run audit", "run framework audit", or before release |
 | localsetup-system-info | Quick system diagnostics: CPU, memory, disk, uptime | Capture server baseline, host layout and specs for further operations |
 | localsetup-cron-orchestrator | Manage cron from manifest: triggers, sequenced tasks, on-boot delay | Create/remove/reorder cron tasks; install crontab fragment |
 | localsetup-cloudflare-dns | Manage Cloudflare DNS records (list, create, modify, delete) and run zone surveys via flarectl | Adding, changing, or removing DNS records; zone survey; automated DNS snapshots |
 | localsetup-npm-management | Manage Nginx Proxy Manager proxy hosts via REST API; coordinate Docker service deployments with NPM routing | Create/modify/remove NPM proxy hosts; diagnose 502s; backup/restore; Docker + NPM deploy workflows |
+| localsetup-mail-protocol-control | Manage delegated SMTP/IMAP accounts with attachment-first MIME handling, chunked attachment retrieval, and full-envelope encryption/decryption tools | Agent-driven mailbox read/send/mutate/encrypt workflows; preencrypted_openpgp_armored for Agent Q strict mail ship |
+| localsetup-agentq-transport | Agent Q bidirectional transport: file_drop ship/ingest, mail pull/ship (strict gpg), registry, queue-pending, archive-prune | Ship/ingest sealed PRD manifests between agents; see AGENTIC_AGENT_Q_SCENARIOS.md |
 
 Framework docs: _localsetup/docs/ (AGENTIC_DESIGN_INDEX.md, WORKFLOW_REGISTRY.md, PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md).
