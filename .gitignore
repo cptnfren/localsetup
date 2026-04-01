@@ -20,6 +20,15 @@ _localsetup/config/mail_accounts.json
 # Git state snapshots (unfuck-my-git-state diagnostic output; never publish)
 .git-state-snapshots/
 
+# Repo maintenance scripts (local-only, not shipped)
+scripts/
+
+# Internal/maintainer docs (not shipped; public docs live in _localsetup/docs/)
+docs/
+
+# Contribution artifacts (local-only, not shipped)
+contributions/
+
 # Python
 __pycache__/
 *.pyc
@@ -27,3 +36,6 @@ __pycache__/
 # Kilo Code (migrated from Cursor)
 .kilocode/
 .kilo/
+
+# Codex CLI context (local-only agent instructions)
+AGENTS.md
