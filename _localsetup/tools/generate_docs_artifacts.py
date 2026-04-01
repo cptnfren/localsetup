@@ -94,10 +94,17 @@ def collect_skills(skills_dir: Path) -> list[dict[str, str]]:
 
 def collect_platforms(platform_registry: Path) -> list[dict[str, str]]:
     rows = []
+    in_supported_platforms = False
     for line in platform_registry.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if stripped.startswith("##"):
+            in_supported_platforms = stripped.startswith("## Supported platforms")
+            continue
+        if not in_supported_platforms:
+            continue
         if not line.startswith("|"):
             continue
-        if line.startswith("| ID ") or line.startswith("|----"):
+        if stripped.startswith("| ID ") or stripped.startswith("|----"):
             continue
         parts = [p.strip() for p in line.strip("|").split("|")]
         if len(parts) != 4:
@@ -148,8 +155,8 @@ def write_skills_md(path: Path, major_minor: str, skills: list[dict[str, str]]) 
             "---",
             "",
             '<p align="center">',
-            "<strong>Author:</strong> <a href=\"https://github.com/cptnfren\">Slavic Kozyuk</a><br>",
-            f"<strong>Copyright</strong> © {year} <a href=\"https://www.cruxexperts.com/\">Crux Experts LLC</a> – Innovate, Automate, Dominate.",
+            '<strong>Author:</strong> <a href="https://github.com/cptnfren">Slavic Kozyuk</a><br>',
+            f'<strong>Copyright</strong> © {year} <a href="https://www.cruxexperts.com/">Crux Experts LLC</a> – Innovate, Automate, Dominate.',
             "</p>",
             "",
         ]
@@ -161,7 +168,8 @@ def write_skills_md(path: Path, major_minor: str, skills: list[dict[str, str]]) 
 
 def write_facts_json(path: Path, facts: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(facts, indent=2) + "\n", encoding="utf-8")
+    output = {k: v for k, v in facts.items() if k != "generated_at"}
+    path.write_text(json.dumps(output, indent=2) + "\n", encoding="utf-8")
 
 
 def write_internal_snapshot(path: Path, facts: dict) -> None:
@@ -223,12 +231,22 @@ def update_facts_blocks(repo_root: Path, facts: dict) -> None:
     )
 
     replace_managed_block(repo_root / "README.md", "facts-block", readme_block)
-    replace_managed_block(repo_root / "_localsetup" / "docs" / "README.md", "facts-block", docs_index_block)
-    replace_managed_block(repo_root / "_localsetup" / "docs" / "FEATURES.md", "facts-block", docs_index_block)
+    replace_managed_block(
+        repo_root / "_localsetup" / "docs" / "README.md",
+        "facts-block",
+        docs_index_block,
+    )
+    replace_managed_block(
+        repo_root / "_localsetup" / "docs" / "FEATURES.md",
+        "facts-block",
+        docs_index_block,
+    )
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate Localsetup documentation artifacts.")
+    parser = argparse.ArgumentParser(
+        description="Generate Localsetup documentation artifacts."
+    )
     parser.add_argument("--repo-root", default=None, help="Repository root path.")
     parser.add_argument(
         "--internal-output",
@@ -240,7 +258,11 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    repo_root = Path(args.repo_root).resolve() if args.repo_root else Path(__file__).resolve().parents[2]
+    repo_root = (
+        Path(args.repo_root).resolve()
+        if args.repo_root
+        else Path(__file__).resolve().parents[2]
+    )
 
     version = (repo_root / "VERSION").read_text(encoding="utf-8").strip()
     major_minor = ".".join(version.split(".")[:2]) if "." in version else version
@@ -260,7 +282,12 @@ def main() -> int:
         "skill_count": len(skills),
         "platforms": platforms,
         "skills": [
-            {"id": s["id"], "name": s["name"], "version": s["version"], "path": s["path"]}
+            {
+                "id": s["id"],
+                "name": s["name"],
+                "version": s["version"],
+                "path": s["path"],
+            }
             for s in skills
         ],
     }

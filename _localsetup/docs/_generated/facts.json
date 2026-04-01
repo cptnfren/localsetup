@@ -1,8 +1,7 @@
 {
-  "generated_at": "2026-04-01T18:12:36.051183+00:00",
-  "version": "2.10.0",
+  "version": "2.10.1",
   "major_minor": "2.10",
-  "platform_count": 10,
+  "platform_count": 5,
   "skill_count": 44,
   "platforms": [
     {
@@ -34,36 +33,6 @@
       "display_name": "Kilo CLI",
       "context_loader": "Not applicable (reads rules from instructions[] in kilo.jsonc)",
       "skills_path": "`~/.kilo/skills/` (auto-discovered)"
-    },
-    {
-      "id": "Platform",
-      "display_name": "Global skills path",
-      "context_loader": "Global config",
-      "skills_path": "Notes"
-    },
-    {
-      "id": "kilo",
-      "display_name": "`~/.kilo/skills/`",
-      "context_loader": "Not required",
-      "skills_path": "Skills auto-discovered by Kilo"
-    },
-    {
-      "id": "kilo",
-      "display_name": "`~/.kilo/rules/`",
-      "context_loader": "Add to `instructions[]` in kilo.jsonc",
-      "skills_path": "Rules deployed as `.md` files"
-    },
-    {
-      "id": "openclaw",
-      "display_name": "`~/.openclaw/skills/`",
-      "context_loader": "`~/.openclaw/openclaw.json`",
-      "skills_path": "Skills auto-discovered from `~/.openclaw/skills/`"
-    },
-    {
-      "id": "claude-code",
-      "display_name": "`~/.claude/skills/`",
-      "context_loader": "N/A",
-      "skills_path": "Uses `~/.claude/CLAUDE.md` for global context"
     }
   ],
   "skills": [
