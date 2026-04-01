@@ -31,22 +31,18 @@ HARDENING_RULES = {
         "def sanitize_text(",
         "def sanitize_url(",
         "def report_error(",
-        "errors=\"replace\"",
+        'errors="replace"',
         "file=sys.stderr",
     ),
     "skill_validation_scan.py": (
         "sanitize_for_output(",
-        "errors=\"replace\"",
+        'errors="replace"',
         "file=sys.stderr",
         "try:",
     ),
 }
 
 TOOLING_POLICY_MARKERS = {
-    "context_rule": (
-        Path(".cursor/rules/localsetup-context.mdc"),
-        "Python-first tooling:",
-    ),
     "tooling_doc": (
         Path("_localsetup/docs/TOOLING_POLICY.md"),
         "Minimum supported version: Python 3.10.",
@@ -96,13 +92,42 @@ def validate_index(index_path: Path, errors: list[str]) -> None:
 
 def validate_markers(engine_dir: Path, errors: list[str]) -> None:
     required_markers = {
-        engine_dir / "skills" / "localsetup-context" / "SKILL.md": "## Output contract (low token, always apply)",
-        engine_dir / "skills" / "localsetup-communication-and-tools" / "SKILL.md": "**Output contract (always):**",
-        engine_dir / "skills" / "localsetup-skill-discovery" / "SKILL.md": "Presentation fallback by platform capability:",
-        engine_dir / "templates" / "cursor" / "localsetup-context.mdc": "## Output contract (low token, always apply)",
-        engine_dir / "templates" / "claude-code" / "CLAUDE.md": "## Output contract (low token, always apply)",
-        engine_dir / "templates" / "codex" / "AGENTS.md": "## Output contract (low token, always apply)",
-        engine_dir / "templates" / "openclaw" / "OPENCLAW_CONTEXT.md": "## Output contract (low token, always apply)",
+        engine_dir
+        / "skills"
+        / "localsetup-context"
+        / "SKILL.md": "## Output contract (low token, always apply)",
+        engine_dir
+        / "skills"
+        / "localsetup-communication-and-tools"
+        / "SKILL.md": "**Output contract (always):**",
+        engine_dir
+        / "skills"
+        / "localsetup-skill-discovery"
+        / "SKILL.md": "Presentation fallback by platform capability:",
+        engine_dir
+        / "templates"
+        / "cursor"
+        / "localsetup-context.mdc": "## Output contract (low token, always apply)",
+        engine_dir
+        / "templates"
+        / "claude-code"
+        / "CLAUDE.md": "## Output contract (low token, always apply)",
+        engine_dir
+        / "templates"
+        / "codex"
+        / "AGENTS.md": "## Output contract (low token, always apply)",
+        engine_dir
+        / "templates"
+        / "openclaw"
+        / "OPENCLAW_CONTEXT.md": "## Output contract (low token, always apply)",
+        engine_dir
+        / "templates"
+        / "opencode"
+        / "AGENTS.md": "## Output contract (low token, always apply)",
+        engine_dir
+        / "templates"
+        / "kilocode"
+        / "localsetup-context.md": "## Output contract (low token, always apply)",
     }
     for file_path, marker in required_markers.items():
         if not file_path.exists():

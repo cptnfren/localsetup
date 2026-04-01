@@ -10,7 +10,7 @@
     Client repo root path. Default: current directory (interactive) or . (with -Yes).
 
 .PARAMETER Tools
-    Comma-separated list: cursor, claude-code, codex, openclaw. Required when using -Yes.
+    Comma-separated list: cursor, claude-code, codex, openclaw, opencode. Required when using -Yes.
 
 .PARAMETER Yes
     Non-interactive mode. Requires -Tools. No prompts.
@@ -60,6 +60,7 @@ if ($args.Count -gt 0) {
 }
 
 $REPO_URL = if ($env:LOCALSETUP_2_REPO) { $env:LOCALSETUP_2_REPO } else { 'https://github.com/cptnfren/localsetup.git' }
+$MinPythonVersion = [Version]'3.10.0'
 
 function Show-Usage {
     @'
@@ -72,13 +73,13 @@ Usage:
 
 Parameters:
   -Directory PATH   Client repo root (default: . or prompt)
-  -Tools LIST       Comma-separated: cursor, claude-code, codex, openclaw (required with -Yes)
+  -Tools LIST       Comma-separated: cursor, claude-code, codex, openclaw, opencode (required with -Yes)
   -Yes              Non-interactive; no prompts
   -UpgradePolicy    preserve | force | fail-on-conflict (default: preserve)
   -InstallDeps      Automatically install missing Python packages via pip after deploy.
                     Without this switch, missing deps are reported but install still completes.
-  -Global           Deploy skills/rules globally to user home (~/.kilo/, ~/.openclaw/, etc.)
-                    Auto-detects installed agents (kilo, openclaw, claude) if -Tools not specified.
+  -Global           Deploy skills/rules globally to user home (~/.kilo/, ~/.openclaw/, ~/.config/opencode/, etc.)
+                    Auto-detects installed agents (kilo, openclaw, claude, opencode) if -Tools not specified.
   -Help, -?, -h     Show this help and exit
 
 Tools (use with -Tools):
@@ -86,11 +87,14 @@ Tools (use with -Tools):
   claude-code  Claude Code (.claude/CLAUDE.md, .claude/skills)
   codex        OpenAI Codex CLI (AGENTS.md, .agents/skills)
   openclaw     OpenClaw (skills/, _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md)
+  opencode     OpenCode CLI (AGENTS.md, .opencode/skills/)
+  kilo         Kilo CLI (.kilocode/rules, .kilocode/skills/)
 
 Examples:
   .\install.ps1 -Directory C:\repos\myapp -Tools "cursor,claude-code" -Yes
   .\install.ps1 -Global              Deploy framework globally to all detected agents
   .\install.ps1 -Global -Tools kilo  Deploy framework globally to kilo only
+  .\install.ps1 -Global -Tools opencode  Deploy framework globally to opencode only
   .\install.ps1
 
 Note: Running elevated (Run as Administrator) creates files owned by that account. Re-runs as a normal
@@ -100,6 +104,9 @@ Global deploy deploys to:
   kilo:       ~/.kilo/skills/ (auto-discovered) and ~/.kilo/rules/ (add to instructions[])
   openclaw:   ~/.openclaw/skills/
   claude:     ~/.claude/skills/ and ~/.claude/CLAUDE.md
+  opencode:   ~/.config/opencode/skills/
+
+Local kilo deploy uses: .kilocode/rules/ and .kilocode/skills/
 '@
 }
 
@@ -135,6 +142,7 @@ function Detect-Agents {
     if (Get-ToolVersion -ToolName 'kilo') { $agents += 'kilo' }
     if (Get-ToolVersion -ToolName 'openclaw') { $agents += 'openclaw' }
     if (Get-ToolVersion -ToolName 'claude') { $agents += 'claude-code' }
+    if (Get-ToolVersion -ToolName 'opencode') { $agents += 'opencode' }
     return ($agents -join ',')
 }
 
@@ -493,7 +501,7 @@ if ($Global) {
     if (-not $Tools) {
         $Tools = Detect-Agents
         if (-not $Tools) {
-            Write-Host 'No supported CLI agents detected (kilo, openclaw, claude).' -ForegroundColor Yellow
+            Write-Host 'No supported CLI agents detected (kilo, openclaw, claude, opencode).' -ForegroundColor Yellow
             Write-Host 'Install one of them first, then re-run with -Global.'
             exit 1
         }
@@ -542,15 +550,18 @@ if (-not $Tools) {
     Write-Host '  2) claude-code'
     Write-Host '  3) codex'
     Write-Host '  4) openclaw'
+    Write-Host '  5) opencode'
+    Write-Host '  6) kilo'
     Write-Host 'Example: 1,2 for Cursor and Claude Code'
     $Tools = Read-Host 'Tools'
 }
 $ToolsNormalized = ($Tools -split ',' | ForEach-Object { $_.Trim().ToLower() }) -join ','
-$ToolsNormalized = $ToolsNormalized -replace '1', 'cursor' -replace '2', 'claude-code' -replace '3', 'codex' -replace '4', 'openclaw'
+$ToolsNormalized = $ToolsNormalized -replace '1', 'cursor' -replace '2', 'claude-code' -replace '3', 'codex' -replace '4', 'openclaw' -replace '5', 'opencode' -replace '6', 'kilo'
 $toolList = $ToolsNormalized -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ }
+$ValidTools = @('cursor', 'claude-code', 'codex', 'openclaw', 'opencode', 'kilo')
 foreach ($t in $toolList) {
     if ($t -notin $ValidTools) {
-        Show-UsageAndExit "Invalid tool: '$t'. Valid values: cursor, claude-code, codex, openclaw"
+        Show-UsageAndExit "Invalid tool: '$t'. Valid values: cursor, claude-code, codex, openclaw, opencode, kilo"
     }
 }
 if (-not $toolList -or $toolList.Count -eq 0) {

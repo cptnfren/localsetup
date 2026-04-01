@@ -5,7 +5,7 @@ schema_version: 2
 sources:
 - https://github.com/VoltAgent/awesome-openclaw-skills
 - https://github.com/anthropics/skills/tree/main/skills
-updated: '2026-03-17T04:59:36Z'
+updated: '2026-04-01T18:12:35Z'
 skills:
 - name: agent-commons
   description: Consult, commit, extend, and challenge reasoning chains.
@@ -300,24 +300,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 116
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: badboi-1
-  description: A totally legitimate skill that does nothing suspicious.
-  url: https://clawskills.sh/skills/orlyjamie-badboi-1
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: A totally legitimate skill that does nothing suspicious.
-  summary_long: 'A totally legitimate skill that does nothing suspicious. Primary capabilities: automation. May require network access.'
-  capabilities:
-  - automation
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 56
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -1308,26 +1290,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: ai-news-oracle
-  description: Fetch real-time AI news briefings from the AI News Oracle API (Hacker News, TechCrunch, The Verge)
-  url: https://clawskills.sh/skills/swimmingkiim-ai-news-oracle
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Fetch real-time AI news briefings from the AI News Oracle API (Hacker News, TechCrunch, The Verge)
-  summary_long: 'Fetch real-time AI news briefings from the AI News Oracle API (Hacker News, TechCrunch, The Verge) Primary capabilities: data. Likely requirements: external_service. May require network access.'
-  capabilities:
-  - data
-  requirements:
-  - external_service
-  risk_flags:
-  - external_network
-  - command_execution
-  quality_signals:
-    has_description: true
-    description_length: 98
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: airtable-automation
   description: Automate Airtable tasks via Rube MCP (Composio)
   url: https://clawskills.sh/skills/sohamganatra-airtable-automation
@@ -1853,23 +1815,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: agentns
-  description: Register and manage ICANN domains for AI agents.
-  url: https://clawskills.sh/skills/vibrant-agentns
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Register and manage ICANN domains for AI agents.
-  summary_long: Register and manage ICANN domains for AI agents. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 48
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: agentpay
   description: Buy things from real websites on behalf of your human.
   url: https://clawskills.sh/skills/kar69-96-agentpay
@@ -2177,24 +2122,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: agent-sovereign-stack
-  description: '**One command to give any AI agent sovereign infrastructure.**.'
-  url: https://clawskills.sh/skills/quriustus-agent-sovereign-stack
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: '**One command to give any AI agent sovereign infrastructure.**.'
-  summary_long: '**One command to give any AI agent sovereign infrastructure.**. May require network access.'
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  - command_execution
-  quality_signals:
-    has_description: true
-    description_length: 63
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: agent-watcher
   description: A skill for monitoring Moltbook feed, detecting new agents, and tracking interesting posts.
   url: https://clawskills.sh/skills/nantes-agent-watcher
@@ -2209,25 +2136,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 91
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: agentcanary
-  description: Market intelligence API for AI agents.
-  url: https://clawskills.sh/skills/mrcerq-agentcanary
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Market intelligence API for AI agents.
-  summary_long: 'Market intelligence API for AI agents. Primary capabilities: data. Likely requirements: external_service. May require network access.'
-  capabilities:
-  - data
-  requirements:
-  - external_service
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 38
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -3613,24 +3521,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: agent-arena-skill
-  description: Discover, register, and hire ERC-8004 autonomous agents across 16 blockchains.
-  url: https://clawskills.sh/skills/neeeophytee-agent-arena-skill
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Discover, register, and hire ERC-8004 autonomous agents across 16 blockchains.
-  summary_long: 'Discover, register, and hire ERC-8004 autonomous agents across 16 blockchains. Primary capabilities: search. May require network access.'
-  capabilities:
-  - search
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 78
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: agent-brain
   description: Local-first persistent memory for AI agents with SQLite storage, orchestrated retrieve/extract loops, hybrid.
   url: https://clawskills.sh/skills/dobrinalexandru-agent-brain
@@ -3718,24 +3608,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 51
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: arxiv-source
-  description: Fetch arXiv LaTeX source, list sections, extract abstracts.
-  url: https://clawskills.sh/skills/willamhou-arxiv-source
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Fetch arXiv LaTeX source, list sections, extract abstracts.
-  summary_long: 'Fetch arXiv LaTeX source, list sections, extract abstracts. Primary capabilities: data. May require network access.'
-  capabilities:
-  - data
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 59
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -4444,6 +4316,23 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
+- name: honcho-setup
+  description: Persistent cross-session memory via Honcho.
+  url: https://clawskills.sh/skills/ajspig-honcho-setup
+  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
+  category: Table of Contents
+  summary_short: Persistent cross-session memory via Honcho.
+  summary_long: Persistent cross-session memory via Honcho. May require network access.
+  capabilities: []
+  requirements: []
+  risk_flags:
+  - external_network
+  quality_signals:
+    has_description: true
+    description_length: 43
+    has_category: true
+    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
+    url_domain_hint: other
 - name: 13-day-sprint-method
   description: Productivity system based on Maya calendar with 13 natural tones for project management and personal development.
   url: https://clawskills.sh/skills/galizki-13-day-sprint-method
@@ -4873,23 +4762,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 49
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: cabin-sol
-  description: Solana development tutor and builder.
-  url: https://clawskills.sh/skills/sp0oby-cabin-sol
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Solana development tutor and builder.
-  summary_long: Solana development tutor and builder. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 37
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -5915,6 +5787,23 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
+- name: boss-ai-agent
+  description: AI management middleware with 14 mentors and 9 culture packs.
+  url: https://github.com/openclaw/skills/tree/main/skills/tonypk/boss-ai-agent/SKILL.md
+  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
+  category: Table of Contents
+  summary_short: AI management middleware with 14 mentors and 9 culture packs.
+  summary_long: AI management middleware with 14 mentors and 9 culture packs. May require network access.
+  capabilities: []
+  requirements: []
+  risk_flags:
+  - external_network
+  quality_signals:
+    has_description: true
+    description_length: 61
+    has_category: true
+    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
+    url_domain_hint: github
 - name: 4claw
   description: 4claw — a moderated imageboard for AI agents.
   url: https://clawskills.sh/skills/mfergpt-4claw
@@ -5997,26 +5886,6 @@ skills:
   capabilities:
   - github
   requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 38
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: aegis-security
-  description: Blockchain security API for AI agents.
-  url: https://clawskills.sh/skills/swiftadviser-aegis-security
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Blockchain security API for AI agents.
-  summary_long: 'Blockchain security API for AI agents. Primary capabilities: security, data. Likely requirements: external_service. May require network access.'
-  capabilities:
-  - security
-  - data
-  requirements:
-  - external_service
   risk_flags:
   - external_network
   quality_signals:
@@ -6296,24 +6165,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: agentbus-relay-chat
-  description: 'AgentBus proof-of-concept: an IRC-like LLM.'
-  url: https://clawskills.sh/skills/dantunes-github-agentbus-relay-chat
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: 'AgentBus proof-of-concept: an IRC-like LLM.'
-  summary_long: 'AgentBus proof-of-concept: an IRC-like LLM. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 43
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: add-analytics
   description: Add Google Analytics 4 tracking to any project.
   url: https://clawskills.sh/skills/jeftekhari-add-analytics
@@ -6439,42 +6290,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 34
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: clean-skill-1
-  description: A friendly greeting skill for testing.
-  url: https://clawskills.sh/skills/orlyjamie-clean-skill-1
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: A friendly greeting skill for testing.
-  summary_long: 'A friendly greeting skill for testing. Primary capabilities: testing. May require network access.'
-  capabilities:
-  - testing
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 38
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: cleanboi-00002
-  description: A friendly greeting skill for testing.
-  url: https://clawskills.sh/skills/orlyjamie-cleanboi-00002
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: A friendly greeting skill for testing.
-  summary_long: 'A friendly greeting skill for testing. Primary capabilities: testing. May require network access.'
-  capabilities:
-  - testing
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 38
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -6755,328 +6570,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 74
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: api-credentials-hygiene
-  description: Audits and hardens API credential handling.
-  url: https://clawskills.sh/skills/kowl64-api-credentials-hygiene
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Audits and hardens API credential handling.
-  summary_long: 'Audits and hardens API credential handling. Primary capabilities: data. Likely requirements: api_key, external_service. May require network access.'
-  capabilities:
-  - data
-  requirements:
-  - api_key
-  - external_service
-  risk_flags:
-  - external_network
-  - credential_usage
-  quality_signals:
-    has_description: true
-    description_length: 43
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: app-store-changelog
-  description: Create user-facing App Store release notes.
-  url: https://clawskills.sh/skills/dimillian-app-store-changelog
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Create user-facing App Store release notes.
-  summary_long: 'Create user-facing App Store release notes. Primary capabilities: automation. May require network access.'
-  capabilities:
-  - automation
-  requirements: []
-  risk_flags:
-  - external_network
-  - file_write
-  quality_signals:
-    has_description: true
-    description_length: 43
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: clawdbot-release-check
-  description: Check for new clawdbot releases and notify once.
-  url: https://clawskills.sh/skills/pors-clawdbot-release-check
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Check for new clawdbot releases and notify once.
-  summary_long: Check for new clawdbot releases and notify once. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 48
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: create-content
-  description: Thinking partner that transforms ideas into platform-optimized.
-  url: https://clawskills.sh/skills/itsflow-create-content
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Thinking partner that transforms ideas into platform-optimized.
-  summary_long: Thinking partner that transforms ideas into platform-optimized. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  - file_write
-  quality_signals:
-    has_description: true
-    description_length: 63
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: expense-tracker-pro
-  description: Track expenses via natural language, get spending.
-  url: https://clawskills.sh/skills/jhillin8-expense-tracker-pro
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Track expenses via natural language, get spending.
-  summary_long: 'Track expenses via natural language, get spending. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 50
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: harvey
-  description: Harvey is an imaginary friend and conversation companion - a large white.
-  url: https://clawskills.sh/skills/udiedrichsen-harvey
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Harvey is an imaginary friend and conversation companion - a large white.
-  summary_long: Harvey is an imaginary friend and conversation companion - a large white. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 73
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: just-fucking-cancel
-  description: Find and cancel unwanted subscriptions.
-  url: https://clawskills.sh/skills/chipagosfinest-just-fucking-cancel
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Find and cancel unwanted subscriptions.
-  summary_long: Find and cancel unwanted subscriptions. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 39
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: nordpool-fi
-  description: Hourly electricity prices for Finland with optimal EV charging window.
-  url: https://clawskills.sh/skills/ovaris-nordpool-fi
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Hourly electricity prices for Finland with optimal EV charging window.
-  summary_long: 'Hourly electricity prices for Finland with optimal EV charging window. Primary capabilities: github, automation. May require network access.'
-  capabilities:
-  - github
-  - automation
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 70
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: openssl
-  description: Generate secure random strings, passwords, and cryptographic tokens.
-  url: https://clawskills.sh/skills/asleep123-openssl
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Generate secure random strings, passwords, and cryptographic tokens.
-  summary_long: 'Generate secure random strings, passwords, and cryptographic tokens. Likely requirements: api_key. May require network access.'
-  capabilities: []
-  requirements:
-  - api_key
-  risk_flags:
-  - external_network
-  - credential_usage
-  - file_write
-  quality_signals:
-    has_description: true
-    description_length: 68
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: plaid
-  description: plaid-cli a cli for interacting with the plaid finance platform.
-  url: https://clawskills.sh/skills/jverdi-plaid
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: plaid-cli a cli for interacting with the plaid finance platform.
-  summary_long: plaid-cli a cli for interacting with the plaid finance platform. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 64
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: publisher
-  description: Make your skills easy to understand and impossible to ignore.
-  url: https://clawskills.sh/skills/tunaissacoding-publisher
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Make your skills easy to understand and impossible to ignore.
-  summary_long: Make your skills easy to understand and impossible to ignore. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 61
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: relationship-skills
-  description: Improve relationships with communication tools.
-  url: https://clawskills.sh/skills/jhillin8-relationship-skills
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Improve relationships with communication tools.
-  summary_long: 'Improve relationships with communication tools. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 47
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: sharesight-skill
-  description: Manage Sharesight portfolios, holdings, and custom.
-  url: https://clawskills.sh/skills/lextoumbourou-sharesight-skill
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Manage Sharesight portfolios, holdings, and custom.
-  summary_long: Manage Sharesight portfolios, holdings, and custom. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 51
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: solo-cli
-  description: Monitor and interact with SOLO.ro accounting platform via CLI or TUI.
-  url: https://clawskills.sh/skills/rursache-solo-cli
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Monitor and interact with SOLO.ro accounting platform via CLI or TUI.
-  summary_long: Monitor and interact with SOLO.ro accounting platform via CLI or TUI. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 69
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: swissweather
-  description: Get current weather and forecasts from MeteoSwiss.
-  url: https://clawskills.sh/skills/xenofex7-swissweather
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Get current weather and forecasts from MeteoSwiss.
-  summary_long: Get current weather and forecasts from MeteoSwiss. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 50
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: tax-professional
-  description: US tax advisor, deduction optimizer.
-  url: https://clawskills.sh/skills/scottfo-tax-professional
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: US tax advisor, deduction optimizer.
-  summary_long: 'US tax advisor, deduction optimizer. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 36
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: ynab
-  description: Manage YNAB budgets, accounts, categories.
-  url: https://clawskills.sh/skills/obviyus-ynab
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Manage YNAB budgets, accounts, categories.
-  summary_long: Manage YNAB budgets, accounts, categories. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 42
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: accountcreator
-  description: '**[EN]** Bulk account registration agent for emails and social media.'
-  url: https://clawskills.sh/skills/dimkag79-accountcreator
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: '**[EN]** Bulk account registration agent for emails and social media.'
-  summary_long: '**[EN]** Bulk account registration agent for emails and social media. Primary capabilities: automation. May require network access.'
-  capabilities:
-  - automation
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 69
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -7602,24 +7095,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 112
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: agent-privacy-skill
-  description: Interact with the Ceaser privacy protocol on Base L2.
-  url: https://clawskills.sh/skills/se7enhvn-agent-privacy-skill
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Interact with the Ceaser privacy protocol on Base L2.
-  summary_long: 'Interact with the Ceaser privacy protocol on Base L2. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 53
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -9062,23 +8537,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: acorp
-  description: A-Corp Foundry — the coordination engine for agentic companies.
-  url: https://clawskills.sh/skills/thoerner-acorp
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: A-Corp Foundry — the coordination engine for agentic companies.
-  summary_long: A-Corp Foundry — the coordination engine for agentic companies. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 63
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: adaptive-learning-agents
   description: '**Learn from errors and corrections in real-time.'
   url: https://clawskills.sh/skills/vedantsingh60-adaptive-learning-agents
@@ -9656,24 +9114,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: bittensor-sdk
-  description: Comprehensive Bittensor blockchain interaction skill with wallet management, staking, subnet operations, neuron.
-  url: https://clawskills.sh/skills/taoleeh-bittensor-sdk
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Comprehensive Bittensor blockchain interaction skill with wallet management, staking, subnet operations, neuron.
-  summary_long: 'Comprehensive Bittensor blockchain interaction skill with wallet management, staking, subnet operations, neuron. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 112
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: bountyhub-agent
   description: 'Use H1DR4 BountyHub as an agent: create missions, submit work, dispute, vote, and claim escrow payouts.'
   url: https://clawskills.sh/skills/nativ3ai-bountyhub-agent
@@ -10121,23 +9561,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: agentbook
-  description: Send and receive encrypted messages on the agentbook network.
-  url: https://clawskills.sh/skills/r4v3n-art-agentbook
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Send and receive encrypted messages on the agentbook network.
-  summary_long: Send and receive encrypted messages on the agentbook network. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 61
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: agenthc-market-intelligence
   description: Real-time stock market data and trading intelligence API. 85 intelligence modules, 40 encoded intelligence skills.
   url: https://clawskills.sh/skills/traderhc123-agenthc-market-intelligence
@@ -10371,25 +9794,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 44
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: betbud-prediction-market-creation
-  description: An AI agent that automatically creates prediction markets on betbud.live by analyzing trending crypto Twitter content.
-  url: https://clawskills.sh/skills/samj12-betbud-prediction-market-creation
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: An AI agent that automatically creates prediction markets on betbud.live by analyzing trending crypto Twitter content.
-  summary_long: 'An AI agent that automatically creates prediction markets on betbud.live by analyzing trending crypto Twitter content. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  - file_write
-  quality_signals:
-    has_description: true
-    description_length: 118
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -11459,27 +10863,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: agentic-commerce
-  description: AI-powered shopping API for product search and crypto.
-  url: https://clawskills.sh/skills/purch-agent-agentic-commerce
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: AI-powered shopping API for product search and crypto.
-  summary_long: 'AI-powered shopping API for product search and crypto. Primary capabilities: search, github, data. Likely requirements: external_service. May require network access.'
-  capabilities:
-  - search
-  - github
-  - data
-  requirements:
-  - external_service
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 54
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: allstock-data
   description: Query A-share and US stock data via Tencent Finance API.
   url: https://clawskills.sh/skills/hacksing-allstock-data
@@ -12417,25 +11800,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: aegis-security-hackathon
-  description: Blockchain security scanner for AI agents (testnet)
-  url: https://clawskills.sh/skills/swiftadviser-aegis-security-hackathon
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Blockchain security scanner for AI agents (testnet)
-  summary_long: 'Blockchain security scanner for AI agents (testnet) Primary capabilities: testing, security. May require network access.'
-  capabilities:
-  - testing
-  - security
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 51
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: agent-constitution
   description: Interact with AgentConstitution governance contracts.
   url: https://clawskills.sh/skills/ztsalexey-agent-constitution
@@ -12799,24 +12163,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 115
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: chronobets
-  description: On-chain prediction market for AI agents on Solana mainnet.
-  url: https://clawskills.sh/skills/lordx64-chronobets
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: On-chain prediction market for AI agents on Solana mainnet.
-  summary_long: 'On-chain prediction market for AI agents on Solana mainnet. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 59
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -13317,24 +12663,6 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
-- name: nasty-skill
-  description: A totally legitimate skill that does nothing suspicious.
-  url: https://clawskills.sh/skills/orlyjamie-nasty-skill
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: A totally legitimate skill that does nothing suspicious.
-  summary_long: 'A totally legitimate skill that does nothing suspicious. Primary capabilities: automation. May require network access.'
-  capabilities:
-  - automation
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 56
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
 - name: nordvpn
   description: Control NordVPN on Linux via the `nordvpn` CLI.
   url: https://clawskills.sh/skills/maciekish-nordvpn
@@ -13527,6 +12855,26 @@ skills:
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
+- name: agent-security-harness
+  description: Security testing for AI agent wire protocols and platforms.
+  url: https://github.com/openclaw/skills/tree/main/skills/msaleme/agent-security-harness/SKILL.md
+  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
+  category: Table of Contents
+  summary_short: Security testing for AI agent wire protocols and platforms.
+  summary_long: 'Security testing for AI agent wire protocols and platforms. Primary capabilities: github, testing, security. May require network access.'
+  capabilities:
+  - github
+  - testing
+  - security
+  requirements: []
+  risk_flags:
+  - external_network
+  quality_signals:
+    has_description: true
+    description_length: 59
+    has_category: true
+    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
+    url_domain_hint: github
 - name: api-security
   description: Implement secure API design patterns including authentication, authorization, input validation, rate limiting.
   url: https://clawskills.sh/skills/brandonwise-api-security
@@ -13668,26 +13016,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 111
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: cifer-security
-  description: Implement quantum-resistant encryption using the CIFER SDK (cifer-sdk npm package)
-  url: https://clawskills.sh/skills/tip-citron-cifer-security
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Implement quantum-resistant encryption using the CIFER SDK (cifer-sdk npm package)
-  summary_long: 'Implement quantum-resistant encryption using the CIFER SDK (cifer-sdk npm package) Primary capabilities: automation, security. Likely requirements: node. May require network access.'
-  capabilities:
-  - automation
-  - security
-  requirements:
-  - node
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 82
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other
@@ -14664,220 +13992,6 @@ skills:
   quality_signals:
     has_description: true
     description_length: 33
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: a0x-agents
-  description: 'Two superpowers for AI agents: a collective brain and a Base.'
-  url: https://clawskills.sh/skills/claucondor-a0x-agents
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: 'Two superpowers for AI agents: a collective brain and a Base.'
-  summary_long: 'Two superpowers for AI agents: a collective brain and a Base. May require network access.'
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 61
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: civic-nexus
-  description: Connect to Civic Nexus MCP for 100+ integrations.
-  url: https://clawskills.sh/skills/tyronemichael-civic-nexus
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Connect to Civic Nexus MCP for 100+ integrations.
-  summary_long: 'Connect to Civic Nexus MCP for 100+ integrations. Primary capabilities: automation. May require network access.'
-  capabilities:
-  - automation
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 49
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: claw-skill-guard
-  description: Security scanner for OpenClaw skills.
-  url: https://clawskills.sh/skills/vincentchan-claw-skill-guard
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Security scanner for OpenClaw skills.
-  summary_long: 'Security scanner for OpenClaw skills. Primary capabilities: security. May require network access.'
-  capabilities:
-  - security
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 37
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: claw-to-claw
-  description: Coordinate with other AI agents on behalf of your human.
-  url: https://clawskills.sh/skills/tonacy-claw-to-claw
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Coordinate with other AI agents on behalf of your human.
-  summary_long: Coordinate with other AI agents on behalf of your human. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 56
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: clawtoclaw
-  description: Coordinate with other AI agents on behalf of your human.
-  url: https://clawskills.sh/skills/tonacy-clawtoclaw
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Coordinate with other AI agents on behalf of your human.
-  summary_long: Coordinate with other AI agents on behalf of your human. May require network access.
-  capabilities: []
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 56
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: dating
-  description: Meet other AI agents and make friends on the social platform built.
-  url: https://clawskills.sh/skills/lucasgeeksinthewood-dating
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Meet other AI agents and make friends on the social platform built.
-  summary_long: 'Meet other AI agents and make friends on the social platform built. Primary capabilities: automation. May require network access.'
-  capabilities:
-  - automation
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 67
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: glitchward-shield
-  description: Protect your OpenClaw assistant from prompt injection.
-  url: https://clawskills.sh/skills/eyeskiller-glitchward-shield
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Protect your OpenClaw assistant from prompt injection.
-  summary_long: 'Protect your OpenClaw assistant from prompt injection. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 54
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: heimdall
-  description: Scan OpenClaw skills for malicious patterns before installation.
-  url: https://clawskills.sh/skills/henrino3-heimdall
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Scan OpenClaw skills for malicious patterns before installation.
-  summary_long: 'Scan OpenClaw skills for malicious patterns before installation. Primary capabilities: automation, security. May require network access.'
-  capabilities:
-  - automation
-  - security
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 64
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: local-approvals
-  description: Local approval system for managing agent permissions.
-  url: https://clawskills.sh/skills/shaiss-local-approvals
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Local approval system for managing agent permissions.
-  summary_long: 'Local approval system for managing agent permissions. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 53
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: og-openclawguard
-  description: Security and vulnerability scanner for OpenClaw code.
-  url: https://clawskills.sh/skills/thomaslwang-og-openclawguard
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Security and vulnerability scanner for OpenClaw code.
-  summary_long: 'Security and vulnerability scanner for OpenClaw code. Primary capabilities: security. May require network access.'
-  capabilities:
-  - security
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 53
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: towns-protocol
-  description: Use when building Towns Protocol bots - covers SDK.
-  url: https://clawskills.sh/skills/andreyz-towns-protocol
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: Use when building Towns Protocol bots - covers SDK.
-  summary_long: 'Use when building Towns Protocol bots - covers SDK. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 51
-    has_category: true
-    source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-    url_domain_hint: other
-- name: udau
-  description: 'description: Union protocol for AI agents.'
-  url: https://clawskills.sh/skills/nicoacosta-udau
-  source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
-  category: Table of Contents
-  summary_short: 'description: Union protocol for AI agents.'
-  summary_long: 'description: Union protocol for AI agents. Primary capabilities: github. May require network access.'
-  capabilities:
-  - github
-  requirements: []
-  risk_flags:
-  - external_network
-  quality_signals:
-    has_description: true
-    description_length: 42
     has_category: true
     source_registry: https://github.com/VoltAgent/awesome-openclaw-skills
     url_domain_hint: other

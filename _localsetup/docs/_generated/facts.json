@@ -1,7 +1,7 @@
 {
   "version": "2.10.1",
   "major_minor": "2.10",
-  "platform_count": 5,
+  "platform_count": 6,
   "skill_count": 44,
   "platforms": [
     {
@@ -31,8 +31,14 @@
     {
       "id": "kilo",
       "display_name": "Kilo CLI",
-      "context_loader": "Not applicable (reads rules from instructions[] in kilo.jsonc)",
-      "skills_path": "`~/.kilo/skills/` (auto-discovered)"
+      "context_loader": "`.kilocode/rules/localsetup-context.md`",
+      "skills_path": "`.kilocode/skills/localsetup-*/`"
+    },
+    {
+      "id": "opencode",
+      "display_name": "OpenCode CLI",
+      "context_loader": "AGENTS.md (repo root)",
+      "skills_path": ".opencode/skills/localsetup-*/"
     }
   ],
   "skills": [

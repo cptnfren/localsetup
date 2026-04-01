@@ -33,11 +33,3 @@ required_front_matter_fields:
 # - aliases: map from alternate labels to canonical labels.
 # - required_front_matter_fields: extra metadata fields required by this repo.
 
-root: "docs/"
-
-categories: {}
-
-aliases: {}
-
-required_front_matter_fields: []
-

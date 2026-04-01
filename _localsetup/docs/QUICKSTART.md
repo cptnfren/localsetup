@@ -52,7 +52,8 @@ When prompted (or when using `--tools` / `-Tools`), use one or more of these IDs
 | `claude-code` | Claude Code | `.claude/CLAUDE.md` | `.claude/skills/localsetup-*/` |
 | `codex` | OpenAI Codex CLI | `AGENTS.md` (repo root) | `.agents/skills/localsetup-*/` |
 | `openclaw` | OpenClaw | [_localsetup/templates/openclaw/OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) | `skills/localsetup-*/` |
-| `kilo` | Kilo CLI | Not applicable (reads rules from `instructions[]` in `kilo.jsonc`) | `~/.kilo/skills/` (auto-discovered) |
+| `kilo` | Kilo CLI | `.kilocode/rules/localsetup-context.md` | `.kilocode/skills/localsetup-*/` |
+| `opencode` | OpenCode CLI | `AGENTS.md` (repo root) | `.opencode/skills/localsetup-*/` |
 
 You can deploy to multiple platforms at once by comma-separating: `cursor,claude-code`.
 
@@ -90,6 +91,7 @@ curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | b
 | `kilo` | `~/.kilo/skills/` | Add `~/.kilo/rules/*.md` to `instructions[]` in kilo.jsonc |
 | `openclaw` | `~/.openclaw/skills/` | Auto-discovered |
 | `claude-code` | `~/.claude/skills/` | Auto-discovered |
+| `opencode` | `~/.config/opencode/skills/` | Auto-discovered |
 
 **Note:** Repo-local installation takes precedence over global. Project-specific skills/rules override global ones.
 
@@ -151,6 +153,22 @@ Install into the current directory and deploy context and skills for OpenClaw on
 curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --directory . --tools openclaw --yes
 ```
 
+#### OpenCode
+
+Install into the current directory and deploy context and skills for OpenCode CLI only.
+
+```bash
+curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --directory . --tools opencode --yes
+```
+
+#### Kilo CLI
+
+Install into the current directory and deploy context and skills for Kilo CLI only (local repo deploy to `.kilocode/`).
+
+```bash
+curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --directory . --tools kilo --yes
+```
+
 ### Windows (PowerShell)
 
 #### Cursor
@@ -183,6 +201,22 @@ Install into the current directory and deploy context and skills for OpenClaw on
 
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Directory . -Tools openclaw -Yes
+```
+
+#### OpenCode
+
+Install into the current directory and deploy context and skills for OpenCode CLI only.
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Directory . -Tools opencode -Yes
+```
+
+#### Kilo CLI
+
+Install into the current directory and deploy context and skills for Kilo CLI only (local repo deploy to `.kilocode/`).
+
+```powershell
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Directory . -Tools kilo -Yes
 ```
 
 ### From a local clone
@@ -223,6 +257,22 @@ Install from a local clone into the target directory for OpenClaw only.
 ./install --directory /path/to/your/project --tools openclaw --yes
 ```
 
+**OpenCode**
+
+Install from a local clone into the target directory for OpenCode CLI only.
+
+```bash
+./install --directory /path/to/your/project --tools opencode --yes
+```
+
+**Kilo CLI**
+
+Install from a local clone into the target directory for Kilo CLI only (local repo deploy to `.kilocode/`).
+
+```bash
+./install --directory /path/to/your/project --tools kilo --yes
+```
+
 #### Windows (PowerShell)
 
 **Cursor**
@@ -255,6 +305,22 @@ Install from a local clone into the target directory for OpenClaw only.
 
 ```powershell
 .\install.ps1 -Directory "C:\path\to\your\project" -Tools openclaw -Yes
+```
+
+**OpenCode**
+
+Install from a local clone into the target directory for OpenCode CLI only.
+
+```powershell
+.\install.ps1 -Directory "C:\path\to\your\project" -Tools opencode -Yes
+```
+
+**Kilo CLI**
+
+Install from a local clone into the target directory for Kilo CLI only (local repo deploy to `.kilocode/`).
+
+```powershell
+.\install.ps1 -Directory "C:\path\to\your\project" -Tools kilo -Yes
 ```
 
 ## 🔄 Updating

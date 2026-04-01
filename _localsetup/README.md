@@ -3,7 +3,7 @@
 **Version:** 2.10.1  
 **Last updated:** 2026-02-19
 
-This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw). For first-time setup and overview, see the [root README](../../README.md). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.
+This directory is the engine of Localsetup v2: a universal, cross-platform agentic workflow framework for DevOps, local and remote servers, network configuration, and any workflow that benefits from AI agent assistance on your chosen platform (see [Platform registry](docs/PLATFORM_REGISTRY.md) for the canonical list: Cursor, Claude Code, OpenAI Codex CLI, OpenClaw, OpenCode). For first-time setup and overview, see the [root README](../../README.md). Deployed into your repo, the framework and context live inside the repo so the setup is mobile and backup-able, with no home-directory dependency.
 
 The framework is for anyone who wants to execute tasks with agents: it provides a convenient, contained place for workflows and skills. It is **lightweight**, **does not interfere with existing projects**, and works for a **wide variety of tasks**; it is **compatible with all agentic design patterns** and **platform-independent** -the same skills and workflows run on any supported host.
 
@@ -31,7 +31,7 @@ The emphasis is on **transparency**, **security**, and **high-quality operations
 
 ## Overview
 
-**Summary of features:** One-line install (Bash/PowerShell); multi-platform deploy (cursor, claude-code, codex, openclaw, kilo); always-loaded context per platform; built-in skills (decision tree, PRD batch, safety, tmux, versioning, publishing, skill-creator, skill-importer, skill-discovery, agentlens, and more); duplicate/overlap/namespace checks when creating or importing; heuristic security screening on import; public skill registry and index with refresh and top-5 similar recommendations; versioning (VERSION, conventional commits, per-skill metadata.version); cross-platform tools (deploy, verify_context, verify_rules, skill_importer_scan); docs under [docs/](docs/) and [AGENTIC_DESIGN_INDEX.md](docs/AGENTIC_DESIGN_INDEX.md).
+**Summary of features:** One-line install (Bash/PowerShell); multi-platform deploy (cursor, claude-code, codex, openclaw, kilo, opencode); always-loaded context per platform; built-in skills (decision tree, PRD batch, safety, tmux, versioning, publishing, skill-creator, skill-importer, skill-discovery, agentlens, and more); duplicate/overlap/namespace checks when creating or importing; heuristic security screening on import; public skill registry and index with refresh and top-5 similar recommendations; versioning (VERSION, conventional commits, per-skill metadata.version); cross-platform tools (deploy, verify_context, verify_rules, skill_importer_scan); docs under [docs/](docs/) and [AGENTIC_DESIGN_INDEX.md](docs/AGENTIC_DESIGN_INDEX.md).
 
 Localsetup v2 provides:
 
@@ -76,7 +76,7 @@ On Windows, if you run the Bash `install` from Git Bash, it **detects the host**
 | Option | Description |
 |--------|-------------|
 | `--directory PATH` | Client repo root (default: `.`) |
-| `--tools LIST` | Comma-separated: `cursor`, `claude-code`, `codex`, `openclaw`, `kilo` |
+| `--tools LIST` | Comma-separated: `cursor`, `claude-code`, `codex`, `openclaw`, `kilo`, `opencode` |
 | `--yes` | Non-interactive; no prompts (required when using `--tools`) |
 | `--global` | Deploy to user-wide locations (`~/.kilo/skills/`, `~/.openclaw/`, `~/.claude/`); auto-detects agents |
 | `--help` | Print usage and exit |
@@ -146,7 +146,9 @@ _localsetup/
 │   ├── cursor/
 │   ├── claude-code/
 │   ├── codex/
-│   └── openclaw/
+│   ├── kilocode/
+│   ├── openclaw/
+│   └── opencode/
 ├── tests/
 │   ├── automated_test.sh        # Minimal sanity tests (Bash)
 │   └── automated_test.ps1       # Minimal sanity tests (PowerShell)

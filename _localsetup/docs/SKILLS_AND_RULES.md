@@ -9,8 +9,8 @@ version: 2.10
 
 ## Model
 
-- **One always-loaded context** per platform: Cursor uses `.cursor/rules/localsetup-context.mdc`; Claude Code uses `.claude/CLAUDE.md`; Codex uses `AGENTS.md`; OpenClaw uses a context skill + optional doc template in _localsetup/docs/.
-- **Skills:** Same SKILL.md content across platforms; installer/deploy copies from `_localsetup/skills/` to platform path (`.cursor/skills/`, `.claude/skills/`, `.agents/skills/`, or `skills/` for OpenClaw). Edit only in _localsetup; deploy overwrites platform paths.
+- **One always-loaded context** per platform: Cursor uses `.cursor/rules/localsetup-context.mdc`; Claude Code uses `.claude/CLAUDE.md`; Codex uses `AGENTS.md`; OpenClaw uses a context skill + optional doc template in _localsetup/docs/; OpenCode uses `AGENTS.md`; Kilo CLI uses `.kilocode/rules/localsetup-context.md` (repo-local deploy) or `~/.kilo/rules/` (global deploy).
+- **Skills:** Same SKILL.md content across platforms; installer/deploy copies from `_localsetup/skills/` to platform path (`.cursor/skills/`, `.claude/skills/`, `.agents/skills/`, `skills/` for OpenClaw, `.opencode/skills/` for OpenCode, or `.kilocode/skills/` for Kilo). Edit only in _localsetup; deploy overwrites platform paths.
 - **When to load a skill:** Load when the task matches the skill's description (e.g. user says "decision tree" -> localsetup-decision-tree-workflow). The master rule/context includes an index of skills and when to use them.
 
 ## Task-to-skill matching flow
@@ -32,7 +32,9 @@ version: 2.10
 | Cursor | .cursor/rules/localsetup-context.mdc | .cursor/skills/localsetup-*/ |
 | Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ |
 | Codex | AGENTS.md (repo root) | .agents/skills/localsetup-*/ |
-| OpenClaw | Skill localsetup-context + _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md | skills/localsetup-*/ |
+| OpenClaw | Skill localsetup-context + _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md | skills/localsetup-*/ (repo root) |
+| OpenCode | AGENTS.md (repo root) | .opencode/skills/localsetup-*/ |
+| Kilo CLI | .kilocode/rules/localsetup-context.md (local) | .kilocode/skills/localsetup-*/ |
 
 ## Format
 

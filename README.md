@@ -7,7 +7,7 @@
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="https://agentskills.io/specification"><img src="https://img.shields.io/badge/Agent%20Skills-compatible-2ea44f" alt="Agent Skills compatible"></a>
-  <a href="_localsetup/docs/PLATFORM_REGISTRY.md"><img src="https://img.shields.io/badge/platforms-cursor%20%7C%20claude--code%20%7C%20codex%20%7C%20openclaw%20%7C%20kilo-1f6feb" alt="Supported platforms"></a>
+  <a href="_localsetup/docs/PLATFORM_REGISTRY.md"><img src="https://img.shields.io/badge/platforms-cursor%20%7C%20claude--code%20%7C%20codex%20%7C%20openclaw%20%7C%20kilo%20%7C%20opencode-1f6feb" alt="Supported platforms"></a>
 </p>
 
 **Version:** 2.10.1  
@@ -15,7 +15,7 @@
 
 Agentic setups often share the same headaches: indeterministic outcomes, memory that compresses or decays, hallucinations, agents that drop context or ignore instructions, and difficulty scaling beyond a certain code size. Coordinating multiple agents so they follow patterns and run workflows reliably is harder still. Localsetup v2 targets these problems without adding much overhead.
 
-The framework is repo-local: context, skills, and docs live in one folder in your project. Clone or move the repo and the setup moves with it. No home-directory state, no cloud dependency. Context is code, so you can audit what changed and tie specs and outcomes to git commits. It installs with one command and works the same across Cursor, Claude Code, OpenAI Codex CLI, and OpenClaw (add more via [one registry file](_localsetup/docs/PLATFORM_REGISTRY.md)). Safety and sandboxing are built in; when you import third-party skills, the framework runs security checks and heuristics before anything touches your agent. Tooling can be refactored or rewritten in Python and standardized even when sources disagree, and you can adapt it to your stack. The [public skill index](_localsetup/docs/PUBLIC_SKILL_INDEX.yaml) grows over time; you can add your own registry sources and combine or adapt skills as you like. One folder in every project, no namespace collisions with existing code. It just works.
+The framework is repo-local: context, skills, and docs live in one folder in your project. Clone or move the repo and the setup moves with it. No home-directory state, no cloud dependency. Context is code, so you can audit what changed and tie specs and outcomes to git commits. It installs with one command and works the same across Cursor, Claude Code, OpenAI Codex CLI, OpenClaw, and OpenCode (add more via [one registry file](_localsetup/docs/PLATFORM_REGISTRY.md)). Safety and sandboxing are built in; when you import third-party skills, the framework runs security checks and heuristics before anything touches your agent. Tooling can be refactored or rewritten in Python and standardized even when sources disagree, and you can adapt it to your stack. The [public skill index](_localsetup/docs/PUBLIC_SKILL_INDEX.yaml) grows over time; you can add your own registry sources and combine or adapt skills as you like. One folder in every project, no namespace collisions with existing code. It just works.
 
 Out of the box you get [all shipped skills](_localsetup/docs/SKILLS.md): debugging, TDD, PR review, git recovery, Linux patching, Ansible, and more. Skills follow the [Agent Skills](https://agentskills.io/specification) spec, so you can import from other ecosystems (e.g. Anthropic's public repo) and export yours. Version and docs are maintained in a separate maintainer workflow; see [_localsetup/docs/VERSIONING.md](_localsetup/docs/VERSIONING.md). Run one install command, verify with one script, then use the workflows. The result is a single, auditable agent setup that stays accurate over time.
 
@@ -25,7 +25,7 @@ Out of the box you get [all shipped skills](_localsetup/docs/SKILLS.md): debuggi
 | Fact | Value |
 |---|---|
 | Current version | `2.10.1` |
-| Supported platforms | `cursor, claude-code, codex, openclaw, kilo` |
+| Supported platforms | `cursor, claude-code, codex, openclaw, kilo, opencode` |
 | Shipped skills | `44` |
 | Source | `_localsetup/docs/_generated/facts.json` |
 <!-- facts-block:end -->
@@ -48,7 +48,7 @@ curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | b
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1)))
 ```
 
-The installer asks which platform(s) to deploy: Cursor, Claude Code, Codex CLI, OpenClaw, or Kilo. After install, run the verification script printed at the end to confirm context loaded correctly.
+The installer asks which platform(s) to deploy: Cursor, Claude Code, Codex CLI, OpenClaw, Kilo, or OpenCode. After install, run the verification script printed at the end to confirm context loaded correctly.
 
 For non-interactive one-liners (CI, automation, or when you already know the platform), see the collapsed **Full install reference** below or [_localsetup/docs/QUICKSTART.md](_localsetup/docs/QUICKSTART.md).
 
@@ -92,7 +92,7 @@ The installer runs a dependency preflight and prints missing items with copy-pas
 
 1. **Secure skill import with safety checks** - import any external skill or freeform text, run automatic prompt-injection detection, foreign-language screening, and heuristic security analysis before it touches your agent. Use the framework as a sandbox to build and adapt workflows however you see fit.
 2. **Repo-local engine** - the entire framework lives at `_localsetup/`; clone or move your repo and everything travels together. No home-directory state, no cloud sync, no hidden drift.
-3. **Multi-platform install** - one command deploys context and skills for Cursor, Claude Code, Codex CLI, or OpenClaw. Add platforms later by editing one registry file.
+3. **Multi-platform install** - one command deploys context and skills for Cursor, Claude Code, Codex CLI, OpenClaw, or OpenCode. Add platforms later by editing one registry file.
 4. **Agent Skills spec compatible** - skills follow the open Agent Skills specification, so you can import from Anthropic's public repo, awesome lists, or your own library and export yours for others.
 5. **Shipped skills** - debugging, TDD, PR review, git recovery, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux ops (pick/probe/send), system-info, cron-orchestrator, PRD batching, decision trees, and more, ready to use out of the box. See [_localsetup/docs/SKILLS.md](_localsetup/docs/SKILLS.md) for the full catalog.
 6. **Workflow registry and quick-ref** - named workflow IDs, human-readable names, and aliases in [_localsetup/docs/WORKFLOW_REGISTRY.md](_localsetup/docs/WORKFLOW_REGISTRY.md), plus an agent-facing quick reference and composite pipelines (PR feedback loop, git repair and hygiene, server triage and patch, repo polish) in [_localsetup/docs/WORKFLOW_QUICK_REF.md](_localsetup/docs/WORKFLOW_QUICK_REF.md). Agents can invoke multi-step workflows by intent instead of chaining skills manually.

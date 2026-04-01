@@ -7,7 +7,7 @@ version: 2.10
 
 **Purpose:** Single source of truth for which AI agent platforms the framework supports. When you need to list supported platforms, reference this file instead of scattering names across docs. When adding a new platform, add it here first; when registering a new skill, use the "Skill registration (new skills)" list below so no platform is missed.
 
-**Deploy flag:** The install/deploy scripts use platform **IDs** (e.g. `cursor`, `claude-code`, `codex`, `openclaw`, `kilo`) in the `--tools` / `-Tools` option. Values must match the **ID** column.
+**Deploy flag:** The install/deploy scripts use platform **IDs** (e.g. `cursor`, `claude-code`, `codex`, `openclaw`, `kilo`, `opencode`) in the `--tools` / `-Tools` option. Values must match the **ID** column.
 
 ## Supported platforms
 
@@ -17,7 +17,8 @@ version: 2.10
 | claude-code | Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ |
 | codex | OpenAI Codex CLI | AGENTS.md (repo root) | .agents/skills/localsetup-*/ |
 | openclaw | OpenClaw | [OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) (merge into workspace MEMORY.md if desired) | skills/localsetup-*/ (repo root) |
-| kilo | Kilo CLI | Not applicable (reads rules from instructions[] in kilo.jsonc) | `~/.kilo/skills/` (auto-discovered) |
+| kilo | Kilo CLI | `.kilocode/rules/localsetup-context.md` | `.kilocode/skills/localsetup-*/` |
+| opencode | OpenCode CLI | AGENTS.md (repo root) | .opencode/skills/localsetup-*/ |
 
 *More platforms may be added later. Update this table and the "Skill registration (new skills)" section when adding one.*
 
@@ -31,6 +32,7 @@ When deployed with `--scope global` (via `./install --global` or `install.ps1 -G
 | kilo | `~/.kilo/rules/` | Add to `instructions[]` in kilo.jsonc | Rules deployed as `.md` files |
 | openclaw | `~/.openclaw/skills/` | `~/.openclaw/openclaw.json` | Skills auto-discovered from `~/.openclaw/skills/` |
 | claude-code | `~/.claude/skills/` | N/A | Uses `~/.claude/CLAUDE.md` for global context |
+| opencode | `~/.config/opencode/skills/` | N/A | Skills auto-discovered from `~/.config/opencode/skills/` |
 
 **Precedence:** Repo-local deployment wins over global. Project-local skills/rules override global ones, allowing projects to customize without affecting the global install.
 
@@ -49,6 +51,9 @@ Add one row or bullet per new skill with a short "When to use" description. Use 
 | Claude Code | _localsetup/templates/claude-code/CLAUDE.md |
 | Codex | _localsetup/templates/codex/AGENTS.md |
 | OpenClaw | _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md |
+| OpenCode | _localsetup/templates/opencode/AGENTS.md |
+| Kilo (templates) | _localsetup/templates/kilocode/localsetup-context.md |
+| Kilo (templates) | _localsetup/templates/kilocode/localsetup-context-index.md |
 | Framework README | _localsetup/README.md (Skills table) |
 | Context skill (source) | _localsetup/skills/localsetup-context/SKILL.md |
 
@@ -56,7 +61,7 @@ Add one row or bullet per new skill with a short "When to use" description. Use 
 
 ## Reference
 
-- Deploy script: `_localsetup/tools/deploy` (Bash) / `deploy.ps1` (PowerShell); accepts `--tools "cursor,claude-code,codex,openclaw,kilo"` and `--scope local|global`.
+- Deploy script: `_localsetup/tools/deploy` (Bash) / `deploy.ps1` (PowerShell); accepts `--tools "cursor,claude-code,codex,openclaw,kilo,opencode"` and `--scope local|global`.
 - Global install: root `install` (Bash) / `install.ps1` (PowerShell) with `--global` / `-Global` flag. Auto-detects installed agents (kilo, openclaw, claude). Skills go to `~/.kilo/skills/` (auto-discovered), rules go to `~/.kilo/rules/`.
 - Skills and rules (paths and model): [SKILLS_AND_RULES.md](SKILLS_AND_RULES.md).
 - Release and publish (including packaging and sync checks) are maintained in a separate maintainer repository.

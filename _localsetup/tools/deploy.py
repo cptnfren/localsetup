@@ -64,6 +64,32 @@ def deploy_cursor(engine_dir: Path, root: Path) -> None:
                     _safe_copy2(f, dest / rel)
 
 
+def deploy_kilo(engine_dir: Path, root: Path) -> None:
+    rules_dir = root / ".kilocode" / "rules"
+    skills_dir = root / ".kilocode" / "skills"
+    rules_dir.mkdir(parents=True, exist_ok=True)
+    skills_dir.mkdir(parents=True, exist_ok=True)
+    templates = engine_dir / "templates" / "kilocode"
+    if (templates / "localsetup-context.md").exists():
+        _safe_copy2(
+            templates / "localsetup-context.md", rules_dir / "localsetup-context.md"
+        )
+        _safe_copy2(
+            templates / "localsetup-context-index.md",
+            rules_dir / "localsetup-context-index.md",
+        )
+    skills_src = engine_dir / "skills"
+    for skill_dir in sorted(skills_src.glob("localsetup-*")):
+        if skill_dir.is_dir():
+            dest = skills_dir / skill_dir.name
+            dest.mkdir(parents=True, exist_ok=True)
+            for f in skill_dir.rglob("*"):
+                if f.is_file():
+                    rel = f.relative_to(skill_dir)
+                    (dest / rel).parent.mkdir(parents=True, exist_ok=True)
+                    _safe_copy2(f, dest / rel)
+
+
 def deploy_claude_code(engine_dir: Path, root: Path) -> None:
     claude_dir = root / ".claude"
     skills_dir = claude_dir / "skills"
@@ -111,6 +137,26 @@ def deploy_openclaw(engine_dir: Path, root: Path) -> None:
     templates = engine_dir / "templates" / "openclaw"
     if (templates / "OPENCLAW_CONTEXT.md").exists():
         _safe_copy2(templates / "OPENCLAW_CONTEXT.md", docs_dir / "OPENCLAW_CONTEXT.md")
+    skills_src = engine_dir / "skills"
+    for skill_dir in sorted(skills_src.glob("localsetup-*")):
+        if skill_dir.is_dir():
+            dest = skills_dir / skill_dir.name
+            dest.mkdir(parents=True, exist_ok=True)
+            for f in skill_dir.rglob("*"):
+                if f.is_file():
+                    rel = f.relative_to(skill_dir)
+                    (dest / rel).parent.mkdir(parents=True, exist_ok=True)
+                    _safe_copy2(f, dest / rel)
+
+
+def deploy_opencode(engine_dir: Path, root: Path) -> None:
+    opencode_dir = root / ".opencode"
+    skills_dir = opencode_dir / "skills"
+    opencode_dir.mkdir(parents=True, exist_ok=True)
+    skills_dir.mkdir(parents=True, exist_ok=True)
+    templates = engine_dir / "templates" / "opencode"
+    if (templates / "AGENTS.md").exists():
+        _safe_copy2(templates / "AGENTS.md", root / "AGENTS.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -245,6 +291,15 @@ def deploy_claude_code_global(engine_dir: Path) -> None:
     _deploy_skills_to_dir(engine_dir, skills_dir)
 
 
+def deploy_opencode_global(engine_dir: Path) -> None:
+    """Deploy skills to global opencode location (~/.config/opencode/skills/)."""
+    opencode_dir = _expand_path("~/.config/opencode")
+    skills_dir = opencode_dir / "skills"
+    skills_dir.mkdir(parents=True, exist_ok=True)
+
+    _deploy_skills_to_dir(engine_dir, skills_dir)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Deploy platform context and skills.")
     ap.add_argument(
@@ -253,7 +308,7 @@ def main() -> int:
     ap.add_argument(
         "--tools",
         required=True,
-        help="Comma-separated: cursor,claude-code,codex,openclaw",
+        help="Comma-separated: cursor,claude-code,codex,openclaw,opencode,kilo",
     )
     ap.add_argument(
         "--scope",
@@ -275,11 +330,14 @@ def main() -> int:
         "claude-code": deploy_claude_code,
         "codex": deploy_codex,
         "openclaw": deploy_openclaw,
+        "opencode": deploy_opencode,
+        "kilo": deploy_kilo,
     }
     global_deployers = {
         "kilo": deploy_kilo_global,
         "openclaw": deploy_openclaw_global,
         "claude-code": deploy_claude_code_global,
+        "opencode": deploy_opencode_global,
     }
 
     if args.scope == "global":

@@ -63,9 +63,9 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Directory . -Tools curso
 ## Options
 
 - `--directory PATH` / `-Directory PATH`  - Client repo root (default: .)
-- `--tools LIST` / `-Tools LIST`  - Comma-separated: cursor, claude-code, codex, openclaw, kilo
+- `--tools LIST` / `-Tools LIST`  - Comma-separated: cursor, claude-code, codex, openclaw, kilo, opencode
 - `--yes` / `-Yes`  - Non-interactive (required when using --tools)
-- `--global` / `-Global`  - Deploy to user-wide locations (`~/.kilo/skills/`, `~/.openclaw/`, `~/.claude/`); auto-detects agents if `--tools` not specified
+- `--global` / `-Global`  - Deploy to user-wide locations (`~/.kilo/skills/`, `~/.openclaw/`, `~/.claude/`, `~/.config/opencode/`); auto-detects agents if `--tools` not specified
 - `--install-deps` / `-InstallDeps`  - Install Python dependencies from `_localsetup/requirements.txt` automatically
 - `--help` / `-Help`  - Print usage and exit
 
@@ -79,6 +79,7 @@ If `--tools` / `-Tools` is not specified with `--global`, the installer auto-det
 - **kilo** → `~/.kilo/skills/` and `~/.kilo/rules/`
 - **openclaw** → `~/.openclaw/skills/`
 - **claude-code** → `~/.claude/skills/` and `~/.claude/CLAUDE.md`
+- **opencode** → `~/.config/opencode/skills/`
 
 ### Global install examples
 
@@ -88,7 +89,7 @@ If `--tools` / `-Tools` is not specified with `--global`, the installer auto-det
 ./install --global
 
 # Deploy to specific agents
-./install --global --tools kilo,openclaw
+./install --global --tools kilo,openclaw,opencode
 ```
 
 **Windows (PowerShell):**
@@ -97,7 +98,7 @@ If `--tools` / `-Tools` is not specified with `--global`, the installer auto-det
 .\install.ps1 -Global
 
 # Deploy to specific agents
-.\install.ps1 -Global -Tools kilo,openclaw
+.\install.ps1 -Global -Tools kilo,openclaw,opencode
 ```
 
 ### Kilo-specific
@@ -136,6 +137,9 @@ rm -rf ~/.openclaw/skills
 # Claude Code
 rm -rf ~/.claude/skills
 rm ~/.claude/CLAUDE.md
+
+# OpenCode
+rm -rf ~/.config/opencode/skills
 ```
 
 ## Dependency preflight
