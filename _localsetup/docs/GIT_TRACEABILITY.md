@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.9
+version: 2.10
 ---
 
 # Git traceability (Localsetup v2)

@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.3
+version: 2.10
 ---
 
 # Framework maintenance workflow (Localsetup v2)

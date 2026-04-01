@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.9
+version: 2.10
 ---
 
 # ⚡ Features
@@ -11,7 +11,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 
 <!-- facts-block:start -->
 - Current version: `2.9.5`
-- Supported platforms: `cursor, claude-code, codex, openclaw, kilo`
+- Supported platforms: `cursor, claude-code, codex, openclaw, kilo, Platform, kilo, kilo, openclaw, claude-code`
 - Shipped skills: `44`
 - Source: `_localsetup/docs/_generated/facts.json`
 <!-- facts-block:end -->
