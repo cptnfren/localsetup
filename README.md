@@ -11,21 +11,21 @@
 </p>
 
 **Version:** 2.10.1  
-**Last updated:** 2026-02-19
+**Last updated:** 2026-04-01
 
 Agentic setups often share the same headaches: indeterministic outcomes, memory that compresses or decays, hallucinations, agents that drop context or ignore instructions, and difficulty scaling beyond a certain code size. Coordinating multiple agents so they follow patterns and run workflows reliably is harder still. Localsetup v2 targets these problems without adding much overhead.
 
 The framework is repo-local: context, skills, and docs live in one folder in your project. Clone or move the repo and the setup moves with it. No home-directory state, no cloud dependency. Context is code, so you can audit what changed and tie specs and outcomes to git commits. It installs with one command and works the same across Cursor, Claude Code, OpenAI Codex CLI, and OpenClaw (add more via [one registry file](_localsetup/docs/PLATFORM_REGISTRY.md)). Safety and sandboxing are built in; when you import third-party skills, the framework runs security checks and heuristics before anything touches your agent. Tooling can be refactored or rewritten in Python and standardized even when sources disagree, and you can adapt it to your stack. The [public skill index](_localsetup/docs/PUBLIC_SKILL_INDEX.yaml) grows over time; you can add your own registry sources and combine or adapt skills as you like. One folder in every project, no namespace collisions with existing code. It just works.
 
-Out of the box you get [all shipped skills](_localsetup/docs/SKILLS.md): debugging, TDD, PR review, git recovery, Linux patching, Ansible, and more. Skills follow the [Agent Skills](https://agentskills.io/specification) spec, so you can import from other ecosystems (e.g. Anthropic's public repo) and export yours. Version and docs are maintained in a separate maintainer workflow; see [docs/VERSIONING.md](docs/VERSIONING.md). Run one install command, verify with one script, then use the workflows. The result is a single, auditable agent setup that stays accurate over time.
+Out of the box you get [all shipped skills](_localsetup/docs/SKILLS.md): debugging, TDD, PR review, git recovery, Linux patching, Ansible, and more. Skills follow the [Agent Skills](https://agentskills.io/specification) spec, so you can import from other ecosystems (e.g. Anthropic's public repo) and export yours. Version and docs are maintained in a separate maintainer workflow; see [_localsetup/docs/VERSIONING.md](_localsetup/docs/VERSIONING.md). Run one install command, verify with one script, then use the workflows. The result is a single, auditable agent setup that stays accurate over time.
 
 ## 📊 Current snapshot
 
 <!-- facts-block:start -->
 | Fact | Value |
 |---|---|
-| Current version | `2.10.0` |
-| Supported platforms | `cursor, claude-code, codex, openclaw, kilo, Platform, kilo, kilo, openclaw, claude-code` |
+| Current version | `2.10.1` |
+| Supported platforms | `cursor, claude-code, codex, openclaw, kilo` |
 | Shipped skills | `44` |
 | Source | `_localsetup/docs/_generated/facts.json` |
 <!-- facts-block:end -->
@@ -97,7 +97,7 @@ The installer runs a dependency preflight and prints missing items with copy-pas
 5. **Shipped skills** - debugging, TDD, PR review, git recovery, Linux patching, Ansible orchestration, codebase navigation (agentlens), tmux ops (pick/probe/send), system-info, cron-orchestrator, PRD batching, decision trees, and more, ready to use out of the box. See [_localsetup/docs/SKILLS.md](_localsetup/docs/SKILLS.md) for the full catalog.
 6. **Workflow registry and quick-ref** - named workflow IDs, human-readable names, and aliases in [_localsetup/docs/WORKFLOW_REGISTRY.md](_localsetup/docs/WORKFLOW_REGISTRY.md), plus an agent-facing quick reference and composite pipelines (PR feedback loop, git repair and hygiene, server triage and patch, repo polish) in [_localsetup/docs/WORKFLOW_QUICK_REF.md](_localsetup/docs/WORKFLOW_QUICK_REF.md). Agents can invoke multi-step workflows by intent instead of chaining skills manually.
 7. **Human-in-the-loop gates and Always-On-TMUX** - tmux shared sessions via tmux_ops (pick, probe, send with 1 s delay), sudo discovery and approval flow before destructive ops, and a tmux-default terminal mode that can run as an \"always-on tmux\" layer for this repo or machine. The agent pauses and waits for you when it matters.
-8. **Versioning** - VERSION at repo root; conventional commits; version and docs are maintained in a separate maintainer workflow (see [docs/VERSIONING.md](docs/VERSIONING.md)).
+8. **Versioning** - VERSION at repo root; conventional commits; version and docs are maintained in a separate maintainer workflow (see [_localsetup/docs/VERSIONING.md](_localsetup/docs/VERSIONING.md)).
 9. **Skill metadata patching** - staged `SKILL.md` files get their `metadata.version` incremented automatically so skill docs stay accurate.
 10. **Platform registry and git-coupled traceability** - a single [Markdown table](_localsetup/docs/PLATFORM_REGISTRY.md) defines every supported host, context path, and skills path, and PRDs/specs/outcomes can reference commit hashes for audit. Context is code; changes are reviewable.
 11. **Global deployment (user-wide, cross-project)** - Install once, use the framework across all projects. Deploys skills to `~/.kilo/skills/` (auto-discovered) and `~/.openclaw/`, and `~/.claude/` with auto-detection of installed agents.
