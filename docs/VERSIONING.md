@@ -1,16 +1,16 @@
 ---
 status: ACTIVE
-version: 2.3
+version: 3.0
 ---
 
-# Versioning (maintainer repo)
+# Versioning
 
 This repository uses semantic versioning in `VERSION`.
 
 ## Source of truth
 
 - `VERSION` at repo root is the canonical version value.
-- Bump operations are performed by maintainer scripts.
+- Bump operations are performed by `scripts/bump-version`.
 
 ## Recommended workflow
 

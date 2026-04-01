@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # Purpose: Compare _localsetup/skills and _localsetup/templates/cursor with .cursor/skills and .cursor/rules
-#          in the public repo. Reports which files differ and which version is newer (mtime).
+#          in this repo. Reports which files differ and which version is newer (mtime).
 #          Run before commit/publish to avoid overwriting newer .cursor with older packaged or vice versa.
+# Usage: compare-packaged-vs-cursor.py [--repo-root PATH]
 # Created: 2026-02-20
-# Last updated: 2026-02-20
+# Last updated: 2026-04-01
 
 import argparse
 import sys
@@ -12,17 +13,17 @@ from pathlib import Path
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Compare packaged source (_localsetup) with .cursor in the public repo; report diffs and which is newer."
+        description="Compare packaged source (_localsetup) with .cursor; report diffs and which is newer."
     )
     ap.add_argument(
-        "--public-repo",
-        required=True,
+        "--repo-root",
+        default=".",
         metavar="PATH",
-        help="Path to the public repo root (localsetup-2) where _localsetup and .cursor exist",
+        help="Path to the repo root (default: current directory)",
     )
     args = ap.parse_args()
 
-    repo = Path(args.public_repo).resolve()
+    repo = Path(args.repo_root).resolve()
     if not repo.is_dir():
         print(f"Error: not a directory: {repo}", file=sys.stderr)
         return 1
@@ -109,12 +110,12 @@ def main() -> int:
             print(f"  {scope}/{rel}")
     if newer_cursor:
         print(
-            "\n--- NEWER in .cursor (risk: overwrite by deploy; run publish-from-dogfood to harvest, or copy back to _localsetup then deploy) ---"
+            "\n--- NEWER in .cursor (run deploy to overwrite, or sync-cursor-to-source.py to harvest) ---"
         )
         for scope, rel in newer_cursor:
             print(f"  {scope}/{rel}")
     if newer_packaged:
-        print("\n--- NEWER in packaged (run deploy in public repo to update .cursor) ---")
+        print("\n--- NEWER in packaged (run deploy to update .cursor) ---")
         for scope, rel in newer_packaged:
             print(f"  {scope}/{rel}")
 
@@ -123,7 +124,7 @@ def main() -> int:
         return 0
     if newer_cursor:
         print(
-            "\nAction: Run scripts/publish-from-dogfood --public-repo <path> to harvest .cursor into source, or copy changed files to _localsetup and deploy."
+            "\nAction: Run scripts/sync-cursor-to-source.py to harvest .cursor into source, or deploy to overwrite."
         )
     return 0
 

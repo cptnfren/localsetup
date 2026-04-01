@@ -1,38 +1,27 @@
-# Migrated from .cursor/rules/repo-boundaries.mdc
-# Original: /mnt/data/devzone/localsetup-2/.cursor/rules/repo-boundaries.mdc
-
 # Repo boundary guardrail
 
-Purpose: prevent accidental cross-repo edits after the split between public and private repositories.
+Purpose: define canonical source rules and guardrails for safe development in this unified framework repository.
 
-## Repository identities
+## Canonical source rule
 
-- Public framework repo: `localsetup-2`
-- Private maintainer repo: `localsetup-maintainer`
-
-**Maintainer workflow index:** In the maintainer repo, the canonical reference for all maintainer workflows (trigger words, purpose, script path) is `docs/WORKFLOW_INDEX.md`. When working in the maintainer repo or on a cross-repo task that involves maintainer scripts, use that document to locate the right workflow.
+- **Source:** `_localsetup/` is immutable source for the framework. All framework edits go here.
+- **Deploy target:** `.cursor/` is populated by `deploy --tools cursor --root .`. Do not edit `.cursor/` for framework content.
+- **One-way flow:** `deploy` copies from `_localsetup` to `.cursor/`. Never edit `.cursor/` for framework content.
+- **Exception:** Use `scripts/sync-cursor-to-source.py` to promote `.cursor/` changes back to `_localsetup/` (git 3-way: newer wins when source unchanged).
 
 ## Hard rules
 
-1. Do not create, edit, or delete files in the private maintainer repository when working in this public repository, unless the user explicitly asks for a cross-repo task.
-2. Do not reintroduce maintainer-only scripts or internal release tooling into the public repository.
-3. Treat paths such as `scripts/maintain`, publish orchestration, private release checklists, and maintainer-only hooks as private-repo scope.
-4. If a task can affect both repos, stop and confirm scope first with the user.
-
-## Scope protocol for each task
-
-Before making edits or git operations:
-
-- Identify target scope as one of: `[public]`, `[private]`, `[split]`.
-- If scope is ambiguous, ask one clarification question before making changes.
-- If user requests one repo only, do not make changes in the other repo.
+1. Edit only under `_localsetup/` for framework content.
+2. After editing, run `deploy --tools cursor --root .` to update `.cursor/`.
+3. Before committing, run `scripts/compare-packaged-vs-cursor` to check for drift.
+4. Use `scripts/publish` to version, document, and push changes.
 
 ## Git safety checks
 
 Before commit or push:
 
 1. Confirm current repo root path.
-2. Confirm `origin` URL matches intended target repo.
-3. Confirm staged files belong to intended scope only.
+2. Confirm `origin` URL is `github.com/cptnfren/localsetup.git`.
+3. Confirm staged files are intentional.
 
 If any check fails, stop and ask the user how to proceed.

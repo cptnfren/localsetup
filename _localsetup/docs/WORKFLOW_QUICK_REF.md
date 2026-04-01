@@ -27,7 +27,7 @@ last_updated: "2026-03-09"
 | Pipeline ID | Name | Steps (skills) | Notes |
 |-------------|------|----------------|-------|
 | `pipeline-skill-onboard` | Skill onboarding | `localsetup-skill-vetter` (optional) → `localsetup-skill-importer` → `localsetup-skill-normalizer` → `localsetup-skill-sandbox-tester`; optional `localsetup-framework-audit` | Normalizer = batch/legacy normalization when importer already normalizes on import. |
-| `pipeline-pre-publish` | Pre-publish (public) | `localsetup-github-publishing-workflow` → `localsetup-automatic-versioning` → `localsetup-framework-audit` | Release-only steps live in maintainer repo (no public procedure). |
+| `pipeline-pre-publish` | Pre-publish | `localsetup-github-publishing-workflow` → `localsetup-automatic-versioning` → `localsetup-framework-audit` | Release automation in scripts/ directory. |
 | `pipeline-pr-feedback-loop` | PR feedback improvement loop | `localsetup-receiving-code-review` → `localsetup-tdd-guide` (or `localsetup-test-runner`) → `localsetup-pr-reviewer` | Turn review comments into changes + tests + second automated review. |
 | `pipeline-git-repair-hygiene` | Git repair and hygiene | `localsetup-unfuck-my-git-state` → `localsetup-git-workflows` → `localsetup-framework-compliance` | Recover broken git state, then harden workflow with compliance checklist. |
 | `pipeline-server-triage-patch` | Server triage and patch | `localsetup-system-info` → `localsetup-linux-service-triage` → `localsetup-linux-patcher` | Ops-only: capture baseline, triage services, then patch hosts/containers with PHC. |
@@ -55,9 +55,9 @@ These skills are high-value capabilities that usually appear as **steps** inside
 - `localsetup-linux-service-triage` — Service diagnostics.
 - `localsetup-linux-patcher` — Server patching and Docker updates.
 
-## Maintainer-only workflow pointer
+## Publish workflow pointer
 
 | Workflow ID | Name | Aliases | Skill(s) | Note |
 |------------|------|---------|----------|------|
-| `maintainer-release` | Release after audit (maintainer repo only) | publish; version bump; release | N/A | Procedure lives in maintainer repo `docs/WORKFLOW_INDEX.md`. No public URL if repo is private; add only if a public mirror exists. |
+| `publish` | Publish workflow | publish; version bump; release | N/A | Procedure in `docs/WORKFLOW_INDEX.md` and `scripts/publish`. |
 

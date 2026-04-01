@@ -1,48 +1,42 @@
-# Repo boundaries and development flow (private maintainer repo)
+# Repo boundaries (unified framework repo)
 
-Purpose: keep maintainer operations in private scope while preserving a clean public framework repository.
+Purpose: define what belongs in this framework repository and guardrails for safe development.
 
-Created date: 2026-02-19
-Last updated date: 2026-02-19
+## This is a unified framework repository
 
-## Repositories
-
-- Private maintainer repo: `localsetup-maintainer`
-- Public framework repo: `localsetup-2`
-
-These are separate git repositories with separate remotes and histories.
+All framework code, skills, docs, automation, and publishing live in this single repository:
+- **Source:** `_localsetup/` is the canonical source for the framework
+- **Deploy target:** `.cursor/` is populated by `deploy` from `_localsetup/`
+- **Scripts:** `scripts/` contains all automation (publish, maintain, bump-version, etc.)
 
 ## What belongs where
 
-Private repo (`localsetup-maintainer`):
-- Maintainer-only scripts and release automation
-- Maintainer hooks and internal checklists
-- Private publishing workflows
-- Internal operational docs
+| Path | Role |
+|------|------|
+| `_localsetup/` | Canonical source (skills, templates, tools, framework docs) |
+| `.cursor/` | Deploy target (auto-generated from _localsetup via `deploy`) |
+| `scripts/` | Automation scripts (publish, maintain, compare-packaged-vs-cursor, etc.) |
+| `docs/` | Public documentation and user-facing docs |
+| `.kilocode/` | Agent rules and skills for Kilo/Cursor tooling |
 
-Public repo (`localsetup-2`):
-- Framework code and templates
-- Public docs and skills
-- Public install and usage behavior
-- User-facing workflow definitions
+## Canonical source rule
 
-## Default development workflow
+- `_localsetup/` is **immutable source**. All framework edits go here.
+- `.cursor/` is the **deploy target**, populated by `deploy --tools cursor --root .`
+- **One-way flow:** `deploy` copies from `_localsetup` to `.cursor`. Never edit `.cursor/` for framework content.
+- **Exception:** If you edit in `.cursor/` for testing and want to promote changes back to source, use `scripts/sync-cursor-to-source.py` (git 3-way merge: newer wins when source is unchanged since last commit).
 
-1. Choose target scope first: `[public]`, `[private]`, or `[split]`.
-2. Do all edits and git operations in that repo only.
-3. If the task needs both repos, split it into two explicit phases.
-4. Validate repo root and remote before commit and push.
+## Development guardrails
 
-## Prompt templates
+1. Edit only under `_localsetup/` for framework content.
+2. After editing, run `deploy --tools cursor --root .` to update `.cursor/`.
+3. Before committing, run `scripts/compare-packaged-vs-cursor` to check for drift.
+4. Use `scripts/publish` to version, document, and push changes.
 
-Single-repo private task:
+## Git safety checks
 
-`[private] Update maintainer release automation only. No public repo changes.`
+Before commit or push:
 
-Single-repo public task:
-
-`[public] Add feature X in framework. Update docs and tests in public repo only.`
-
-Two-repo task:
-
-`[split] Public phase: add framework feature X. Private phase: update maintainer release flow for X.`
+1. Confirm current repo root path.
+2. Confirm `origin` URL is `github.com/cptnfren/localsetup.git`.
+3. Confirm staged files are intentional.

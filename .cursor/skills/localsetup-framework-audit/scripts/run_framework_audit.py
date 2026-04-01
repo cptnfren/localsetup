@@ -27,7 +27,7 @@ PATH_COMPONENT_MAX = 256
 # Plain "see docs/..." or "See _localsetup/..." that should be markdown links
 PLAIN_SEE_DOCS = re.compile(r"\b[Ss]ee\s+docs/[^\s\]\)\"']+")
 PLAIN_SEE_LOCALSETUP = re.compile(r"\b[Ss]ee\s+_localsetup/[^\s\]\)\"']+")
-MAINTAINER_PATTERN = re.compile(r"scripts/maintain|localsetup-maintainer")
+MAINTAINER_PATTERN = re.compile(r"\bmaintainer\b")
 VERSION_LINE = re.compile(r"^\*\*Version:\*\*\s*([\d.]+)", re.MULTILINE)
 
 
@@ -62,7 +62,12 @@ def _read_version_file(root: Path) -> str | None:
     if not vf.is_file():
         return None
     try:
-        line = vf.read_text(encoding="utf-8", errors="replace").strip().split("\n")[0].strip()
+        line = (
+            vf.read_text(encoding="utf-8", errors="replace")
+            .strip()
+            .split("\n")[0]
+            .strip()
+        )
         return line[:64] if line else None
     except OSError:
         return None
@@ -149,8 +154,16 @@ def phase_skill_matrix(root: Path, fw: Path) -> tuple[list[str], list[str]]:
         errors.append("skill_smoke_commands.yaml must be a YAML map")
         return (errors, warnings)
     skills_dir = fw / "skills"
-    create_sandbox = fw / "skills" / "localsetup-skill-sandbox-tester" / "scripts" / "create_sandbox.py"
-    run_smoke = fw / "skills" / "localsetup-skill-sandbox-tester" / "scripts" / "run_smoke.py"
+    create_sandbox = (
+        fw
+        / "skills"
+        / "localsetup-skill-sandbox-tester"
+        / "scripts"
+        / "create_sandbox.py"
+    )
+    run_smoke = (
+        fw / "skills" / "localsetup-skill-sandbox-tester" / "scripts" / "run_smoke.py"
+    )
     if not create_sandbox.is_file() or not run_smoke.is_file():
         errors.append("Sandbox tooling (create_sandbox.py, run_smoke.py) not found")
         return (errors, warnings)
@@ -170,21 +183,32 @@ def phase_skill_matrix(root: Path, fw: Path) -> tuple[list[str], list[str]]:
                 timeout=60,
             )
             if cp.returncode != 0:
-                errors.append(f"Skill matrix {skill_id}: create_sandbox failed: {cp.stderr or cp.stdout}")
+                errors.append(
+                    f"Skill matrix {skill_id}: create_sandbox failed: {cp.stderr or cp.stdout}"
+                )
                 continue
             sandbox_dir = cp.stdout.strip().split("\n")[-1].strip()
             if not sandbox_dir:
                 errors.append(f"Skill matrix {skill_id}: empty sandbox path")
                 continue
             cp2 = subprocess.run(
-                [sys.executable, str(run_smoke), "--sandbox-dir", sandbox_dir, "--command", cmd],
+                [
+                    sys.executable,
+                    str(run_smoke),
+                    "--sandbox-dir",
+                    sandbox_dir,
+                    "--command",
+                    cmd,
+                ],
                 cwd=str(root),
                 capture_output=True,
                 text=True,
                 timeout=120,
             )
             if cp2.returncode != 0:
-                errors.append(f"Skill matrix {skill_id}: smoke failed (exit {cp2.returncode})")
+                errors.append(
+                    f"Skill matrix {skill_id}: smoke failed (exit {cp2.returncode})"
+                )
         except subprocess.TimeoutExpired:
             errors.append(f"Skill matrix {skill_id}: timeout")
         except Exception as e:
@@ -201,7 +225,9 @@ def phase_version_facts(root: Path) -> tuple[list[str], list[str]]:
     if not v:
         errors.append("VERSION file missing or unreadable")
     if not rv:
-        errors.append("README.md version line (**Version:** X.Y.Z) missing or unreadable")
+        errors.append(
+            "README.md version line (**Version:** X.Y.Z) missing or unreadable"
+        )
     if v and rv and v != rv:
         errors.append(f"VERSION ({v}) != README version ({rv})")
     if v and fv and v != fv:
@@ -291,8 +317,12 @@ def main() -> int:
             report_lines.append(f"- {w}")
         report_lines.append("")
     report_lines.append("## requires_review / human_decision")
-    report_lines.append("Review errors and warnings above. Fix errors before release; accept or fix warnings.")
-    report_lines.append("Doc-only skills: agent produces step summary and logic-gap notes per SKILL.md; no script run.")
+    report_lines.append(
+        "Review errors and warnings above. Fix errors before release; accept or fix warnings."
+    )
+    report_lines.append(
+        "Doc-only skills: agent produces step summary and logic-gap notes per SKILL.md; no script run."
+    )
     report_lines.append("")
 
     summary = f"Errors: {len(all_errors)}, Warnings: {len(all_warnings)}"

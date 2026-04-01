@@ -41,7 +41,7 @@ compatibility: "Python 3.10+. Depends on localsetup-skill-sandbox-tester tooling
 **Quick start:**
 
 ```bash
-# Output to file (e.g. maintainer repo folder)
+# Output to file
 python _localsetup/skills/localsetup-framework-audit/scripts/run_framework_audit.py --output /path/to/audit_report.md
 
 # Or env

@@ -14,7 +14,7 @@ last_updated: "2026-03-09"
 4. **Canonical mapping** is the source for Workflow ID, display name, and aliases when editing [WORKFLOW_REGISTRY.md](WORKFLOW_REGISTRY.md) and the quick-ref file.
 
 **Audience:** Maintainers and agents executing the review.  
-**Scope:** [public] only. Maintainer release procedures: IDs + pointers only (see repo-boundaries).  
+**Scope:** Framework repo only.  
 **Overrides:** A PRD may override this spec; otherwise this is the build contract.
 
 ---
@@ -23,7 +23,7 @@ last_updated: "2026-03-09"
 
 | # | Topic | Decision |
 |---|--------|----------|
-| 1 | Scope | Public repo only; maintainer steps as pointers only. |
+| 1 | Scope | Framework repo only; publish/release steps in scripts/ and docs/WORKFLOW_INDEX.md. |
 | 2 | Artifacts | WORKFLOW_REGISTRY update + exactly one quick-ref file under `_localsetup/docs/`. |
 | 3 | Renaming | Workflow ID + display name + aliases in registry and quick-ref; no repo-wide grep rewrites. |
 | 4 | Normalize | Mandatory after import per [SKILL_IMPORTING.md](SKILL_IMPORTING.md); `_localsetup/skills/localsetup-skill-importer/SKILL.md` must match. |
@@ -50,7 +50,7 @@ Use this table when adding **Workflow ID**, **Display name**, and **Aliases** co
 | `skills-index-refresh` | Skill index refresh + scrub | refresh skills, scrub index | `localsetup-skill-discovery` | No |
 | `tmux-terminal-mode` | Tmux terminal mode | tmux terminal mode | (tool only) `_localsetup/tools/tmux_terminal_mode` | No |
 
-**Release pointer (no procedure copy):** After `audit-framework`, release-only steps live in maintainer repo `docs/WORKFLOW_INDEX.md`. Public agents cannot open that repo: use a quick-ref row only (see Quick-ref requirements).
+**Release pointer:** After `audit-framework`, release steps are in `docs/WORKFLOW_INDEX.md` and `scripts/publish`.
 
 ---
 
@@ -59,7 +59,7 @@ Use this table when adding **Workflow ID**, **Display name**, and **Aliases** co
 | Pipeline ID | Display name | Steps (in order) | After last step |
 |-------------|--------------|------------------|-----------------|
 | `pipeline-skill-onboard` | Skill onboarding | `localsetup-skill-vetter` (optional) → `localsetup-skill-importer` → `localsetup-skill-normalizer` → `localsetup-skill-sandbox-tester`; optional `localsetup-framework-audit` | N/A |
-| `pipeline-pre-publish` | Pre-publish (public) | `localsetup-github-publishing-workflow` → `localsetup-automatic-versioning` → `localsetup-framework-audit` | Pointer to maintainer repo only |
+| `pipeline-pre-publish` | Pre-publish | `localsetup-github-publishing-workflow` → `localsetup-automatic-versioning` → `localsetup-framework-audit` | Release automation in scripts/ |
 | `pipeline-pr-feedback-loop` | PR feedback improvement loop | `localsetup-receiving-code-review` → `localsetup-tdd-guide` (or `localsetup-test-runner` where tests already exist) → `localsetup-pr-reviewer` | N/A |
 | `pipeline-git-repair-hygiene` | Git repair and hygiene | `localsetup-unfuck-my-git-state` → `localsetup-git-workflows` → `localsetup-framework-compliance` | N/A |
 | `pipeline-server-triage-patch` | Server triage and patch | `localsetup-system-info` → `localsetup-linux-service-triage` → `localsetup-linux-patcher` | Ops-only; apply PHC before patching hosts. |
@@ -86,11 +86,11 @@ Create `_localsetup/docs/WORKFLOW_QUICK_REF.md` (preferred) in the **same change
 
 1. **Workflow rows:** Copy from canonical mapping: Workflow ID, display name, aliases, skill(s), one canonical doc link per row.
 2. **Invoke by alias:** Short section listing common user phrases mapped to Workflow ID (so agents match legacy prompts without grep rewrites).
-3. **Maintainer pointer row:**
+3. **Publish workflow row:**
 
    | Workflow ID | Display name | Aliases | Skill(s) | Doc / note |
    |-------------|--------------|---------|----------|------------|
-   | `maintainer-release` | Release after audit (pointer only) | publish, version bump, release | N/A | Procedure in maintainer repo only; path `docs/WORKFLOW_INDEX.md`. No public URL if repo is private; add URL only if a public mirror exists. |
+   | `publish` | Publish workflow | publish, version bump, release | N/A | Procedure in `docs/WORKFLOW_INDEX.md` and `scripts/publish`. |
 
 4. **Capabilities without a registry row (optional appendix):** Table or bullet list of high-traffic skills that stay capability-only (e.g. `localsetup-npm-management`, `localsetup-cloudflare-dns`, `localsetup-mail-protocol-control` when not doing strict handoff) so agents do not assume every skill needs a workflow row. Reduces false “missing workflow” reports.
 

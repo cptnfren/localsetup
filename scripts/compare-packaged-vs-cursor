@@ -1,17 +1,30 @@
 #!/usr/bin/env bash
-# Purpose: Wrapper for compare-packaged-vs-cursor.py. Compare packaged source with .cursor in public repo.
+# Purpose: Compare _localsetup with .cursor in this repo. Reports which files differ and which version is newer.
+# Usage: ./scripts/compare-packaged-vs-cursor [--repo-root PATH]
+#        With no --repo-root, uses current repo.
 # Created: 2026-02-20
-# Last updated: 2026-02-20
+# Last updated: 2026-04-01
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MAINTAINER_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-PY_SCRIPT="$MAINTAINER_ROOT/scripts/compare-packaged-vs-cursor.py"
+REPO_ROOT=""
 
-if [[ ! -f "$PY_SCRIPT" ]]; then
-  echo "Error: missing $PY_SCRIPT" >&2
-  exit 1
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --repo-root) REPO_ROOT="$2"; shift 2 ;;
+    -h|--help)
+      echo "Usage: $0 [--repo-root PATH]"
+      echo "  Compares _localsetup with .cursor in the repo."
+      echo "  With no --repo-root, uses current directory."
+      exit 0
+      ;;
+    *) shift ;;
+  esac
+done
+
+if [[ -z "$REPO_ROOT" ]]; then
+  REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 fi
 
-exec python3 "$PY_SCRIPT" "$@"
+exec python3 "$SCRIPT_DIR/compare-packaged-vs-cursor.py" --repo-root "$REPO_ROOT"

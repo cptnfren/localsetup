@@ -5,7 +5,7 @@ version: 2.3
 
 # Framework maintenance workflow (Localsetup v2)
 
-**Purpose:** Standard workflow after any modification to the framework: bump version, commit, and push to **main**. This keeps the framework on main current; it is not a formal release process. Use this for every change so the public repo stays in sync.
+**Purpose:** Standard workflow after any modification to the framework: bump version, commit, and push to **main**. This keeps the framework on main current; it is not a formal release process.
 
 ## When to run
 
@@ -49,7 +49,7 @@ Or run `./scripts/publish` (commit only), then `git push origin main`.
 
 - **main** stays current with all changes (no separate release branch).
 - Version and docs stay in sync.
-- The public repo (GitHub) and live server get updates after each change.
+- GitHub and live server get updates after each change.
 - **Attribution:** Only humans are contributors. See [ATTRIBUTION.md](ATTRIBUTION.md).
 
 See [VERSIONING.md](VERSIONING.md) for how version numbers and bump types work.

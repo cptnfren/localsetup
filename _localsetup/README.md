@@ -41,7 +41,7 @@ Localsetup v2 provides:
 - **Bidirectional Agent Q + PRD integration**: PRD schema, queue pattern, and agent-to-agent protocol are wired together. See [docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md](docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md) for PRD shape and outcome blocks, [docs/AGENTIC_AGENT_Q_PATTERN.md](docs/AGENTIC_AGENT_Q_PATTERN.md) for queue layout, and [docs/AGENTIC_AGENT_TO_AGENT_PROTOCOL.md](docs/AGENTIC_AGENT_TO_AGENT_PROTOCOL.md) plus [docs/AGENTIC_AGENT_Q_SCENARIOS.md](docs/AGENTIC_AGENT_Q_SCENARIOS.md) for transport behavior.
 - **Repo-local everything**: engine at `_localsetup/`, user/context data under the repo; [git traceability](docs/GIT_TRACEABILITY.md) for PRDs, specs, and outcomes so operations stay transparent and auditable.
 
-After installation, the client repo contains `_localsetup/` (this framework plus docs) and platform-specific paths at repo root (e.g. `.cursor/rules/`, `.cursor/skills/` for Cursor). Version displayed in READMEs and framework docs is kept in sync with the repo **VERSION** file; release and publish are maintained in a separate maintainer repository.
+After installation, the client repo contains `_localsetup/` (this framework plus docs) and platform-specific paths at repo root (e.g. `.cursor/rules/`, `.cursor/skills/` for Cursor). Version displayed in READMEs and framework docs is kept in sync with the repo **VERSION** file; release and publish automation is in the `scripts/` directory.
 
 ---
 

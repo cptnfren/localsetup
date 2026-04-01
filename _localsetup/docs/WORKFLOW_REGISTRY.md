@@ -30,7 +30,7 @@ version: 2.9
 | `skills-index-refresh` | Skill index refresh + scrub | Refresh index then scrub (mandatory sequence) | User says "refresh skills", "update public skill index", "refresh and scrub", or "scrub the index" | No | refresh skills; scrub index | [SKILL_DISCOVERY.md](SKILL_DISCOVERY.md) (refresh + scrub block); skill `localsetup-skill-discovery` |
 | `tmux-terminal-mode` | Tmux terminal mode | Enable/disable/status via `_localsetup/tools/tmux_terminal_mode`; ide or shell mode; injects agent ops rule | User says "enable tmux mode", "tmux terminal mode", "disable tmux mode", "always-on tmux", or setting up ops machine | No | tmux terminal mode; always-on tmux | [TMUX_TERMINAL_MODE.md](TMUX_TERMINAL_MODE.md); tool `_localsetup/tools/tmux_terminal_mode` |
 
-Release and publish (including version bump) are maintained in a separate maintainer repository; not documented here.
+Release and publish workflows are documented in `docs/WORKFLOW_INDEX.md` and `docs/MAINTENANCE_WORKFLOW.md`.
 
 ## Usage
 

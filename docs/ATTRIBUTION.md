@@ -35,7 +35,7 @@ GitHub’s **main repo page** shows a cached contributors list; it does not auto
    GitHub does not expose a “refresh” button. To clear the stale list:
    - Go to [GitHub Support](https://support.github.com/).
    - Choose **Remove data from a repository I own or control** (or similar).
-  - Ask them to **regenerate the repository contributors list** for `cptnfren/localsetup-maintainer` after a history rewrite that removed Co-authored-by trailers; the Insights Contributors graph is already correct.
+   - Ask them to **regenerate the repository contributors list** for `cptnfren/localsetup` after a history rewrite that removed Co-authored-by trailers; the Insights Contributors graph is already correct.
 
 3. **If the account still appears in Insights → Contributors**  
    Then some ref (e.g. another branch or tag) or commit still attributes them. Check for Co-authored-by and for a different committer:

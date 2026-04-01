@@ -21,9 +21,9 @@ metadata:
 - **PATCH:** `fix:`, `docs:`, `chore:`, `style:`, `refactor:`, `perf:`, `test:`, `ci:`, `build:`; any other message defaults to PATCH.
 - **No bump:** Merge commits (message starts with `Merge `).
 
-## In this repo (public framework)
+## In this repo
 
-Version bump and doc sync are performed by the repository maintainers. Contributors do not need to run any scripts. If you are working in a repo that has the maintainer publish workflow (e.g. the framework maintainer repo), run the publish workflow from that context as documented there.
+Version bump and doc sync are performed by running `scripts/publish`. Contributors do not need to run any special scripts; just commit changes and run publish when ready.
 
 ## Reference
 

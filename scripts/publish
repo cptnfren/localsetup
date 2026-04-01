@@ -10,7 +10,7 @@
 #          7) Optionally pushes to origin/main
 # Usage:   ./scripts/publish [--major|--minor|--patch] [--push]
 #          With no bump flag, infers bump type from the last commit message.
-# Created: 2026-04-01 (consolidated from publish and publish-from-dogfood)
+# Created: 2026-04-01
 # Last updated: 2026-04-01
 
 set -euo pipefail

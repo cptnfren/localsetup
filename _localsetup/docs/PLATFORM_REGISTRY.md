@@ -42,7 +42,7 @@ Add one row or bullet per new skill with a short "When to use" description. Use 
 
 - Deploy script: `_localsetup/tools/deploy` (Bash) / `deploy.ps1` (PowerShell); accepts `--tools "cursor,claude-code,codex,openclaw"`.
 - Skills and rules (paths and model): [SKILLS_AND_RULES.md](SKILLS_AND_RULES.md).
-- Release and publish (including packaging and sync checks) are maintained in a separate maintainer repository.
+- Release and publish automation is in `scripts/` directory.
 
 ---
 

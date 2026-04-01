@@ -7,7 +7,7 @@
 
 """
 Sync Cursor runtime (.cursor) back to package source (_localsetup) with git-based strategy.
-- Base = file content as in HEAD (last commit) in the public repo.
+- Base = file content as in HEAD (last commit).
 - Copy cursor -> packaged only when: cursor != base and (packaged == base or packaged missing).
 - Skip when: packaged != base (packaged has edits), or both differ from base (conflict), or identical.
 - New files (not in git): copy when packaged missing; when both exist, fall back to mtime.
@@ -166,7 +166,9 @@ def sync_skills(repo: Path, dry_run: bool) -> tuple[int, int, int, int]:
 
     copied_total, skipped_total, stale_total, conflicts_total = 0, 0, 0, 0
     for runtime_skill in sorted(cursor_skills.iterdir()):
-        if not runtime_skill.is_dir() or not runtime_skill.name.startswith("localsetup-"):
+        if not runtime_skill.is_dir() or not runtime_skill.name.startswith(
+            "localsetup-"
+        ):
             continue
         name = runtime_skill.name
         target_dir = packaged_skills / name
@@ -195,7 +197,9 @@ def sync_skills(repo: Path, dry_run: bool) -> tuple[int, int, int, int]:
             print(f"  skipped (packaged has changes) in {name}: {skipped_s} file(s)")
         if stale_s:
             stale_total += stale_s
-            print(f"  skipped (cursor not newer than last commit) in {name}: {stale_s} file(s)")
+            print(
+                f"  skipped (cursor not newer than last commit) in {name}: {stale_s} file(s)"
+            )
         if conflicts_s:
             conflicts_total += conflicts_s
             print(f"  conflict (both changed) in {name}: {conflicts_s} file(s)")
@@ -206,11 +210,20 @@ def main() -> int:
     ap = argparse.ArgumentParser(
         description="Sync .cursor into _localsetup using git 3-way: only overwrite when .cursor has changes and packaged matches last commit."
     )
-    ap.add_argument("--public-repo", required=True, metavar="PATH", help="Path to public repo (localsetup-2) root")
-    ap.add_argument("--dry-run", action="store_true", help="Report what would be done without copying")
+    ap.add_argument(
+        "--repo-root",
+        default=".",
+        metavar="PATH",
+        help="Path to repo root (default: current directory)",
+    )
+    ap.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Report what would be done without copying",
+    )
     args = ap.parse_args()
 
-    repo = Path(args.public_repo).resolve()
+    repo = Path(args.repo_root).resolve()
     if not repo.is_dir():
         print(f"Error: not a directory: {repo}", file=sys.stderr)
         return 1
@@ -224,7 +237,9 @@ def main() -> int:
             check=True,
         )
     except (subprocess.CalledProcessError, FileNotFoundError):
-        print("Error: public repo is not a git repository or git unavailable.", file=sys.stderr)
+        print(
+            "Error: repo is not a git repository or git unavailable.", file=sys.stderr
+        )
         return 1
 
     packaged_skills = repo / "_localsetup" / "skills"
