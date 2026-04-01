@@ -19,7 +19,7 @@ jobs:
           python-version: "3.x"
 
       - name: Regenerate docs artifacts
-        run: ./scripts/generate-doc-artifacts
+        run: python3 _localsetup/tools/generate_docs_artifacts.py
 
       - name: Verify generated files are committed
         run: git diff --exit-code _localsetup/docs/SKILLS.md _localsetup/docs/_generated/facts.json
