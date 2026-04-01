@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+# Purpose: Validate maintainer repo workflow wiring after split.
+# Created Date: 2026-02-19
+# Last Updated Date: 2026-02-19
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+if [[ -z "${REPO_ROOT}" ]]; then
+  echo "FAIL: not inside a git repository"
+  exit 1
+fi
+cd "${REPO_ROOT}"
+
+failures=0
+
+pass() { echo "PASS: $1"; }
+fail() { echo "FAIL: $1"; failures=$((failures + 1)); }
+
+check_exists() {
+  local p="$1"
+  if [[ -e "$p" ]]; then
+    pass "exists: $p"
+  else
+    fail "missing required path: $p"
+  fi
+}
+
+check_executable() {
+  local p="$1"
+  if [[ -x "$p" ]]; then
+    pass "executable: $p"
+  else
+    fail "not executable: $p"
+  fi
+}
+
+check_syntax() {
+  local p="$1"
+  if bash -n "$p" >/dev/null 2>&1; then
+    pass "syntax ok: $p"
+  else
+    fail "syntax error: $p"
+  fi
+}
+
+echo "== Maintainer workflow validator =="
+echo "Repo root: ${REPO_ROOT}"
+echo
+
+origin_url="$(git remote get-url origin 2>/dev/null || true)"
+if [[ "${origin_url}" =~ localsetup-maintainer\.git$ ]]; then
+  pass "origin target looks correct: ${origin_url}"
+else
+  fail "origin target mismatch: ${origin_url}"
+fi
+
+check_exists "README.md"
+check_exists "VERSION"
+check_exists "docs/MAINTENANCE_WORKFLOW.md"
+check_exists "docs/ATTRIBUTION.md"
+check_exists "docs/PUBLISHING_CHECKLIST.md"
+check_exists "docs/VERSIONING.md"
+
+check_exists "scripts/bump-version"
+check_exists "scripts/compare-packaged-vs-cursor"
+check_exists "scripts/generate-doc-artifacts"
+check_exists "scripts/maintain"
+check_exists "scripts/publish"
+check_exists ".githooks/commit-msg"
+check_exists ".githooks/post-commit"
+
+check_executable "scripts/bump-version"
+check_executable "scripts/compare-packaged-vs-cursor"
+check_executable "scripts/generate-doc-artifacts"
+check_executable "scripts/maintain"
+check_executable "scripts/publish"
+check_executable ".githooks/commit-msg"
+check_executable ".githooks/post-commit"
+
+check_syntax "scripts/bump-version"
+check_syntax "scripts/compare-packaged-vs-cursor"
+check_syntax "scripts/generate-doc-artifacts"
+check_syntax "scripts/maintain"
+check_syntax "scripts/publish"
+check_syntax ".githooks/commit-msg"
+check_syntax ".githooks/post-commit"
+
+if ./scripts/publish --help >/dev/null 2>&1; then
+  pass "publish help command works"
+else
+  fail "publish help command failed"
+fi
+
+if grep -qE '^hooksPath = .githooks$' .git/config; then
+  pass "hooksPath configured to .githooks"
+else
+  echo "WARN: hooksPath not configured in this clone"
+  echo "WARN: set with: git config core.hooksPath .githooks (optional, hooks are currently no-op)"
+  pass "hooksPath check downgraded to warning"
+fi
+
+echo
+if [[ "${failures}" -eq 0 ]]; then
+  echo "RESULT: PASS"
+  exit 0
+fi
+
+echo "RESULT: FAIL (${failures} issue(s))"
+exit 1

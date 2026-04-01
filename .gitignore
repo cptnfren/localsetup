@@ -1,0 +1,31 @@
+# Localsetup v2 source repo
+*.backup
+*.local
+.DS_Store
+*.log
+
+# Local-only generated maintenance docs
+_internal_docs/
+_localsetup/.localsetup-meta/
+
+# Repo-local data (PR review state, audit output, etc.; never publish)
+data/
+
+# Mail accounts (credentials; use example template only in repo)
+_localsetup/config/mail_accounts.json
+
+# Agent work queue (local-only PRDs and task files; never publish)
+.agent/
+
+# Git state snapshots (unfuck-my-git-state diagnostic output; never publish)
+.git-state-snapshots/
+
+# Python
+__pycache__/
+*.pyc
+
+# Kilo Code (migrated from Cursor) - track rules and skills
+# but ignore local-only node_modules and generated files
+.kilocode/node_modules/
+.kilocode/package.json
+.kilocode/bun.lock
