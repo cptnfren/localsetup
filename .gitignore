@@ -24,8 +24,6 @@ _localsetup/config/mail_accounts.json
 __pycache__/
 *.pyc
 
-# Kilo Code (migrated from Cursor) - track rules and skills
-# but ignore local-only node_modules and generated files
-.kilocode/node_modules/
-.kilocode/package.json
-.kilocode/bun.lock
+# Kilo Code (migrated from Cursor)
+.kilocode/
+.kilo/

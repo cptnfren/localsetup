@@ -39,6 +39,7 @@ param(
     [string]$UpgradePolicy = 'preserve',
     [switch]$Yes,
     [switch]$InstallDeps,
+    [switch]$Global,
     [switch]$Help
 )
 
@@ -51,6 +52,7 @@ if ($args.Count -gt 0) {
             '--yes'          { $Yes = $true }
             '--install-deps' { $InstallDeps = $true }
             '--upgrade-policy' { if ($i + 1 -lt $args.Count) { $UpgradePolicy = $args[$i + 1]; $i++ } }
+            '--global' { $Global = $true }
             '--help' { $Help = $true }
             '-h'     { $Help = $true }
         }
@@ -58,10 +60,6 @@ if ($args.Count -gt 0) {
 }
 
 $REPO_URL = if ($env:LOCALSETUP_2_REPO) { $env:LOCALSETUP_2_REPO } else { 'https://github.com/cptnfren/localsetup.git' }
-$FRAMEWORK_DIRNAME = '_localsetup'
-$ValidTools = @('cursor', 'claude-code', 'codex', 'openclaw')
-$MinGitVersion = [Version]'2.20.0'
-$MinPythonVersion = [Version]'3.10.0'
 
 function Show-Usage {
     @'
@@ -78,7 +76,9 @@ Parameters:
   -Yes              Non-interactive; no prompts
   -UpgradePolicy    preserve | force | fail-on-conflict (default: preserve)
   -InstallDeps      Automatically install missing Python packages via pip after deploy.
-                    Without this flag, missing deps are reported but install still completes.
+                    Without this switch, missing deps are reported but install still completes.
+  -Global           Deploy skills/rules globally to user home (~/.kilo/, ~/.openclaw/, etc.)
+                    Auto-detects installed agents (kilo, openclaw, claude) if -Tools not specified.
   -Help, -?, -h     Show this help and exit
 
 Tools (use with -Tools):
@@ -89,10 +89,17 @@ Tools (use with -Tools):
 
 Examples:
   .\install.ps1 -Directory C:\repos\myapp -Tools "cursor,claude-code" -Yes
+  .\install.ps1 -Global              Deploy framework globally to all detected agents
+  .\install.ps1 -Global -Tools kilo  Deploy framework globally to kilo only
   .\install.ps1
 
 Note: Running elevated (Run as Administrator) creates files owned by that account. Re-runs as a normal
   user may then hit permission errors. Prefer running as the user who will own the repo.
+
+Global deploy deploys to:
+  kilo:       ~/.kilo/skills/ (auto-discovered) and ~/.kilo/rules/ (add to instructions[])
+  openclaw:   ~/.openclaw/skills/
+  claude:     ~/.claude/skills/ and ~/.claude/CLAUDE.md
 '@
 }
 
@@ -121,6 +128,14 @@ function Get-GitVersion {
         }
     } catch {}
     return $null
+}
+
+function Detect-Agents {
+    $agents = @()
+    if (Get-ToolVersion -ToolName 'kilo') { $agents += 'kilo' }
+    if (Get-ToolVersion -ToolName 'openclaw') { $agents += 'openclaw' }
+    if (Get-ToolVersion -ToolName 'claude') { $agents += 'claude-code' }
+    return ($agents -join ',')
 }
 
 function Run-PreflightChecks {
@@ -469,6 +484,52 @@ function Apply-Upgrade {
     if ($conflicts.Count -gt 0) {
         Write-Host 'Conflicts were preserved. Review upgrade report for paths.' -ForegroundColor Yellow
     }
+}
+
+# --- Global scope handling ---
+if ($Global) {
+    Run-PreflightChecks
+
+    if (-not $Tools) {
+        $Tools = Detect-Agents
+        if (-not $Tools) {
+            Write-Host 'No supported CLI agents detected (kilo, openclaw, claude).' -ForegroundColor Yellow
+            Write-Host 'Install one of them first, then re-run with -Global.'
+            exit 1
+        }
+        Write-Host "Detected agents: $Tools"
+    }
+
+    $engineSrc = $null
+    $candidates = @(
+        (Join-Path $PWD '_localsetup'),
+        $PWD,
+        (Join-Path $PWD 'framework')
+    )
+    foreach ($candidate in $candidates) {
+        $deployScript = Join-Path $candidate 'tools\deploy.ps1'
+        if (Test-Path -LiteralPath $deployScript) {
+            $engineSrc = $candidate
+            break
+        }
+    }
+
+    if (-not $engineSrc) {
+        Write-Host 'Error: Cannot find framework engine. Run install first without -Global.' -ForegroundColor Red
+        exit 1
+    }
+
+    $deployScriptPath = Join-Path $engineSrc 'tools\deploy.ps1'
+    if (-not (Test-Path -LiteralPath $deployScriptPath)) {
+        Write-Host "Error: Deploy script not found at '$deployScriptPath'" -ForegroundColor Red
+        exit 1
+    }
+
+    Write-Host "Deploying framework skills/rules globally for: $Tools"
+    & $deployScriptPath -Scope global -Tools $Tools
+    if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+    Write-Host 'Done. Framework deployed globally.'
+    exit 0
 }
 
 # Resolve tools

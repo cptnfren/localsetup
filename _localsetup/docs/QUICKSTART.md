@@ -52,8 +52,46 @@ When prompted (or when using `--tools` / `-Tools`), use one or more of these IDs
 | `claude-code` | Claude Code | `.claude/CLAUDE.md` | `.claude/skills/localsetup-*/` |
 | `codex` | OpenAI Codex CLI | `AGENTS.md` (repo root) | `.agents/skills/localsetup-*/` |
 | `openclaw` | OpenClaw | [_localsetup/templates/openclaw/OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) | `skills/localsetup-*/` |
+| `kilo` | Kilo CLI | Not applicable (reads rules from `instructions[]` in `kilo.jsonc`) | `~/.kilo/skills/` (auto-discovered) |
 
 You can deploy to multiple platforms at once by comma-separating: `cursor,claude-code`.
+
+## 🌐 Global installation (optional)
+
+Deploy the framework once to your user home directory and use it across ALL projects.
+
+### Linux and macOS
+
+```bash
+# Auto-detect installed agents (kilo, openclaw, claude) and deploy globally
+curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --global
+
+# Deploy to specific agents only
+curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --global --tools kilo
+
+# From local clone
+./install --global
+```
+
+### Windows (PowerShell)
+
+```powershell
+# Auto-detect and deploy globally
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Global
+
+# Specific agents
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Global -Tools kilo
+```
+
+### Where things get deployed
+
+| Platform | Global skills path | Global config |
+|----------|-------------------|---------------|
+| `kilo` | `~/.kilo/skills/` | Add `~/.kilo/rules/*.md` to `instructions[]` in kilo.jsonc |
+| `openclaw` | `~/.openclaw/skills/` | Auto-discovered |
+| `claude-code` | `~/.claude/skills/` | Auto-discovered |
+
+**Note:** Repo-local installation takes precedence over global. Project-specific skills/rules override global ones.
 
 ## ✅ Verify installation
 

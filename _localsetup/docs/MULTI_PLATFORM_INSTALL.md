@@ -63,9 +63,80 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Directory . -Tools curso
 ## Options
 
 - `--directory PATH` / `-Directory PATH`  - Client repo root (default: .)
-- `--tools LIST` / `-Tools LIST`  - Comma-separated: cursor, claude-code, codex, openclaw
+- `--tools LIST` / `-Tools LIST`  - Comma-separated: cursor, claude-code, codex, openclaw, kilo
 - `--yes` / `-Yes`  - Non-interactive (required when using --tools)
+- `--global` / `-Global`  - Deploy to user-wide locations (`~/.kilo/skills/`, `~/.openclaw/`, `~/.claude/`); auto-detects agents if `--tools` not specified
+- `--install-deps` / `-InstallDeps`  - Install Python dependencies from `_localsetup/requirements.txt` automatically
 - `--help` / `-Help`  - Print usage and exit
+
+## Global deployment (user-wide, cross-project)
+
+Use `--global` / `-Global` to deploy the framework to user-wide locations. Skills and rules become available across ALL projects without per-repo installation.
+
+### Auto-detection
+
+If `--tools` / `-Tools` is not specified with `--global`, the installer auto-detects which agents are installed:
+- **kilo** → `~/.kilo/skills/` and `~/.kilo/rules/`
+- **openclaw** → `~/.openclaw/skills/`
+- **claude-code** → `~/.claude/skills/` and `~/.claude/CLAUDE.md`
+
+### Global install examples
+
+**Linux/macOS (Bash):**
+```bash
+# Deploy to all detected agents
+./install --global
+
+# Deploy to specific agents
+./install --global --tools kilo,openclaw
+```
+
+**Windows (PowerShell):**
+```powershell
+# Deploy to all detected agents
+.\install.ps1 -Global
+
+# Deploy to specific agents
+.\install.ps1 -Global -Tools kilo,openclaw
+```
+
+### Kilo-specific
+
+Global skills deploy to `~/.kilo/skills/` which Kilo auto-discovers. Rules deploy to `~/.kilo/rules/`.
+
+**One-time setup for rules:** To enable global rules, add the following to your `kilo.jsonc` (project or global):
+
+```jsonc
+{
+  "instructions": [
+    "~/.kilo/rules/*.md"
+  ]
+}
+```
+
+This is a one-time configuration. Subsequent `--global` deploys only update the skill and rule files.
+
+### Precedence
+
+**Repo-local wins over global.** Project-specific skills and rules take precedence over global ones. This allows projects to customize without affecting the global install.
+
+### Removing global deployment
+
+To remove global deployment:
+```bash
+# Kilo skills
+rm -rf ~/.kilo/skills/localsetup-*
+
+# Kilo rules (if no longer needed)
+rm -rf ~/.kilo/rules/localsetup-*
+
+# OpenClaw
+rm -rf ~/.openclaw/skills
+
+# Claude Code
+rm -rf ~/.claude/skills
+rm ~/.claude/CLAUDE.md
+```
 
 ## Dependency preflight
 

@@ -52,6 +52,7 @@ INSTALL_DEPS=false
 MIN_GIT_VERSION="2.20.0"
 MIN_PYTHON_VERSION="3.10.0"
 UPGRADE_POLICY="preserve"
+GLOBAL_SCOPE=false
 
 # Help text inline so it works when script is piped (curl | bash); $0 is not the script then.
 usage() {
@@ -117,6 +118,20 @@ version_ge() {
     ((10#$av < 10#$bv)) && return 1
   done
   return 0
+}
+
+detect_agents() {
+  local agents=""
+  if command -v kilo >/dev/null 2>&1; then
+    agents="${agents:+$agents,}kilo"
+  fi
+  if command -v openclaw >/dev/null 2>&1; then
+    agents="${agents:+$agents,}openclaw"
+  fi
+  if command -v claude >/dev/null 2>&1; then
+    agents="${agents:+$agents,}claude-code"
+  fi
+  echo "$agents"
 }
 
 preflight_checks() {
@@ -292,6 +307,10 @@ while [[ $# -gt 0 ]]; do
       UPGRADE_POLICY="$2"
       shift 2
       ;;
+    --global)
+      GLOBAL_SCOPE=true
+      shift
+      ;;
     --help|-h)
       show_help_and_exit
       ;;
@@ -300,6 +319,66 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+# --- Global scope handling (skip target directory prompt) ---
+if $GLOBAL_SCOPE; then
+  preflight_checks
+
+  if [[ -z "$TOOLS_CSV" ]]; then
+    TOOLS_CSV="$(detect_agents)"
+    if [[ -z "$TOOLS_CSV" ]]; then
+      echo "No supported CLI agents detected (kilo, openclaw, claude)."
+      echo "Install one of them first, then re-run with --global."
+      exit 1
+    fi
+    echo "Detected agents: $TOOLS_CSV"
+  fi
+
+  ENGINE_SRC=""
+  detect_engine_dir() {
+    local base="$1"
+    if [[ -x "$base/_localsetup/tools/deploy" ]]; then
+      echo "$base/_localsetup"
+      return 0
+    fi
+    if [[ -x "$base/tools/deploy" ]]; then
+      echo "$base"
+      return 0
+    fi
+    if [[ -x "$base/framework/tools/deploy" ]]; then
+      echo "$base/framework"
+      return 0
+    fi
+    return 1
+  }
+
+  if [[ -x "$PWD/_localsetup/tools/deploy" ]]; then
+    ENGINE_SRC="$PWD/_localsetup"
+  elif [[ -x "$PWD/tools/deploy" ]]; then
+    ENGINE_SRC="$PWD"
+  else
+    for dir in "$PWD" "$HOME"; do
+      ENGINE_SRC="$(detect_engine_dir "$dir" 2>/dev/null || true)"
+      [[ -n "$ENGINE_SRC" ]] && break
+    done
+  fi
+
+  if [[ -z "$ENGINE_SRC" ]]; then
+    echo "Error: Cannot find framework engine. Run install first without --global."
+    exit 1
+  fi
+
+  DEPLOY_SCRIPT="$ENGINE_SRC/tools/deploy"
+  if [[ ! -x "$DEPLOY_SCRIPT" ]]; then
+    echo "Error: Deploy script not found at $DEPLOY_SCRIPT"
+    exit 1
+  fi
+
+  echo "Deploying framework skills/rules globally for: $TOOLS_CSV"
+  "$DEPLOY_SCRIPT" --scope global --tools "$TOOLS_CSV" || { echo "Global deploy failed." >&2; exit 1; }
+  echo "Done. Framework deployed globally."
+  exit 0
+fi
 
 case "$UPGRADE_POLICY" in
   preserve|force|fail-on-conflict) ;;
