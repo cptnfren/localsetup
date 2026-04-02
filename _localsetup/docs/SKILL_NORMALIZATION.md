@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 3.0
+version: 2.11
 ---
 
 # Skill normalization (spec compliance and platform-neutral)

@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 3.0
+version: 2.11
 ---
 
 # Workflow and module registry (Localsetup v2)

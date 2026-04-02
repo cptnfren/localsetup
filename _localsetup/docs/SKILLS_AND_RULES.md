@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 3.0
+version: 2.11
 ---
 
 # Skills and rules (Localsetup v2)
