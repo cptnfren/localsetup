@@ -1,46 +1,9 @@
 {
   "version": "2.10.1",
   "major_minor": "2.10",
-  "platform_count": 6,
+  "platform_count": 0,
   "skill_count": 44,
-  "platforms": [
-    {
-      "id": "cursor",
-      "display_name": "Cursor",
-      "context_loader": ".cursor/rules/localsetup-context.mdc (and .cursor/rules/localsetup-context-index.md)",
-      "skills_path": ".cursor/skills/localsetup-*/"
-    },
-    {
-      "id": "claude-code",
-      "display_name": "Claude Code",
-      "context_loader": ".claude/CLAUDE.md",
-      "skills_path": ".claude/skills/localsetup-*/"
-    },
-    {
-      "id": "codex",
-      "display_name": "OpenAI Codex CLI",
-      "context_loader": "AGENTS.md (repo root)",
-      "skills_path": ".agents/skills/localsetup-*/"
-    },
-    {
-      "id": "openclaw",
-      "display_name": "OpenClaw",
-      "context_loader": "[OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) (merge into workspace MEMORY.md if desired)",
-      "skills_path": "skills/localsetup-*/ (repo root)"
-    },
-    {
-      "id": "kilo",
-      "display_name": "Kilo CLI",
-      "context_loader": "`.kilocode/rules/localsetup-context.md`",
-      "skills_path": "`.kilocode/skills/localsetup-*/`"
-    },
-    {
-      "id": "opencode",
-      "display_name": "OpenCode CLI",
-      "context_loader": "AGENTS.md (repo root)",
-      "skills_path": ".opencode/skills/localsetup-*/"
-    }
-  ],
+  "platforms": [],
   "skills": [
     {
       "id": "localsetup-agentic-prd-batch",
