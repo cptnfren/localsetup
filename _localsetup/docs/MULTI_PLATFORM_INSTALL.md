@@ -76,10 +76,10 @@ Use `--global` / `-Global` to deploy the framework to user-wide locations. Skill
 ### Auto-detection
 
 If `--tools` / `-Tools` is not specified with `--global`, the installer auto-detects which agents are installed:
-- **kilo** → `~/.kilo/skills/` and `~/.kilo/rules/`
-- **openclaw** → `~/.openclaw/skills/`
-- **claude-code** → `~/.claude/skills/` and `~/.claude/CLAUDE.md`
-- **opencode** → `~/.config/opencode/skills/`
+- **kilo** → `~/.kilo/skills/`, `~/.kilo/rules/`, and `~/.kilo/AGENT_MEMORY.md`
+- **openclaw** → `~/.openclaw/skills/` and `~/.openclaw/AGENT_MEMORY.md`
+- **claude-code** → `~/.claude/skills/`, `~/.claude/CLAUDE.md`, and `~/.claude/AGENT_MEMORY.md`
+- **opencode** → `~/.config/opencode/skills/` and `~/.config/opencode/AGENT_MEMORY.md`
 
 ### Global install examples
 
@@ -103,7 +103,7 @@ If `--tools` / `-Tools` is not specified with `--global`, the installer auto-det
 
 ### Kilo-specific
 
-Global skills deploy to `~/.kilo/skills/` which Kilo auto-discovers. Rules deploy to `~/.kilo/rules/`.
+Global skills deploy to `~/.kilo/skills/` which Kilo auto-discovers. Rules deploy to `~/.kilo/rules/`. Memory file deploys to `~/.kilo/AGENT_MEMORY.md`.
 
 **One-time setup for rules:** To enable global rules, add the following to your `kilo.jsonc` (project or global):
 
@@ -125,21 +125,23 @@ This is a one-time configuration. Subsequent `--global` deploys only update the 
 
 To remove global deployment:
 ```bash
-# Kilo skills
+# Kilo skills and memory
 rm -rf ~/.kilo/skills/localsetup-*
-
-# Kilo rules (if no longer needed)
 rm -rf ~/.kilo/rules/localsetup-*
+rm ~/.kilo/AGENT_MEMORY.md
 
 # OpenClaw
 rm -rf ~/.openclaw/skills
+rm ~/.openclaw/AGENT_MEMORY.md
 
 # Claude Code
 rm -rf ~/.claude/skills
 rm ~/.claude/CLAUDE.md
+rm ~/.claude/AGENT_MEMORY.md
 
 # OpenCode
 rm -rf ~/.config/opencode/skills
+rm ~/.config/opencode/AGENT_MEMORY.md
 ```
 
 ## Dependency preflight
@@ -198,7 +200,8 @@ Use with:
 ## What gets deployed
 
 - **All platforms:** Framework at `_localsetup/` (tools, lib, docs, skills, templates).
-- **Per-platform** context loader and skills paths: see [PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md) (single source of truth; add new platforms there first).
+- **Per-platform** context loader, skills, and memory file paths: see [PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md) (single source of truth; add new platforms there first).
+- **Memory files:** Each platform deploys with a writable memory file for agent learnings. See [MEMORY_MANAGEMENT.md](MEMORY_MANAGEMENT.md) for curation rules.
 
 ## Framework tools (Bash vs PowerShell)
 

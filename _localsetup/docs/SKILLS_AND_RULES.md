@@ -9,8 +9,9 @@ version: 2.10
 
 ## Model
 
-- **One always-loaded context** per platform: Cursor uses `.cursor/rules/localsetup-context.mdc`; Claude Code uses `.claude/CLAUDE.md`; Codex uses `AGENTS.md`; OpenClaw uses a context skill + optional doc template in _localsetup/docs/; OpenCode uses `AGENTS.md`; Kilo CLI uses `.kilocode/rules/localsetup-context.md` (repo-local deploy) or `~/.kilo/rules/` (global deploy).
-- **Skills:** Same SKILL.md content across platforms; installer/deploy copies from `_localsetup/skills/` to platform path (`.cursor/skills/`, `.claude/skills/`, `.agents/skills/`, `skills/` for OpenClaw, `.opencode/skills/` for OpenCode, or `.kilocode/skills/` for Kilo). Edit only in _localsetup; deploy overwrites platform paths.
+- **One always-loaded context** per platform: Cursor uses `.cursor/rules/localsetup-context.mdc`; Claude Code uses `.claude/CLAUDE.md`; Codex uses `AGENTS.md`; OpenClaw uses a context skill + optional doc template in _localsetup/docs/; OpenCode uses `AGENTS.md`; Kilo CLI uses `AGENTS.md` (repo root, local deploy) or `~/.kilo/rules/` (global deploy).
+- **Skills:** Same SKILL.md content across platforms; installer/deploy copies from `_localsetup/skills/` to platform path (`.cursor/skills/`, `.claude/skills/`, `.agents/skills/`, `skills/` for OpenClaw, `.opencode/skills/` for OpenCode, or `.kilo/skills/` for Kilo). Edit only in _localsetup; deploy overwrites platform paths.
+- **Memory file:** Each platform has a writable memory file for agent learnings (`.kilo/AGENT_MEMORY.md`, `.claude/AGENT_MEMORY.md`, etc.). See [MEMORY_MANAGEMENT.md](MEMORY_MANAGEMENT.md) for curation rules.
 - **When to load a skill:** Load when the task matches the skill's description (e.g. user says "decision tree" -> localsetup-decision-tree-workflow). The master rule/context includes an index of skills and when to use them.
 
 ## Task-to-skill matching flow
@@ -25,16 +26,16 @@ version: 2.10
 
 ## Platform paths
 
-**Canonical list:** Supported platforms and their context/skills paths are defined in [PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md). Reference that file when listing platforms or adding a new one. Summary:
+**Canonical list:** Supported platforms and their context/skills/memory paths are defined in [PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md). Reference that file when listing platforms or adding a new one. Summary:
 
-| Platform | Context loader | Skills |
-|----------|----------------|--------|
-| Cursor | .cursor/rules/localsetup-context.mdc | .cursor/skills/localsetup-*/ |
-| Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ |
-| Codex | AGENTS.md (repo root) | .agents/skills/localsetup-*/ |
-| OpenClaw | Skill localsetup-context + _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md | skills/localsetup-*/ (repo root) |
-| OpenCode | AGENTS.md (repo root) | .opencode/skills/localsetup-*/ |
-| Kilo CLI | .kilocode/rules/localsetup-context.md (local) | .kilocode/skills/localsetup-*/ |
+| Platform | Context loader | Skills | Memory file |
+|----------|----------------|--------|-------------|
+| Cursor | .cursor/rules/localsetup-context.mdc | .cursor/skills/localsetup-*/ | .cursor/rules/agent-memory.md |
+| Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ | .claude/AGENT_MEMORY.md |
+| Codex | AGENTS.md (repo root) | .agents/skills/localsetup-*/ | .agents/AGENT_MEMORY.md |
+| OpenClaw | _localsetup/docs/OPENCLAW_CONTEXT.md | skills/localsetup-*/ (repo root) | AGENT_MEMORY.md (repo root) |
+| OpenCode | AGENTS.md (repo root) | .opencode/skills/localsetup-*/ | .opencode/AGENT_MEMORY.md |
+| Kilo CLI | AGENTS.md (repo root) | .kilo/skills/localsetup-*/ | .kilo/AGENT_MEMORY.md |
 
 ## Format
 

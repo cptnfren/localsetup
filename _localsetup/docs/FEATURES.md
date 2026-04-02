@@ -26,8 +26,21 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | **Cross-platform installers** | Bash installer for Linux and macOS; PowerShell installer for Windows. Both support interactive and non-interactive modes. |
 | **Multi-host deployment** | Deploy context and skills to Cursor, Claude Code, OpenAI Codex CLI, or OpenClaw from a single install command. |
 | **Idempotent updates** | Re-running install updates the framework (via git pull) and redeploys context. Safe to run repeatedly. Deploy can overwrite root-owned destination files (content is updated; a metadata warning may appear). |
-| **Platform registry** | A single Markdown table ([PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md)) defines every supported platform ID, context path, and skills path. Add new platforms by editing one file. |
+| **Platform registry** | A single Markdown table ([PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md)) defines every supported platform ID, context path, skills path, and memory file location. Add new platforms by editing one file. |
 | **Global deployment** | Deploy once to user-wide locations (`~/.kilo/skills/`, `~/.openclaw/`, `~/.claude/`) and use the framework across all projects. Auto-detects installed agents when `--global` is used without `--tools`. Repo-local installation takes precedence over global. |
+
+---
+
+## 🧠 Agent memory management
+
+| Capability | Description |
+|---|---|
+| **Persistent memory bank** | Each platform deploys with a writable memory file for AI agent learnings. Unlike `AGENTS.md` (which is write-protected), the memory file is freely writable. |
+| **Platform-specific locations** | Memory files at `.kilo/AGENT_MEMORY.md`, `.claude/AGENT_MEMORY.md`, `.opencode/AGENT_MEMORY.md`, `.cursor/rules/agent-memory.md`, `.agents/AGENT_MEMORY.md`, and `AGENT_MEMORY.md` (OpenClaw root). |
+| **Strict curation rules** | Maximum 20 entries per section; revise existing entries don't append; stale entries (>30 days) are deleted; only record patterns confirmed in 2+ sessions. |
+| **Global and repo-local memory** | Memory can be deployed globally (shared across projects) or repo-locally (versioned with the project). Repo-local takes precedence. |
+| **Memory references in context** | Each platform's context file references its memory file with curation rules, prompting the AI to actively manage memory. |
+| **Documentation:** | Full guide at [MEMORY_MANAGEMENT.md](MEMORY_MANAGEMENT.md). |
 
 ---
 

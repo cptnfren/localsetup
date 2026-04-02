@@ -79,3 +79,24 @@ Load when task matches:
 ## Commands (repo root)
 ./_localsetup/tools/verify_context
 ./_localsetup/tests/automated_test.sh
+
+## Agent Memory Bank
+
+A persistent memory file exists at `AGENT_MEMORY.md` (repo root). You can write freely, but this file must remain curated.
+
+**Curation Rules:**
+- Maximum 20 entries per section
+- Revise existing entries, don't just append
+- Remove stale entries (older than 30 days)
+- Only record patterns confirmed in 2+ sessions
+- Escalate significant learnings to framework docs
+
+## Memory Management Rules
+
+When you discover something valuable:
+1. **Check before writing** - Does this pattern already exist?
+2. **Be specific** - Good: "- 2026-04-02: Use ruff format before ruff check"
+3. **Quality gate** - Only record patterns confirmed in 2+ sessions
+4. **Curate actively** - Before adding, remove stale entries
+5. **Escalate** - Move important patterns to framework docs
+6. **No bloat** - If section exceeds 20 entries, remove old ones first

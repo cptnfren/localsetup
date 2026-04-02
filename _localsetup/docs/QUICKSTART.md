@@ -46,14 +46,14 @@ After install completes, it prints a verification command. Run it to confirm con
 
 When prompted (or when using `--tools` / `-Tools`), use one or more of these IDs:
 
-| ID | Agent host | Context path | Skills path |
-|----|------------|--------------|-------------|
-| `cursor` | Cursor IDE | `.cursor/rules/` | `.cursor/skills/localsetup-*/` |
-| `claude-code` | Claude Code | `.claude/CLAUDE.md` | `.claude/skills/localsetup-*/` |
-| `codex` | OpenAI Codex CLI | `AGENTS.md` (repo root) | `.agents/skills/localsetup-*/` |
-| `openclaw` | OpenClaw | [_localsetup/templates/openclaw/OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) | `skills/localsetup-*/` |
-| `kilo` | Kilo CLI | `.kilocode/rules/localsetup-context.md` | `.kilocode/skills/localsetup-*/` |
-| `opencode` | OpenCode CLI | `AGENTS.md` (repo root) | `.opencode/skills/localsetup-*/` |
+| ID | Agent host | Context path | Skills path | Memory file |
+|----|------------|--------------|-------------|-------------|
+| `cursor` | Cursor IDE | `.cursor/rules/localsetup-context.mdc` | `.cursor/skills/localsetup-*/` | `.cursor/rules/agent-memory.md` |
+| `claude-code` | Claude Code | `.claude/CLAUDE.md` | `.claude/skills/localsetup-*/` | `.claude/AGENT_MEMORY.md` |
+| `codex` | OpenAI Codex CLI | `AGENTS.md` (repo root) | `.agents/skills/localsetup-*/` | `.agents/AGENT_MEMORY.md` |
+| `openclaw` | OpenClaw | `_localsetup/docs/OPENCLAW_CONTEXT.md` | `skills/localsetup-*/` | `AGENT_MEMORY.md` (repo root) |
+| `kilo` | Kilo CLI | `AGENTS.md` (repo root) | `.kilo/skills/localsetup-*/` | `.kilo/AGENT_MEMORY.md` |
+| `opencode` | OpenCode CLI | `AGENTS.md` (repo root) | `.opencode/skills/localsetup-*/` | `.opencode/AGENT_MEMORY.md` |
 
 You can deploy to multiple platforms at once by comma-separating: `cursor,claude-code`.
 
@@ -163,7 +163,7 @@ curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | b
 
 #### Kilo CLI
 
-Install into the current directory and deploy context and skills for Kilo CLI only (local repo deploy to `.kilocode/`).
+Install into the current directory and deploy context and skills for Kilo CLI only (local repo deploy to `.kilo/`).
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/cptnfren/localsetup/main/install | bash -s -- --directory . --tools kilo --yes
@@ -213,7 +213,7 @@ Install into the current directory and deploy context and skills for OpenCode CL
 
 #### Kilo CLI
 
-Install into the current directory and deploy context and skills for Kilo CLI only (local repo deploy to `.kilocode/`).
+Install into the current directory and deploy context and skills for Kilo CLI only (local repo deploy to `.kilo/`).
 
 ```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/cptnfren/localsetup/main/install.ps1))) -Directory . -Tools kilo -Yes
@@ -267,7 +267,7 @@ Install from a local clone into the target directory for OpenCode CLI only.
 
 **Kilo CLI**
 
-Install from a local clone into the target directory for Kilo CLI only (local repo deploy to `.kilocode/`).
+Install from a local clone into the target directory for Kilo CLI only (local repo deploy to `.kilo/`).
 
 ```bash
 ./install --directory /path/to/your/project --tools kilo --yes
@@ -317,7 +317,7 @@ Install from a local clone into the target directory for OpenCode CLI only.
 
 **Kilo CLI**
 
-Install from a local clone into the target directory for Kilo CLI only (local repo deploy to `.kilocode/`).
+Install from a local clone into the target directory for Kilo CLI only (local repo deploy to `.kilo/`).
 
 ```powershell
 .\install.ps1 -Directory "C:\path\to\your\project" -Tools kilo -Yes

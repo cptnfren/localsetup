@@ -52,6 +52,8 @@ def deploy_cursor(engine_dir: Path, root: Path) -> None:
             templates / "localsetup-context-index.md",
             rules_dir / "localsetup-context-index.md",
         )
+    if (templates / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates / "AGENT_MEMORY.md", rules_dir / "agent-memory.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -65,19 +67,15 @@ def deploy_cursor(engine_dir: Path, root: Path) -> None:
 
 
 def deploy_kilo(engine_dir: Path, root: Path) -> None:
-    rules_dir = root / ".kilocode" / "rules"
-    skills_dir = root / ".kilocode" / "skills"
-    rules_dir.mkdir(parents=True, exist_ok=True)
+    kilo_dir = root / ".kilo"
+    skills_dir = kilo_dir / "skills"
+    kilo_dir.mkdir(parents=True, exist_ok=True)
     skills_dir.mkdir(parents=True, exist_ok=True)
-    templates = engine_dir / "templates" / "kilocode"
-    if (templates / "localsetup-context.md").exists():
-        _safe_copy2(
-            templates / "localsetup-context.md", rules_dir / "localsetup-context.md"
-        )
-        _safe_copy2(
-            templates / "localsetup-context-index.md",
-            rules_dir / "localsetup-context-index.md",
-        )
+    templates = engine_dir / "templates" / "kilo"
+    if (templates / "AGENTS.md").exists():
+        _safe_copy2(templates / "AGENTS.md", root / "AGENTS.md")
+    if (templates / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates / "AGENT_MEMORY.md", kilo_dir / "AGENT_MEMORY.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -98,6 +96,8 @@ def deploy_claude_code(engine_dir: Path, root: Path) -> None:
     templates = engine_dir / "templates" / "claude-code"
     if (templates / "CLAUDE.md").exists():
         _safe_copy2(templates / "CLAUDE.md", claude_dir / "CLAUDE.md")
+    if (templates / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates / "AGENT_MEMORY.md", claude_dir / "AGENT_MEMORY.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -116,6 +116,8 @@ def deploy_codex(engine_dir: Path, root: Path) -> None:
     templates = engine_dir / "templates" / "codex"
     if (templates / "AGENTS.md").exists():
         _safe_copy2(templates / "AGENTS.md", root / "AGENTS.md")
+    if (templates / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates / "AGENT_MEMORY.md", root / ".agents" / "AGENT_MEMORY.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -137,6 +139,8 @@ def deploy_openclaw(engine_dir: Path, root: Path) -> None:
     templates = engine_dir / "templates" / "openclaw"
     if (templates / "OPENCLAW_CONTEXT.md").exists():
         _safe_copy2(templates / "OPENCLAW_CONTEXT.md", docs_dir / "OPENCLAW_CONTEXT.md")
+    if (templates / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates / "AGENT_MEMORY.md", root / "AGENT_MEMORY.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -157,6 +161,8 @@ def deploy_opencode(engine_dir: Path, root: Path) -> None:
     templates = engine_dir / "templates" / "opencode"
     if (templates / "AGENTS.md").exists():
         _safe_copy2(templates / "AGENTS.md", root / "AGENTS.md")
+    if (templates / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates / "AGENT_MEMORY.md", opencode_dir / "AGENT_MEMORY.md")
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
         if skill_dir.is_dir():
@@ -245,11 +251,13 @@ def deploy_kilo_global(engine_dir: Path) -> None:
     rules_dir.mkdir(parents=True, exist_ok=True)
     skills_dir.mkdir(parents=True, exist_ok=True)
 
-    templates_cursor = engine_dir / "templates" / "cursor"
-    for rule_file in ["localsetup-context.mdc", "localsetup-context-index.md"]:
-        src = templates_cursor / rule_file
+    templates_kilo = engine_dir / "templates" / "kilo"
+    for rule_file in ["AGENTS.md"]:
+        src = templates_kilo / rule_file
         if src.exists():
             _safe_copy2(src, rules_dir / rule_file)
+    if (templates_kilo / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates_kilo / "AGENT_MEMORY.md", kilo_home / "AGENT_MEMORY.md")
 
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
@@ -273,6 +281,8 @@ def deploy_openclaw_global(engine_dir: Path) -> None:
     context_src = templates / "OPENCLAW_CONTEXT.md"
     if context_src.exists():
         _safe_copy2(context_src, openclaw_dir / "OPENCLAW_CONTEXT.md")
+    if (templates / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates / "AGENT_MEMORY.md", openclaw_dir / "AGENT_MEMORY.md")
 
     _deploy_skills_to_dir(engine_dir, skills_dir)
 
@@ -287,6 +297,8 @@ def deploy_claude_code_global(engine_dir: Path) -> None:
     templates = engine_dir / "templates" / "claude-code"
     if (templates / "CLAUDE.md").exists():
         _safe_copy2(templates / "CLAUDE.md", claude_dir / "CLAUDE.md")
+    if (templates / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates / "AGENT_MEMORY.md", claude_dir / "AGENT_MEMORY.md")
 
     _deploy_skills_to_dir(engine_dir, skills_dir)
 
@@ -295,7 +307,12 @@ def deploy_opencode_global(engine_dir: Path) -> None:
     """Deploy skills to global opencode location (~/.config/opencode/skills/)."""
     opencode_dir = _expand_path("~/.config/opencode")
     skills_dir = opencode_dir / "skills"
+    opencode_dir.mkdir(parents=True, exist_ok=True)
     skills_dir.mkdir(parents=True, exist_ok=True)
+
+    templates = engine_dir / "templates" / "opencode"
+    if (templates / "AGENT_MEMORY.md").exists():
+        _safe_copy2(templates / "AGENT_MEMORY.md", opencode_dir / "AGENT_MEMORY.md")
 
     _deploy_skills_to_dir(engine_dir, skills_dir)
 

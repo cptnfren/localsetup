@@ -11,14 +11,14 @@ version: 2.10
 
 ## Supported platforms
 
-| ID | Display name | Context loader (path in client repo) | Skills path (path in client repo) |
-|----|--------------|--------------------------------------|------------------------------------|
-| cursor | Cursor | .cursor/rules/localsetup-context.mdc (and .cursor/rules/localsetup-context-index.md) | .cursor/skills/localsetup-*/ |
-| claude-code | Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ |
-| codex | OpenAI Codex CLI | AGENTS.md (repo root) | .agents/skills/localsetup-*/ |
-| openclaw | OpenClaw | [OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) (merge into workspace MEMORY.md if desired) | skills/localsetup-*/ (repo root) |
-| kilo | Kilo CLI | `.kilocode/rules/localsetup-context.md` | `.kilocode/skills/localsetup-*/` |
-| opencode | OpenCode CLI | AGENTS.md (repo root) | .opencode/skills/localsetup-*/ |
+| ID | Display name | Context loader (path in client repo) | Skills path (path in client repo) | Memory file |
+|----|--------------|--------------------------------------|------------------------------------|-------------|
+| cursor | Cursor | .cursor/rules/localsetup-context.mdc (and .cursor/rules/localsetup-context-index.md) | .cursor/skills/localsetup-*/ | .cursor/rules/agent-memory.md |
+| claude-code | Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ | .claude/AGENT_MEMORY.md |
+| codex | OpenAI Codex CLI | AGENTS.md (repo root) | .agents/skills/localsetup-*/ | .agents/AGENT_MEMORY.md |
+| openclaw | OpenClaw | [OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) (merge into workspace MEMORY.md if desired) | skills/localsetup-*/ (repo root) | AGENT_MEMORY.md (repo root) |
+| kilo | Kilo CLI | AGENTS.md (repo root) | .kilo/skills/localsetup-*/ | .kilo/AGENT_MEMORY.md |
+| opencode | OpenCode CLI | AGENTS.md (repo root) | .opencode/skills/localsetup-*/ | .opencode/AGENT_MEMORY.md |
 
 *More platforms may be added later. Update this table and the "Skill registration (new skills)" section when adding one.*
 
@@ -26,17 +26,16 @@ version: 2.10
 
 When deployed with `--scope global` (via `./install --global` or `install.ps1 -Global`), the framework installs skills and rules to user-wide locations. This makes the framework available across all projects without per-repo installation.
 
-| Platform | Global skills path | Global config | Notes |
-|----------|-------------------|---------------|-------|
-| kilo | `~/.kilo/skills/` | Not required | Skills auto-discovered by Kilo |
-| kilo | `~/.kilo/rules/` | Add to `instructions[]` in kilo.jsonc | Rules deployed as `.md` files |
-| openclaw | `~/.openclaw/skills/` | `~/.openclaw/openclaw.json` | Skills auto-discovered from `~/.openclaw/skills/` |
-| claude-code | `~/.claude/skills/` | N/A | Uses `~/.claude/CLAUDE.md` for global context |
-| opencode | `~/.config/opencode/skills/` | N/A | Skills auto-discovered from `~/.config/opencode/skills/` |
+| Platform | Global skills path | Memory file | Global config | Notes |
+|----------|-------------------|-------------|---------------|-------|
+| kilo | `~/.kilo/skills/` | `~/.kilo/AGENT_MEMORY.md` | Add to `instructions[]` in kilo.jsonc | Skills auto-discovered by Kilo |
+| openclaw | `~/.openclaw/skills/` | `~/.openclaw/AGENT_MEMORY.md` | `~/.openclaw/openclaw.json` | Skills auto-discovered |
+| claude-code | `~/.claude/skills/` | `~/.claude/AGENT_MEMORY.md` | N/A | Uses `~/.claude/CLAUDE.md` for global context |
+| opencode | `~/.config/opencode/skills/` | `~/.config/opencode/AGENT_MEMORY.md` | N/A | Skills auto-discovered |
 
 **Precedence:** Repo-local deployment wins over global. Project-local skills/rules override global ones, allowing projects to customize without affecting the global install.
 
-**Kilo-specific:** Global skills go to `~/.kilo/skills/` which Kilo auto-discovers. Rules go to `~/.kilo/rules/`. To enable rules globally, add `"~/.kilo/rules/*.md"` to the `instructions[]` array in your `kilo.jsonc` (project-level or global). This is a one-time setup; subsequent global deploys only update the rule files.
+**Kilo-specific:** Global skills go to `~/.kilo/skills/` which Kilo auto-discovers. Memory file goes to `~/.kilo/AGENT_MEMORY.md`. To enable rules globally, add `"~/.kilo/rules/*.md"` to the `instructions[]` array in your `kilo.jsonc` (project-level or global). This is a one-time setup; subsequent global deploys only update the rule files.
 
 ## Skill registration (new skills)
 
@@ -52,8 +51,7 @@ Add one row or bullet per new skill with a short "When to use" description. Use 
 | Codex | _localsetup/templates/codex/AGENTS.md |
 | OpenClaw | _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md |
 | OpenCode | _localsetup/templates/opencode/AGENTS.md |
-| Kilo (templates) | _localsetup/templates/kilocode/localsetup-context.md |
-| Kilo (templates) | _localsetup/templates/kilocode/localsetup-context-index.md |
+| Kilo (templates) | _localsetup/templates/kilo/AGENTS.md |
 | Framework README | _localsetup/README.md (Skills table) |
 | Context skill (source) | _localsetup/skills/localsetup-context/SKILL.md |
 
