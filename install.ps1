@@ -88,7 +88,7 @@ Tools (use with -Tools):
   codex        OpenAI Codex CLI (AGENTS.md, .agents/skills)
   openclaw     OpenClaw (skills/, _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md)
   opencode     OpenCode CLI (AGENTS.md, .opencode/skills/)
-  kilo         Kilo CLI (.kilocode/rules, .kilocode/skills/)
+  kilo         Kilo CLI (.kilo/instructions.md, .kilo/skills/, .kilo/command/, .kilo/agent/)
 
 Examples:
   .\install.ps1 -Directory C:\repos\myapp -Tools "cursor,claude-code" -Yes
@@ -101,12 +101,12 @@ Note: Running elevated (Run as Administrator) creates files owned by that accoun
   user may then hit permission errors. Prefer running as the user who will own the repo.
 
 Global deploy deploys to:
-  kilo:       ~/.kilo/skills/ (auto-discovered) and ~/.kilo/rules/ (add to instructions[])
+  kilo:       ~/.config/kilo/skills/ (auto-discovered) and ~/.config/kilo/instructions/localsetup.md
   openclaw:   ~/.openclaw/skills/
   claude:     ~/.claude/skills/ and ~/.claude/CLAUDE.md
   opencode:   ~/.config/opencode/skills/
 
-Local kilo deploy uses: .kilocode/rules/ and .kilocode/skills/
+Local kilo deploy uses: .kilo/instructions.md, .kilo/skills/, .kilo/command/, .kilo/agent/
 '@
 }
 

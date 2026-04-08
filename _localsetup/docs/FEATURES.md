@@ -27,7 +27,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 | **Multi-host deployment** | Deploy context and skills to Cursor, Claude Code, OpenAI Codex CLI, or OpenClaw from a single install command. |
 | **Idempotent updates** | Re-running install updates the framework (via git pull) and redeploys context. Safe to run repeatedly. Deploy can overwrite root-owned destination files (content is updated; a metadata warning may appear). |
 | **Platform registry** | A single Markdown table ([PLATFORM_REGISTRY.md](PLATFORM_REGISTRY.md)) defines every supported platform ID, context path, skills path, and memory file location. Add new platforms by editing one file. |
-| **Global deployment** | Deploy once to user-wide locations (`~/.kilo/skills/`, `~/.openclaw/`, `~/.claude/`) and use the framework across all projects. Auto-detects installed agents when `--global` is used without `--tools`. Repo-local installation takes precedence over global. |
+| **Global deployment** | Deploy once to user-wide locations (`~/.config/kilo/`, `~/.openclaw/`, `~/.claude/`) and use the framework across all projects. Auto-detects installed agents when `--global` is used without `--tools`. Repo-local installation takes precedence over global. |
 
 ---
 

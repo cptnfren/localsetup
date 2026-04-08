@@ -69,11 +69,15 @@ def deploy_cursor(engine_dir: Path, root: Path) -> None:
 def deploy_kilo(engine_dir: Path, root: Path) -> None:
     kilo_dir = root / ".kilo"
     skills_dir = kilo_dir / "skills"
+    command_dir = kilo_dir / "command"
+    agent_dir = kilo_dir / "agent"
     kilo_dir.mkdir(parents=True, exist_ok=True)
     skills_dir.mkdir(parents=True, exist_ok=True)
+    command_dir.mkdir(parents=True, exist_ok=True)
+    agent_dir.mkdir(parents=True, exist_ok=True)
     templates = engine_dir / "templates" / "kilo"
-    if (templates / "AGENTS.md").exists():
-        _safe_copy2(templates / "AGENTS.md", root / "AGENTS.md")
+    if (templates / "instructions.md").exists():
+        _safe_copy2(templates / "instructions.md", kilo_dir / "instructions.md")
     if (templates / "AGENT_MEMORY.md").exists():
         _safe_copy2(templates / "AGENT_MEMORY.md", kilo_dir / "AGENT_MEMORY.md")
     skills_src = engine_dir / "skills"
@@ -237,27 +241,49 @@ def _deploy_skills_to_dir(engine_dir: Path, dest_dir: Path) -> None:
                     _safe_copy2(f, dest / rel)
 
 
+def _ensure_kilo_config_instructions(
+    config_path: Path, instructions_path: Path
+) -> None:
+    """Idempotently add instructions_path to instructions[] in kilo.json or kilo.jsonc if not already present."""
+    config_path = _expand_path(str(config_path))
+    if not config_path.exists():
+        config_path.write_text('{\n  "instructions": []\n}\n')
+
+    data = _parse_jsonc(config_path)
+    instructions = data.get("instructions", [])
+    instr_str = str(instructions_path)
+    if instr_str not in instructions:
+        instructions.append(instr_str)
+        data["instructions"] = instructions
+        _write_jsonc(config_path, data)
+
+
 def deploy_kilo_global(engine_dir: Path) -> None:
-    """Deploy skills and rules to global kilo locations.
+    """Deploy skills and context to global kilo locations aligned with Kilo v1+ conventions.
 
-    Skills go to ~/.kilo/skills/ which Kilo auto-discovers.
-    Rules go to ~/.kilo/rules/ - users should add ~/.kilo/rules/*.md to their
-    instructions[] in kilo.jsonc if they want rules auto-loaded.
+    Skills go to ~/.config/kilo/skills/ which Kilo auto-discovers.
+    Context (instructions) goes to ~/.config/kilo/instructions/localsetup.md.
+    Config merge idempotently adds the instructions file to instructions[] in kilo.json/kilo.jsonc.
     """
-    kilo_home = _expand_path("~/.kilo")
-    skills_dir = kilo_home / "skills"
-    rules_dir = kilo_home / "rules"
+    kilo_config_base = _expand_path("~/.config/kilo")
+    skills_dir = kilo_config_base / "skills"
+    instructions_dir = kilo_config_base / "instructions"
 
-    rules_dir.mkdir(parents=True, exist_ok=True)
+    kilo_config_base.mkdir(parents=True, exist_ok=True)
     skills_dir.mkdir(parents=True, exist_ok=True)
+    instructions_dir.mkdir(parents=True, exist_ok=True)
 
     templates_kilo = engine_dir / "templates" / "kilo"
-    for rule_file in ["AGENTS.md"]:
-        src = templates_kilo / rule_file
-        if src.exists():
-            _safe_copy2(src, rules_dir / rule_file)
+    if (templates_kilo / "instructions.md").exists():
+        _safe_copy2(
+            templates_kilo / "instructions.md",
+            instructions_dir / "localsetup.md",
+        )
     if (templates_kilo / "AGENT_MEMORY.md").exists():
-        _safe_copy2(templates_kilo / "AGENT_MEMORY.md", kilo_home / "AGENT_MEMORY.md")
+        _safe_copy2(
+            templates_kilo / "AGENT_MEMORY.md",
+            kilo_config_base / "AGENT_MEMORY.md",
+        )
 
     skills_src = engine_dir / "skills"
     for skill_dir in sorted(skills_src.glob("localsetup-*")):
@@ -269,6 +295,22 @@ def deploy_kilo_global(engine_dir: Path) -> None:
                     rel = f.relative_to(skill_dir)
                     (dest / rel).parent.mkdir(parents=True, exist_ok=True)
                     _safe_copy2(f, dest / rel)
+
+    config_path_json = _expand_path("~/.config/kilo/kilo.json")
+    config_path_jsonc = _expand_path("~/.config/kilo/kilo.jsonc")
+    if config_path_json.exists() or config_path_jsonc.exists():
+        target_config = (
+            config_path_json if config_path_json.exists() else config_path_jsonc
+        )
+        _ensure_kilo_config_instructions(
+            target_config,
+            instructions_dir / "localsetup.md",
+        )
+    else:
+        _ensure_kilo_config_instructions(
+            config_path_jsonc,
+            instructions_dir / "localsetup.md",
+        )
 
 
 def deploy_openclaw_global(engine_dir: Path) -> None:

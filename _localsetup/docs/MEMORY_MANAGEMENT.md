@@ -31,7 +31,7 @@ Each platform has its own memory file location:
 
 | Platform | Memory File Location | Context File |
 |----------|---------------------|--------------|
-| **Kilo CLI** | `.kilo/AGENT_MEMORY.md` | `AGENTS.md` (repo root) |
+| **Kilo CLI** | `.kilo/AGENT_MEMORY.md` | `.kilo/instructions.md` |
 | **OpenCode CLI** | `.opencode/AGENT_MEMORY.md` | `AGENTS.md` (repo root) |
 | **Claude Code** | `.claude/AGENT_MEMORY.md` | `.claude/CLAUDE.md` |
 | **Codex CLI** | `.agents/AGENT_MEMORY.md` | `AGENTS.md` (repo root) |
@@ -114,7 +114,7 @@ When deploying with `--global`:
 
 | Platform | Global Memory Path |
 |----------|------------------|
-| Kilo CLI | `~/.kilo/AGENT_MEMORY.md` |
+| Kilo CLI | `~/.config/kilo/AGENT_MEMORY.md` |
 | OpenCode CLI | `~/.config/opencode/AGENT_MEMORY.md` |
 | Claude Code | `~/.claude/AGENT_MEMORY.md` |
 | OpenClaw | `~/.openclaw/AGENT_MEMORY.md` |
@@ -130,16 +130,9 @@ When deploying with `--global`:
 
 ### Kilo CLI
 
-Kilo CLI uses `AGENTS.md` at repo root for framework context. The memory file is at `.kilo/AGENT_MEMORY.md`.
+Kilo CLI uses `.kilo/instructions.md` at repo root for framework context (local deploy) or `~/.config/kilo/instructions/localsetup.md` (global deploy). The memory file is at `.kilo/AGENT_MEMORY.md` (local) or `~/.config/kilo/AGENT_MEMORY.md` (global).
 
-**Setup for memory loading:** Add to your `kilo.jsonc`:
-```jsonc
-{
-  "instructions": [
-    "~/.kilo/rules/*.md"
-  ]
-}
-```
+**Setup for memory loading:** No additional configuration is required. The deploy script idempotently adds the context file to your `instructions[]` in `kilo.json`/`kilo.jsonc`.
 
 ### Cursor
 

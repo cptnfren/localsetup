@@ -65,7 +65,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -Directory . -Tools curso
 - `--directory PATH` / `-Directory PATH`  - Client repo root (default: .)
 - `--tools LIST` / `-Tools LIST`  - Comma-separated: cursor, claude-code, codex, openclaw, kilo, opencode
 - `--yes` / `-Yes`  - Non-interactive (required when using --tools)
-- `--global` / `-Global`  - Deploy to user-wide locations (`~/.kilo/skills/`, `~/.openclaw/`, `~/.claude/`, `~/.config/opencode/`); auto-detects agents if `--tools` not specified
+- `--global` / `-Global`  - Deploy to user-wide locations (`~/.config/kilo/`, `~/.openclaw/`, `~/.claude/`, `~/.config/opencode/`); auto-detects agents if `--tools` not specified
 - `--install-deps` / `-InstallDeps`  - Install Python dependencies from `_localsetup/requirements.txt` automatically
 - `--help` / `-Help`  - Print usage and exit
 
@@ -76,7 +76,7 @@ Use `--global` / `-Global` to deploy the framework to user-wide locations. Skill
 ### Auto-detection
 
 If `--tools` / `-Tools` is not specified with `--global`, the installer auto-detects which agents are installed:
-- **kilo** → `~/.kilo/skills/`, `~/.kilo/rules/`, and `~/.kilo/AGENT_MEMORY.md`
+- **kilo** → `~/.config/kilo/skills/`, `~/.config/kilo/instructions/localsetup.md`, and `~/.config/kilo/AGENT_MEMORY.md`
 - **openclaw** → `~/.openclaw/skills/` and `~/.openclaw/AGENT_MEMORY.md`
 - **claude-code** → `~/.claude/skills/`, `~/.claude/CLAUDE.md`, and `~/.claude/AGENT_MEMORY.md`
 - **opencode** → `~/.config/opencode/skills/` and `~/.config/opencode/AGENT_MEMORY.md`
@@ -103,19 +103,11 @@ If `--tools` / `-Tools` is not specified with `--global`, the installer auto-det
 
 ### Kilo-specific
 
-Global skills deploy to `~/.kilo/skills/` which Kilo auto-discovers. Rules deploy to `~/.kilo/rules/`. Memory file deploys to `~/.kilo/AGENT_MEMORY.md`.
+Global skills deploy to `~/.config/kilo/skills/` which Kilo auto-discovers. Context file deploys to `~/.config/kilo/instructions/localsetup.md`. Memory file deploys to `~/.config/kilo/AGENT_MEMORY.md`.
 
-**One-time setup for rules:** To enable global rules, add the following to your `kilo.jsonc` (project or global):
+**One-time setup for context:** The deploy script idempotently adds `~/.config/kilo/instructions/localsetup.md` to the `instructions[]` array in your `kilo.json` or `kilo.jsonc` (project or global). No manual configuration is required.
 
-```jsonc
-{
-  "instructions": [
-    "~/.kilo/rules/*.md"
-  ]
-}
-```
-
-This is a one-time configuration. Subsequent `--global` deploys only update the skill and rule files.
+This is a one-time configuration. Subsequent `--global` deploys update the skill and context files.
 
 ### Precedence
 
@@ -125,10 +117,10 @@ This is a one-time configuration. Subsequent `--global` deploys only update the 
 
 To remove global deployment:
 ```bash
-# Kilo skills and memory
-rm -rf ~/.kilo/skills/localsetup-*
-rm -rf ~/.kilo/rules/localsetup-*
-rm ~/.kilo/AGENT_MEMORY.md
+# Kilo skills and context
+rm -rf ~/.config/kilo/skills/localsetup-*
+rm -rf ~/.config/kilo/instructions/localsetup.md
+rm ~/.config/kilo/AGENT_MEMORY.md
 
 # OpenClaw
 rm -rf ~/.openclaw/skills

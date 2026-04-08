@@ -128,6 +128,10 @@ def validate_markers(engine_dir: Path, errors: list[str]) -> None:
         / "templates"
         / "kilocode"
         / "localsetup-context.md": "## Output contract (low token, always apply)",
+        engine_dir
+        / "templates"
+        / "kilo"
+        / "instructions.md": "## Output contract (low token, always apply)",
     }
     for file_path, marker in required_markers.items():
         if not file_path.exists():

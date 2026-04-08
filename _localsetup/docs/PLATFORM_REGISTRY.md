@@ -17,7 +17,7 @@ version: 2.11
 | claude-code | Claude Code | .claude/CLAUDE.md | .claude/skills/localsetup-*/ | .claude/AGENT_MEMORY.md |
 | codex | OpenAI Codex CLI | AGENTS.md (repo root) | .agents/skills/localsetup-*/ | .agents/AGENT_MEMORY.md |
 | openclaw | OpenClaw | [OPENCLAW_CONTEXT.md](../templates/openclaw/OPENCLAW_CONTEXT.md) (merge into workspace MEMORY.md if desired) | skills/localsetup-*/ (repo root) | AGENT_MEMORY.md (repo root) |
-| kilo | Kilo CLI | AGENTS.md (repo root) | .kilo/skills/localsetup-*/ | .kilo/AGENT_MEMORY.md |
+| kilo | Kilo CLI | .kilo/instructions.md | .kilo/skills/localsetup-*/ | .kilo/AGENT_MEMORY.md |
 | opencode | OpenCode CLI | AGENTS.md (repo root) | .opencode/skills/localsetup-*/ | .opencode/AGENT_MEMORY.md |
 
 *More platforms may be added later. Update this table and the "Skill registration (new skills)" section when adding one.*
@@ -28,14 +28,14 @@ When deployed with `--scope global` (via `./install --global` or `install.ps1 -G
 
 | Platform | Global skills path | Memory file | Global config | Notes |
 |----------|-------------------|-------------|---------------|-------|
-| kilo | `~/.kilo/skills/` | `~/.kilo/AGENT_MEMORY.md` | Add to `instructions[]` in kilo.jsonc | Skills auto-discovered by Kilo |
+| kilo | `~/.config/kilo/skills/` | `~/.config/kilo/AGENT_MEMORY.md` | `~/.config/kilo/kilo.json` or `kilo.jsonc` | Skills auto-discovered by Kilo |
 | openclaw | `~/.openclaw/skills/` | `~/.openclaw/AGENT_MEMORY.md` | `~/.openclaw/openclaw.json` | Skills auto-discovered |
 | claude-code | `~/.claude/skills/` | `~/.claude/AGENT_MEMORY.md` | N/A | Uses `~/.claude/CLAUDE.md` for global context |
 | opencode | `~/.config/opencode/skills/` | `~/.config/opencode/AGENT_MEMORY.md` | N/A | Skills auto-discovered |
 
 **Precedence:** Repo-local deployment wins over global. Project-local skills/rules override global ones, allowing projects to customize without affecting the global install.
 
-**Kilo-specific:** Global skills go to `~/.kilo/skills/` which Kilo auto-discovers. Memory file goes to `~/.kilo/AGENT_MEMORY.md`. To enable rules globally, add `"~/.kilo/rules/*.md"` to the `instructions[]` array in your `kilo.jsonc` (project-level or global). This is a one-time setup; subsequent global deploys only update the rule files.
+**Kilo-specific:** Global skills go to `~/.config/kilo/skills/` which Kilo auto-discovers. Memory file goes to `~/.config/kilo/AGENT_MEMORY.md`. Context file is deployed to `~/.config/kilo/instructions/localsetup.md` and is idempotently added to the `instructions[]` array in `kilo.json`/`kilo.jsonc`. This is a one-time setup; subsequent global deploys update the skill and context files.
 
 ## Skill registration (new skills)
 
@@ -51,7 +51,7 @@ Add one row or bullet per new skill with a short "When to use" description. Use 
 | Codex | _localsetup/templates/codex/AGENTS.md |
 | OpenClaw | _localsetup/templates/openclaw/OPENCLAW_CONTEXT.md |
 | OpenCode | _localsetup/templates/opencode/AGENTS.md |
-| Kilo (templates) | _localsetup/templates/kilo/AGENTS.md |
+| Kilo (templates) | _localsetup/templates/kilo/instructions.md |
 | Framework README | _localsetup/README.md (Skills table) |
 | Context skill (source) | _localsetup/skills/localsetup-context/SKILL.md |
 
@@ -60,7 +60,7 @@ Add one row or bullet per new skill with a short "When to use" description. Use 
 ## Reference
 
 - Deploy script: `_localsetup/tools/deploy` (Bash) / `deploy.ps1` (PowerShell); accepts `--tools "cursor,claude-code,codex,openclaw,kilo,opencode"` and `--scope local|global`.
-- Global install: root `install` (Bash) / `install.ps1` (PowerShell) with `--global` / `-Global` flag. Auto-detects installed agents (kilo, openclaw, claude). Skills go to `~/.kilo/skills/` (auto-discovered), rules go to `~/.kilo/rules/`.
+- Global install: root `install` (Bash) / `install.ps1` (PowerShell) with `--global` / `-Global` flag. Auto-detects installed agents (kilo, openclaw, claude). Skills go to `~/.config/kilo/skills/` (auto-discovered), context goes to `~/.config/kilo/instructions/localsetup.md`.
 - Skills and rules (paths and model): [SKILLS_AND_RULES.md](SKILLS_AND_RULES.md).
 - Release and publish (including packaging and sync checks) are maintained in a separate maintainer repository.
 
