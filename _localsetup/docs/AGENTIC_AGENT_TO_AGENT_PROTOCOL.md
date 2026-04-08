@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.11
+version: 2.12
 ---
 
 # Agent-to-agent protocol (PRD + transport)

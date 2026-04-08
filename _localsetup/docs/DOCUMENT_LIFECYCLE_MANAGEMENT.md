@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.11
+version: 2.12
 ---
 
 # Document lifecycle (Localsetup v2)

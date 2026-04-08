@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.11
+version: 2.12
 ---
 
 # 📚 Framework docs index
@@ -10,7 +10,7 @@ This is the public documentation index for Localsetup v2. Use it to navigate fra
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.10.1`
+- Current version: `2.11.0`
 - Supported platforms: ``
 - Shipped skills: `44`
 - Source: `_localsetup/docs/_generated/facts.json`

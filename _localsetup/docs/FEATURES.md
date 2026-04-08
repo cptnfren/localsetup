@@ -1,6 +1,6 @@
 ---
 status: ACTIVE
-version: 2.11
+version: 2.12
 ---
 
 # ⚡ Features
@@ -10,7 +10,7 @@ This is the complete public feature catalog for Localsetup v2. The main README h
 ## 📊 Generated facts
 
 <!-- facts-block:start -->
-- Current version: `2.10.1`
+- Current version: `2.11.0`
 - Supported platforms: ``
 - Shipped skills: `44`
 - Source: `_localsetup/docs/_generated/facts.json`
