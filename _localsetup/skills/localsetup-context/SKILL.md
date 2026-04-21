@@ -8,10 +8,10 @@ metadata:
 # Localsetup v2 - Framework context (skill)
 
 ## Overview
-Localsetup v2 is deployed at `_localsetup/`. Framework and context are repo-local (mobile, backup-able). Engine = _localsetup/; user data = repo-local. Use Git hashes for PRDs/specs (see [GIT_TRACEABILITY.md](../../docs/GIT_TRACEABILITY.md)).
+Localsetup v2 is deployed at `_localsetup/`. The framework is repo-local and mobile, but mutable user/project state should live in stable repo-level paths outside `_localsetup/`. Engine = _localsetup/. Use Git hashes for PRDs/specs (see [GIT_TRACEABILITY.md](../../docs/GIT_TRACEABILITY.md)).
 
 ## Invariants
-- **Engine/repo separation:** Never commit repo-local secrets or PII. Use _localsetup/lib/data_paths.sh (or equivalent) for path resolution. Framework lives at _localsetup/; upgrades replace that folder.
+- **Engine/repo separation:** Never commit repo-local secrets or PII. Use _localsetup/lib/data_paths.sh (or equivalent) for path resolution. Framework lives at _localsetup/; upgrades replace that folder. Never store mutable memory, reminders, backlog, or temporary notes under `_localsetup/`.
 - **Documentation:** _localsetup/docs/ only for framework docs. Check document status before assuming implemented.
 - **Proposals:** Framework changes follow Agent Q format (_localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md).
 - **Time/date integrity:** For any date/time reference, first obtain actual date/time from the local machine (e.g. `date` on Linux/macOS, `Get-Date` in PowerShell on Windows). Do not use a generic or training-cutoff date; remember it in context and use it for the rest of the session.
