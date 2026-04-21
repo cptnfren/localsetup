@@ -2,13 +2,13 @@
 
 ## Overview
 
-Localsetup v2 is a universal, cross-platform agentic workflow engine. It is **deployed into the client repository** at `_localsetup/`. All framework code and repo-local context live in the repo so the deployment is mobile and backup-able. Engine = contents of _localsetup/; user/context data = repo-local (under _localsetup/ or repo-level path). Git coupling: attach git hash when referencing PRDs, specs, or outcomes. See _localsetup/docs/GIT_TRACEABILITY.md.
+Localsetup v2 is a universal, cross-platform agentic workflow engine. It is **deployed into the client repository** at `_localsetup/`. Framework code lives under `_localsetup/`, while mutable user/project state must live in stable repo-level paths outside `_localsetup/` so it survives framework refreshes. Git coupling: attach git hash when referencing PRDs, specs, or outcomes. See _localsetup/docs/GIT_TRACEABILITY.md.
 
 Kilo CLI uses `AGENTS.md` as the project initialization file at repo root.
 
 ## Invariants (always apply)
 
-- **Engine/repo separation:** Never commit repo-local secrets or PII. Use _localsetup/lib/data_paths.sh (or equivalent) for path resolution. Framework lives at _localsetup/; upgrades replace that folder.
+- **Engine/repo separation:** Never commit repo-local secrets or PII. Use _localsetup/lib/data_paths.sh (or equivalent) for path resolution. Framework lives at _localsetup/; upgrades replace that folder. Do not store mutable memory, reminders, backlog items, temp notes, or run outputs under `_localsetup/`; use stable repo-level locations instead.
 - **Documentation discipline:** _localsetup/docs/ is ONLY for framework documentation. Check document status (ACTIVE/PROPOSAL/DRAFT) before assuming a feature is implemented.
 - **Proposals:** Any change to the framework must follow the Agent Q format; see _localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md.
 - **Time/date integrity:** For any date or time reference (e.g. "today", year in a search, timestamps), first obtain the actual date/time from the local machine using a platform-appropriate command (e.g. `date` on Linux/macOS, `Get-Date` in PowerShell on Windows). Do not use a generic or training-cutoff date (e.g. 2024 when the current year is different). Remember the obtained date/time in context and use it consistently for the remainder of the session.

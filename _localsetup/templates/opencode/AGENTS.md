@@ -1,12 +1,12 @@
 # Localsetup v2  - Agent context (OpenCode)
 
 ## Overview
-Localsetup v2 is deployed into this repo at `_localsetup/`. Framework and context are repo-local (mobile, backup-able). Engine = _localsetup/; user data = repo-local. Attach git hash when referencing PRDs/specs (see [_localsetup/docs/GIT_TRACEABILITY.md](../_localsetup/docs/GIT_TRACEABILITY.md)).
+Localsetup v2 is deployed into this repo at `_localsetup/`. The framework is repo-local and mobile, but mutable user/project state should live in stable repo-level paths outside `_localsetup/`. Engine = _localsetup/. Attach git hash when referencing PRDs/specs (see [_localsetup/docs/GIT_TRACEABILITY.md](../_localsetup/docs/GIT_TRACEABILITY.md)).
 
 OpenCode uses `AGENTS.md` as the project initialization file. This context is loaded automatically when OpenCode initializes in this repo.
 
 ## Invariants
-- Engine/repo separation: no secrets/PII in commits. Paths via _localsetup/lib/data_paths.sh. Framework at _localsetup/.
+- Engine/repo separation: no secrets/PII in commits. Paths via _localsetup/lib/data_paths.sh. Framework at _localsetup/. Do not store mutable memory, reminders, backlog, temporary notes, or run outputs under `_localsetup/`.
 - Documentation: _localsetup/docs/ only for framework docs. Check doc status (ACTIVE/PROPOSAL) before assuming implemented.
 - Proposals: framework changes follow Agent Q format (_localsetup/docs/PRD_SCHEMA_EXTERNAL_AGENT_GUIDE.md).
 - Time/date integrity: for any date/time reference, first get actual date/time from the local machine (e.g. `date` on Linux/macOS, `Get-Date` in PowerShell on Windows). Do not use a generic or training-cutoff date; remember it and use it for the rest of the session.
